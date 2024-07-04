@@ -13,7 +13,7 @@ func main() {
 	m["k2"] = 13
 
 	fmt.Println("map:", m)
-
+	v1 := m["k1"]
 	fmt.Println("v1:", v1)
 
 	v3 := m["k3"]
