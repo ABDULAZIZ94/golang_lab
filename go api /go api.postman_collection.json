@@ -1,0 +1,370 @@
+{
+	"info": {
+		"_postman_id": "753f6aa4-da10-4ff8-a775-24300e7e7865",
+		"name": "go api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "5540550"
+	},
+	"item": [
+		{
+			"name": "/:3000",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/api/v1/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/api/v1/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/login/{logintype}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/login/{logintype}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/logout"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/recovery/{email}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/recovery/{email}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/recovery/password/{token}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/recovery/password/{token}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/internal/v1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/internal/v1"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback/fp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback/fp"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback/fp/{toiletid}/{toiletType}/{reaction}/{reason}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback/fp/{toiletid}/{toiletType}/{reaction}/{reason}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback/fp/reactionlist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback/fp/reactionlist"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback/fp/cleandetails/{rfidNo}/{locationID}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback/fp/cleandetails/{rfidNo}/{locationID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/feedback/fp/uploads3/{user-id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": "http://localhost:3002/api/feedback/fp/uploads3/{user-id}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/tenant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/tenant"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/contractor"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor/{contractorID}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/contractor/{contractorID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/contractor/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/pair/tenant",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/pair/tenant"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor/{contractorID}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/contractor/{contractorID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/contractor/{contractorID}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/contractor/{contractorID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/location"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/location"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location/impression",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/location/impression"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/location"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location/{locationID}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/location/{locationID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/location/{locationID}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/{locationID}"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/device",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/device"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/setting",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/setting"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/cleaner",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/cleaner"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/toilet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/toilet"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/user"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/v1/tenant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/api/v1/tenant"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3003/api/v1/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/api/v1/"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3003/api/v1/control",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/api/v1/control"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3003/api/v1/telemetry",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/api/v1/telemetry"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3003/api/v1/report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/api/v1/report"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3003/api/v1/config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/api/v1/config"
+			},
+			"response": []
+		}
+	]
+}
