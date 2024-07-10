@@ -109,10 +109,52 @@ WITH DEVICE_LIST AS (
     AND AUTO_CLEAN_STATE = '1'  
     order by CHECK_OUT_TS desc limit 1) Q8 
 
-    -- get cleaner graph
+-- time stamp interval / timestamp gen query
+SELECT uplinkTS  
+FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('  2024-06-01   16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+-- date_trunc('HOUR', TO_TIMESTAMP('  endDate   16:00:00', 'YYYY-MM-DD HH24:MI:SS')  interval '23' HOUR)  
+date_trunc('HOUR', TO_TIMESTAMP('  2024-06-10   15:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+interval '1' HOUR) uplinkTS
+
+-- get cleaner graph
 WITH GENTIME AS (
     SELECT uplinkTS  
     FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('  2024-06-01   16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     -- date_trunc('HOUR', TO_TIMESTAMP('  endDate   16:00:00', 'YYYY-MM-DD HH24:MI:SS')  interval '23' HOUR)  
     date_trunc('HOUR', TO_TIMESTAMP('  2024-06-10   15:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     interval '1' HOUR) uplinkTS)
+SELECT uplinkTS::text, 
+    COALESCE(TOTAL_MALE,0) AS TOTAL_MALE,  
+    COALESCE(TOTAL_FEMALE,0) AS TOTAL_FEMALE  
+    FROM GENTIME  
+LEFT JOIN  
+(SELECT date_trunc('HOUR', CHECK_IN_TS) AS uplinkTS,  
+    COUNT(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN 1 END) TOTAL_MALE,  
+    COUNT(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN 1 END) TOTAL_FEMALE  
+    FROM CLEANER_REPORTS  
+    WHERE CLEANER_REPORTS.LOCATION_ID = (  
+SELECT location_id from toilet_infos where toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984')  
+    GROUP BY uplinkTS) second_query USING (uplinkTS)
+
+
+-- time stamp interval / timestamp gen query
+SELECT uplinkTS  
+FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('  2024-06-01   16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+-- date_trunc('HOUR', TO_TIMESTAMP('  endDate   16:00:00', 'YYYY-MM-DD HH24:MI:SS')  interval '23' HOUR)  
+date_trunc('HOUR', TO_TIMESTAMP('  2024-06-10   15:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+interval '1' HOUR) uplinkTS
+-- cleaning performance
+SELECT uplinkTS::text, 
+    COALESCE(TOTAL_TIME_MALE,0) AS TOTAL_TIME_MALE,  
+    COALESCE(TOTAL_TIME_FEMALE,0) AS TOTAL_TIME_FEMALE,  
+    COALESCE(TOTAL_TIME,0) AS TOTAL_TIME  
+    FROM GENTIME  
+    LEFT JOIN  
+    (SELECT date_trunc('HOUR', CHECK_IN_TS) AS uplinkTS,  
+    AVG(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN duration END) TOTAL_TIME_MALE,  
+    AVG(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN duration END) TOTAL_TIME_FEMALE,  
+    AVG(DURATION) TOTAL_TIME  
+    FROM CLEANER_REPORTS  
+    WHERE CLEANER_REPORTS.LOCATION_ID = (  
+    SELECT location_id from toilet_infos where toilet_info_id = ?)  
+    GROUP BY uplinkTS) second_query USING (uplinkTS)
