@@ -1,3 +1,4 @@
+-- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
 --
 SELECT * FROM devices Where device_token = 'GATEWAY002'  AND device_type_id = 1;
 
