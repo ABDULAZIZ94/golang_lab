@@ -1,0 +1,231 @@
+{
+    "error": false,
+    "message": {
+        "GatewayID": "1b24efde-fb72-4849-4a04-89757b9550a5",
+        "GlobalSetting": {
+            "SettingID": "ddb6f31f-345e-4695-5068-ce9253dd12fa",
+            "EntityID": "59944171-3a4a-460d-5897-8bb38c524d54",
+            "Context": "GLOBAL",
+            "ActiveActuatorOnCntState": "1",
+            "ActiveActuatorOnCnt": "50",
+            "ActiveActuatorOnOdourState": "1",
+            "ActiveActuatorRunTime": "1",
+            "ActiveActuatorOnOdourLvl": "10",
+            "ActiveFregStat": "1",
+            "ActiveFregOnCnt": "10",
+            "ActiveFregOdourLevel": "1",
+            "ActiveWaterjetRunTime": "1",
+            "ActiveWaterjetState": "1",
+            "ActiveDoorLockRunTime": "10",
+            "ActiveDoorLockState": "1",
+            "NotifyCleanerTotalUser": "1",
+            "NotifyCleanerTotalUserState": "1",
+            "NotifyStartTS": "10:00",
+            "NotifyStopTS": "23:30",
+            "NotifyFregSprayCnt": "1",
+            "CleanerResponseTs": "1",
+            "CleanerResponseTsNotifyState": "1",
+            "NotifyOnLuxThres": "100",
+            "NotifyOnLuxState": "1",
+            "NotifyOnOdourThres": "4",
+            "NotifyOnOdourState": "1",
+            "NotifyOnFregLevel": "1",
+            "NotifyOnFregLevelState": "1",
+            "FpSetID": "49b9976d-eae6-473b-57e2-b55415e3f882",
+            "createdAt": "2023-02-24T07:08:26.42772+08:00",
+            "updatedAt": "2024-06-23T15:23:09.646844+08:00",
+            "deleteAt": null
+        },
+        "FeedbackPanelSetting": [
+            {
+                "ButtonID": 5,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "3",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 7,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "1",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 9,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "2",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 2,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "2",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 6,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "2",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 8,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "3",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 10,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "1",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 1,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "3",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 3,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "1",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 4,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "3",
+                "ActiveOnFeedState": "1"
+            }
+        ],
+        "ToiletIdentifier": [
+            {
+                "IdentifierID": "23acd373-4a29-427d-40b7-94d348e4f423",
+                "ToiletTypeID": 2,
+                "Identifier": "FEMALE BIG",
+                "ToiletTypeName": "FEMALE"
+            },
+            {
+                "IdentifierID": "1a30dea0-03c9-41d6-5918-b15807c3661f",
+                "ToiletTypeID": 2,
+                "Identifier": "FEMALE SMALL",
+                "ToiletTypeName": "FEMALE"
+            }
+        ],
+        "DeviceInfo": [
+            {
+                "Identifier": "FEMALE BIG",
+                "PairedDevice": [
+                    {
+                        "DeviceID": "ded9f0f3-395d-47da-76a3-ed28637a3472",
+                        "Namespace": "ENVIROMENTAL",
+                        "NamespaceID": 0,
+                        "DeviceToken": "25",
+                        "Identifier": "FEMALE BIG",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "dbb68364-1e1c-4875-4701-b9cf4ba791c0",
+                        "Namespace": "COUNTER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "14",
+                        "Identifier": "FEMALE BIG",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "a45b2dcb-4a90-46a2-5679-72300a038d2f",
+                        "Namespace": "FRESHENER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "64",
+                        "Identifier": "FEMALE BIG",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "8e501948-2bb1-4cab-5f26-a72b288e4907",
+                        "Namespace": "AIR_BLOWER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "44",
+                        "Identifier": "FEMALE BIG",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "dd029f4b-7579-427c-671f-087d3ede1290",
+                        "Namespace": "FEEDBACK",
+                        "NamespaceID": 0,
+                        "DeviceToken": "3",
+                        "Identifier": "FEMALE BIG",
+                        "ToiletTypeID": 2
+                    }
+                ]
+            },
+            {
+                "Identifier": "FEMALE SMALL",
+                "PairedDevice": [
+                    {
+                        "DeviceID": "534eafa3-79fe-41e6-7d6d-e7ea7586cced",
+                        "Namespace": "ENVIROMENTAL",
+                        "NamespaceID": 0,
+                        "DeviceToken": "24",
+                        "Identifier": "FEMALE SMALL",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "01c916c3-9596-4bb1-6d75-31263af30016",
+                        "Namespace": "COUNTER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "13",
+                        "Identifier": "FEMALE SMALL",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "8c7d4c80-1819-490e-52da-0544022d7c33",
+                        "Namespace": "FRESHENER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "63",
+                        "Identifier": "FEMALE SMALL",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "c584a54a-6380-49cf-617d-3b9e57e413c4",
+                        "Namespace": "AIR_BLOWER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "43",
+                        "Identifier": "FEMALE SMALL",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "dd029f4b-7579-427c-671f-087d3ede1290",
+                        "Namespace": "FEEDBACK",
+                        "NamespaceID": 0,
+                        "DeviceToken": "3",
+                        "Identifier": "FEMALE SMALL",
+                        "ToiletTypeID": 2
+                    }
+                ]
+            }
+        ],
+        "MqttInfo": {
+            "TenantID": "59944171-3a4a-460d-5897-8bb38c524d54",
+            "MqttAddress": "ares.vectolabs.com",
+            "MqttPort": 8883,
+            "MqttUsername": "ppj-1676796401",
+            "MqttPassword": "test123",
+            "Secure": true,
+            "DownlinkTopic": "vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/+/downlink",
+            "UplinkTopic": "vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/+/uplink",
+            "ErrorTopic": "vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/+/error",
+            "NotifyTopic": "vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/+/notify",
+            "RealTimeStatusTopic": "vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/+/status"
+        },
+        "CleanerDetails": [
+            {
+                "UserId": "7a1c3658-d58b-46ca-6935-6a0835477b69",
+                "UserName": "Mariem",
+                "StaffID": "123456",
+                "RfidNumber": "01151B29B593",
+                "LastAction": "checkout",
+                "LastSeen": "2024-05-15T20:42:25.439407+08:00"
+            }
+        ]
+    }
+}

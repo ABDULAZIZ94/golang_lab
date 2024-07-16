@@ -1,0 +1,9 @@
+{
+    "namespace": "ENVIROMENTAL",
+    "namespaceID": 0,
+    "iaq": 0,
+    "temperature": 33,
+    "humidity": 0,
+    "lux": 202,
+    "timestamp": 1721112398
+}
