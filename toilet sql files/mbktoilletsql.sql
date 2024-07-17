@@ -71,8 +71,37 @@ SELECT NOW()::timestamp;
 -- e7c90ba9-fc49-4883-8b2f-64eabedbc502
 -- 4ff2e71b-0b08-4c92-a909-d351c21b592d
 -- d0b00e9d-6b4a-4ee8-b124-4e5e39cf4039
-INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitute", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
-VALUES('8f88b1ef-0e5c-4766-b4c8-797aa946ef36','','')
+-- a1c5f3b7-8d2e-4a9b-b8c1-7f9e2d0a5c81
+-- f7e2b9d4-3a1c-5b8d-a3f6-9e0c2d7f4a2b
+-- 1b3d5f9a-7c8e-2d4f-e6b9-0a1c3f8e2d5f
+
+-- smoke alarm
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('8f88b1ef-0e5c-4766-b4c8-797aa946ef36', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'SMOKE_ALARM_MALE', '69', 1, 1, '10', current_timestamp, current_timestamp, NULL)
+
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('31e25e7d-5a89-4c47-bb7a-88d1b8e85a5d', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'SMOKE_ALARM_FEMALE', '70', 1, 1, '10', current_timestamp, current_timestamp, NULL)
+
+--panic btn
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('e7c90ba9-fc49-4883-8b2f-64eabedbc502', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'PANIC_BTN_MALE', '71', 1, 1, '11', current_timestamp, current_timestamp, NULL)
+
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('4ff2e71b-0b08-4c92-a909-d351c21b592d', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'PANIC_BTN_FEMALE', '72', 1, 1, '11', current_timestamp, current_timestamp, NULL)
+
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('d0b00e9d-6b4a-4ee8-b124-4e5e39cf4039', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'OCCUPANCY_MALE', '73', 1, 1, '12', current_timestamp, current_timestamp, NULL)
+
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('a1c5f3b7-8d2e-4a9b-b8c1-7f9e2d0a5c81', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'OCCUPANCY_FEMALE', '74', 1, 1, '12', current_timestamp, current_timestamp, NULL)
+
+-- add ammonia sensor
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('f7e2b9d4-3a1c-5b8d-a3f6-9e0c2d7f4a2b', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'AMMONIA_SENSOR_MALE', '75', 1, 1, '13', current_timestamp, current_timestamp, NULL)
+
+INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "latitude", "longitude", "device_type_id", "created_at", "updated_at", "deleted_at")
+VALUES('1b3d5f9a-7c8e-2d4f-e6b9-0a1c3f8e2d5f', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'AMMONIA_SENSOR_FEMALE', '76', 1, 1, '13', current_timestamp, current_timestamp, NULL)
+
 -- add toilet infos
 -- create pair
 
