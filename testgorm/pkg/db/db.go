@@ -3,7 +3,8 @@ package db
 import (
 	"log"
 
-	"../models"
+	"testgorm_module/pkg/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
