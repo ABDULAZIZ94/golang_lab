@@ -103,5 +103,6 @@ INSERT INTO devices ("device_id", "tenant_id", "device_name", "device_token", "l
 VALUES('1b3d5f9a-7c8e-2d4f-e6b9-0a1c3f8e2d5f', 'f8be7a6d-679c-4319-6906-d172ebf7c17e', 'AMMONIA_SENSOR_FEMALE', '76', 1, 1, '13', current_timestamp, current_timestamp, NULL)
 
 -- add toilet infos
+
 -- create pair
 
