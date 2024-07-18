@@ -8,6 +8,8 @@ SELECT * FROM device_types
 
 SELECT * FROM device_pairs
 
+SELECT * FROM device_pairs WHERE toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
 SELECT * FROM toilet_infos
 
 -- new table
@@ -21,7 +23,11 @@ SELECT * FROM smoke_data
 
 SELECT * FROM occupancy_data
 
--- get list of devices in this identifier
+-- majlis kuantan 
+-- tenant id :f8be7a6d-679c-4319-6906-d172ebf7c17e, toilet_info_id: 0a38e4d1-f9b9-4cb2-648f-20e0ac269984
+-- gateway_id : a91b5fe2-dd09-4d67-4a71-5a0b033f23c4, device_pair_id, 7e69638d-b002-4718-67e2-2191052cea97
+
+-- get list of devices in this identifier 
 SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,  
 TOILET_INFOS.TOILET_NAME AS Identifier ,DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace, gateway_id
 FROM DEVICE_PAIRS  
@@ -105,4 +111,5 @@ VALUES('1b3d5f9a-7c8e-2d4f-e6b9-0a1c3f8e2d5f', 'f8be7a6d-679c-4319-6906-d172ebf7
 -- add toilet infos
 
 -- create pair
-
+INSERT INTO device_pairs("device_pair_id", "gateway_id", "device_id", "toilet_info_id", "created_at", "updated_at", "deleted_at")
+VALUES('','a91b5fe2-dd09-4d67-4a71-5a0b033f23c4','','',current_timestamp, current_timestamp, NULL)
