@@ -125,3 +125,11 @@ f5700e7d-1d47-4c5c-b5a4-74b61d497843
 -- create pair
 INSERT INTO device_pairs("device_pair_id", "gateway_id", "device_id", "toilet_info_id", "created_at", "updated_at", "deleted_at")
 VALUES('44f3a783-99a6-4f1a-43a4-349402e8a18c','a91b5fe2-dd09-4d67-4a71-5a0b033f23c4','8f88b1ef-0e5c-4766-b4c8-797aa946ef36','0a38e4d1-f9b9-4cb2-648f-20e0ac269984',current_timestamp, current_timestamp, NULL)
+
+
+-- check if device belong to tenant
+SELECT *  FROM devices WHERE device_id = '31e25e7d-5a89-4c47-bb7a-88d1b8e85a5d' AND tenant_id ='f8be7a6d-679c-4319-6906-d172ebf7c17e'
+
+SELECT *  FROM devices WHERE device_id = "" AND tenant_id=""
+
+SELECT *  FROM devices WHERE device_id = '31e25e7d-5a89-4c47-bb7a-88d1b8e85a5d' 
