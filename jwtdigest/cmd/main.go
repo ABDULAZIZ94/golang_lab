@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi"
+	"github.com/joho/godotenv"
 )
 
 //	type AccessInfo struct {
@@ -33,17 +34,31 @@ type AccessInfo struct {
 	UserType      string
 	AccessLevel   string
 }
+type contextKey struct {
+	name string
+}
+
+var (
+	TokenCtxKey = &contextKey{"Token"}
+	ErrorCtxKey = &contextKey{"Error"}
+)
 
 func main() {
 	fmt.Println("jwt main application")
+	if err := godotenv.Load(); err != nil {
+		fmt.Print("No .env file found")
+	}
 	router := chi.NewRouter()
+	jwtt := gate.NewAuth()
+	router.Use(jwtt.AuthMiddleware) //bp1
 	router.Get("/", processReq)
-
 	http.ListenAndServe(":3000", router)
 }
 
 func processReq(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("incoming http request %v\n", r)
+	// fmt.Printf("the context token:%v", r.Context().Value(TokenCtxKey).(*jwt.Token))
+	// fmt.Printf("the context:%v", r.Context())
 	info, err := CheckAccessLevel(r.Context())
 	fmt.Printf("info: %v, err: %v ", info, err)
 }
