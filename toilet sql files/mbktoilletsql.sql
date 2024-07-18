@@ -110,6 +110,18 @@ VALUES('1b3d5f9a-7c8e-2d4f-e6b9-0a1c3f8e2d5f', 'f8be7a6d-679c-4319-6906-d172ebf7
 
 -- add toilet infos
 
+-- pair ids
+7e69638d-b002-4718-67e2-2191052cea97
+44f3a783-99a6-4f1a-43a4-349402e8a18c
+c8f3d7b2-82e5-4c6f-2f85-3d4b0501c7c3
+67ea8b59-1e7b-4985-1d18-39d4d76f8f5d
+80a2e2d6-917f-4eb0-8d1b-125d8f6a4487
+b789f9e2-4bb1-4cf6-9497-13a24d48b8f1
+9f87703e-1a24-4a56-9d56-5d6b745dcf7d
+a92c4a1f-5b98-48b0-bf6c-8a7b5b4e2b95
+f5700e7d-1d47-4c5c-b5a4-74b61d497843
+3b2e0f6c-2b49-4c1f-9203-14c9d295a92d
+
 -- create pair
 INSERT INTO device_pairs("device_pair_id", "gateway_id", "device_id", "toilet_info_id", "created_at", "updated_at", "deleted_at")
-VALUES('','a91b5fe2-dd09-4d67-4a71-5a0b033f23c4','','',current_timestamp, current_timestamp, NULL)
+VALUES('44f3a783-99a6-4f1a-43a4-349402e8a18c','a91b5fe2-dd09-4d67-4a71-5a0b033f23c4','8f88b1ef-0e5c-4766-b4c8-797aa946ef36','0a38e4d1-f9b9-4cb2-648f-20e0ac269984',current_timestamp, current_timestamp, NULL)
