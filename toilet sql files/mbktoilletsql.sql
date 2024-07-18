@@ -1,8 +1,9 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
 SELECT *
 FROM toilet_infos
 WHERE
     toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
 -- basic table
 SELECT * FROM devices
 
@@ -136,8 +137,7 @@ INSERT INTO
         "created_at",
         "updated_at",
         "deleted_at"
-    )
-VALUES (
+)VALUES (
         '8f88b1ef-0e5c-4766-b4c8-797aa946ef36',
         'f8be7a6d-679c-4319-6906-d172ebf7c17e',
         'SMOKE_ALARM_MALE',
@@ -162,8 +162,7 @@ INSERT INTO
         "created_at",
         "updated_at",
         "deleted_at"
-    )
-VALUES (
+)VALUES ( 
         '31e25e7d-5a89-4c47-bb7a-88d1b8e85a5d',
         'f8be7a6d-679c-4319-6906-d172ebf7c17e',
         'SMOKE_ALARM_FEMALE',
@@ -175,6 +174,7 @@ VALUES (
         current_timestamp,
         NULL
     )
+
 --panic btn
 INSERT INTO
     devices (
@@ -266,8 +266,7 @@ INSERT INTO
         "created_at",
         "updated_at",
         "deleted_at"
-    )
-VALUES (
+)VALUES (
         'a1c5f3b7-8d2e-4a9b-b8c1-7f9e2d0a5c81',
         'f8be7a6d-679c-4319-6906-d172ebf7c17e',
         'OCCUPANCY_FEMALE',
@@ -279,6 +278,7 @@ VALUES (
         current_timestamp,
         NULL
     )
+
 -- add ammonia sensor
 INSERT INTO
     devices (
