@@ -1,0 +1,37 @@
+{
+    "error": false,
+    "message": [
+        {
+            "Score": 0,
+            "LocationId": "bd2a6a99-cb85-45bf-77e6-d3432edaa152",
+            "LocationName": "Taman Sintetik ",
+            "Latitude": 3.8138738,
+            "Longitude": 103.322716,
+            "IAQ": 0
+        },
+        {
+            "Score": 3.5281174,
+            "LocationId": "57fd94bb-d029-4aa7-7d77-ea8b3f19a330",
+            "LocationName": "Zoo Teruntum Kuantan",
+            "Latitude": 3.809293,
+            "Longitude": 103.36562,
+            "IAQ": 0.5
+        },
+        {
+            "Score": 3.5286624,
+            "LocationId": "da7a998b-94fc-4376-789f-029a93f25f10",
+            "LocationName": "Taman Bandar Kuantan",
+            "Latitude": 3.8354814,
+            "Longitude": 103.29663,
+            "IAQ": 0.35550278
+        },
+        {
+            "Score": 0,
+            "LocationId": "47f2789e-68ab-493e-4ec6-9c7406275369",
+            "LocationName": "Megaview",
+            "Latitude": 3.8058462,
+            "Longitude": 103.328926,
+            "IAQ": 0
+        }
+    ]
+}

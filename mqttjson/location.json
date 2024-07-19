@@ -1,0 +1,45 @@
+{
+    "error": false,
+    "message": [
+        {
+            "LocationID": "57fd94bb-d029-4aa7-7d77-ea8b3f19a330",
+            "LocationName": "Zoo Teruntum Kuantan",
+            "Latitude": 3.8092929154735997,
+            "Longitude": 103.36562699224197,
+            "ToiletList": [
+                {
+                    "ToiletInfoID": "2a9fbea0-4dca-4af6-457b-348bf682cb54",
+                    "ToiletName": "TOILET FEMALE",
+                    "ToiletTypeID": 2,
+                    "ToiletIndex": "TOILET_FEMALE"
+                },
+                {
+                    "ToiletInfoID": "0a38e4d1-f9b9-4cb2-648f-20e0ac269984",
+                    "ToiletName": "TOILET MALE",
+                    "ToiletTypeID": 1,
+                    "ToiletIndex": "TOILET_MALE"
+                }
+            ]
+        },
+        {
+            "LocationID": "da7a998b-94fc-4376-789f-029a93f25f10",
+            "LocationName": "Taman Bandar Kuantan",
+            "Latitude": 3.835481427748152,
+            "Longitude": 103.29663104819535,
+            "ToiletList": [
+                {
+                    "ToiletInfoID": "5654c008-dbcc-4656-5601-0a0c50652213",
+                    "ToiletName": "TOILET MALE",
+                    "ToiletTypeID": 1,
+                    "ToiletIndex": "TOILET_MALE"
+                },
+                {
+                    "ToiletInfoID": "9eca5dcc-7946-4367-60a5-d7bd09b1e16a",
+                    "ToiletName": "TOILET FEMALE",
+                    "ToiletTypeID": 2,
+                    "ToiletIndex": "TOILET_FEMALE"
+                }
+            ]
+        }
+    ]
+}

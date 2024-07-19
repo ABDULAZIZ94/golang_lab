@@ -1,0 +1,33 @@
+{
+    "error": false,
+    "message": [
+        {
+            "UserTypeID": 1,
+            "UserTypeName": "VECTOLABS",
+            "createdAt": "2023-01-01T05:28:46.765738Z",
+            "updatedAt": "2023-01-01T05:28:46.765738Z",
+            "deleteAt": null
+        },
+        {
+            "UserTypeID": 2,
+            "UserTypeName": "TENANT",
+            "createdAt": "2023-01-01T05:28:46.765738Z",
+            "updatedAt": "2023-01-01T05:28:46.765738Z",
+            "deleteAt": null
+        },
+        {
+            "UserTypeID": 3,
+            "UserTypeName": "SUBTENANT",
+            "createdAt": "2023-02-03T11:11:40.083768Z",
+            "updatedAt": "2023-02-03T11:11:40.083768Z",
+            "deleteAt": null
+        },
+        {
+            "UserTypeID": 4,
+            "UserTypeName": "CONTRACTOR",
+            "createdAt": "2023-02-12T08:49:20.845485Z",
+            "updatedAt": "2023-02-12T08:49:20.845485Z",
+            "deleteAt": null
+        }
+    ]
+}

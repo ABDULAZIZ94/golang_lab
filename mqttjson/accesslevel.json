@@ -1,0 +1,40 @@
+{
+    "error": false,
+    "message": [
+        {
+            "AccessLevelID": 1,
+            "AccessLevelName": "ROOT",
+            "createdAt": "2023-01-01T05:27:06.731399Z",
+            "updatedAt": "2023-01-01T05:27:06.731399Z",
+            "deleteAt": null
+        },
+        {
+            "AccessLevelID": 2,
+            "AccessLevelName": "ADMIN",
+            "createdAt": "2023-01-01T05:27:06.731399Z",
+            "updatedAt": "2023-01-01T05:27:06.731399Z",
+            "deleteAt": null
+        },
+        {
+            "AccessLevelID": 3,
+            "AccessLevelName": "STAFF",
+            "createdAt": "2023-01-01T05:27:06.731399Z",
+            "updatedAt": "2023-01-01T05:27:06.731399Z",
+            "deleteAt": null
+        },
+        {
+            "AccessLevelID": 4,
+            "AccessLevelName": "GUEST",
+            "createdAt": "2023-01-01T05:27:06.731399Z",
+            "updatedAt": "2023-01-01T05:27:06.731399Z",
+            "deleteAt": null
+        },
+        {
+            "AccessLevelID": 5,
+            "AccessLevelName": "CLEANER",
+            "createdAt": "2023-01-24T04:55:29.727241Z",
+            "updatedAt": "2023-01-24T04:55:29.727241Z",
+            "deleteAt": null
+        }
+    ]
+}

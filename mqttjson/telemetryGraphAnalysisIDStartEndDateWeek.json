@@ -1,0 +1,153 @@
+{
+    "error": false,
+    "message": {
+        "TrafficCounter": null,
+        "Enviroment": [
+            {
+                "Lux": 234.54657,
+                "Humidity": 71.48768,
+                "Temperature": 30.796156,
+                "Iaq": 1.3191912,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "Lux": 229.65651,
+                "Humidity": 74.875755,
+                "Temperature": 30.039406,
+                "Iaq": 1.3783675,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "Lux": 233.35794,
+                "Humidity": 72.416885,
+                "Temperature": 31.470446,
+                "Iaq": 0.34130698,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ],
+        "ComplaintType": [
+            {
+                "BinFull": 0,
+                "Busuk": 5,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 9,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 6,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 1,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ],
+        "NewComplaintType": [
+            {
+                "SmellyToilet": 5,
+                "OutOfSupplies": 0,
+                "WetFloor": 9,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 5,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 1,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ],
+        "CleaningFrequency": [
+            {
+                "TotalMale": 7,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "TotalMale": 5,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "TotalMale": 3,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ],
+        "CleaningPerformance": [
+            {
+                "TotalTimeMale": 399.2152,
+                "TotalTimeFemale": 0,
+                "TotalTime": 399.2152,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0.20278957,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0.20278957,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "TotalTimeMale": 13.883518,
+                "TotalTimeFemale": 0,
+                "TotalTime": 13.883518,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ],
+        "UserReactionTypeData": [
+            {
+                "Happy": 0,
+                "Satisfied": 4,
+                "NotSatisfied": 8,
+                "NotHappy": 2,
+                "UplinkTS": "2024-07-01 00:00:00+00"
+            },
+            {
+                "Happy": 1,
+                "Satisfied": 2,
+                "NotSatisfied": 3,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-08 00:00:00+00"
+            },
+            {
+                "Happy": 1,
+                "Satisfied": 0,
+                "NotSatisfied": 1,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-15 00:00:00+00"
+            }
+        ]
+    }
+}
