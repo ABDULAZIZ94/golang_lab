@@ -1,0 +1,120 @@
+{
+    "error": false,
+    "message": [
+        {
+            "ToiletName": "TOILET MALE",
+            "ToiletTypeID": 1,
+            "ToiletIndex": "TOILET_MALE",
+            "OdourLevel": 0,
+            "TotalComplaint": 0,
+            "TotalCounter": 0,
+            "TotalFragrance": 0,
+            "TotalAutoclean": 135,
+            "OccupiedStatus": "1",
+            "FanStatus": "1",
+            "BlowerStatus": "1",
+            "DisplayStatus": "1",
+            "Timestamp": "2024-07-04 23:05:09",
+            "LastCounterCntTimestamp": null,
+            "NotifyFlag": "0",
+            "EachDeviceStatus": [
+                {
+                    "DeviceName": "FEEDBACK_PANEL_1",
+                    "DeviceToken": "1",
+                    "DeviceTypeId": "7",
+                    "DeviceTypeName": "FEEDBACK",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "ENVIROMENT_MALE",
+                    "DeviceToken": "26",
+                    "DeviceTypeId": "3",
+                    "DeviceTypeName": "ENVIROMENTAL",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "FAN_MALE_1",
+                    "DeviceToken": "45",
+                    "DeviceTypeId": "4",
+                    "DeviceTypeName": "EXHAUST_FAN",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "BLOWER_MALE",
+                    "DeviceToken": "47",
+                    "DeviceTypeId": "8",
+                    "DeviceTypeName": "AIR_BLOWER",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "FRESHENER_MALE",
+                    "DeviceToken": "66",
+                    "DeviceTypeId": "5",
+                    "DeviceTypeName": "FRESHENER",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "SMOKE_ALARM_MALE",
+                    "DeviceToken": "69",
+                    "DeviceTypeId": "10",
+                    "DeviceTypeName": "SMOKE_ALARM",
+                    "LastUpdate": "-1"
+                }
+            ]
+        },
+        {
+            "ToiletName": "TOILET FEMALE",
+            "ToiletTypeID": 2,
+            "ToiletIndex": "TOILET_FEMALE",
+            "OdourLevel": 0,
+            "TotalComplaint": 0,
+            "TotalCounter": 0,
+            "TotalFragrance": 0,
+            "TotalAutoclean": 132,
+            "OccupiedStatus": "1",
+            "FanStatus": "1",
+            "BlowerStatus": "1",
+            "DisplayStatus": "1",
+            "Timestamp": "2024-07-04 23:04:49",
+            "LastCounterCntTimestamp": null,
+            "NotifyFlag": "0",
+            "EachDeviceStatus": [
+                {
+                    "DeviceName": "FEEDBACK_PANEL_1",
+                    "DeviceToken": "1",
+                    "DeviceTypeId": "7",
+                    "DeviceTypeName": "FEEDBACK",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "ENVIROMENT_FEMALE",
+                    "DeviceToken": "27",
+                    "DeviceTypeId": "3",
+                    "DeviceTypeName": "ENVIROMENTAL",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "FAN_FEMALE_1",
+                    "DeviceToken": "46",
+                    "DeviceTypeId": "4",
+                    "DeviceTypeName": "EXHAUST_FAN",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "BLOWER_FEMALE",
+                    "DeviceToken": "48",
+                    "DeviceTypeId": "8",
+                    "DeviceTypeName": "AIR_BLOWER",
+                    "LastUpdate": "-1"
+                },
+                {
+                    "DeviceName": "FRESHENER_FEMALE",
+                    "DeviceToken": "65",
+                    "DeviceTypeId": "5",
+                    "DeviceTypeName": "FRESHENER",
+                    "LastUpdate": "-1"
+                }
+            ]
+        }
+    ]
+}
