@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"mqttmockdata_module/mqtt"
 	"os"
 	"time"
@@ -26,6 +28,12 @@ type (
 		// FragranceDuration int
 		// FraggranceCount   int
 		Timestamp time.Time
+	}
+	MqttAmmoniaData struct {
+		Namespace    string    `json:"namespace"`
+		NamespaceID  int       `json:"namespaceID"`
+		Timestamp    time.Time `json:"timestamp"`
+		AmmoniaLevel int       `json:"ammonialevel"`
 	}
 	FragranceData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
@@ -59,13 +67,30 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found")
 	}
-	data := &AmmoniaData{
-		AmmoniaLevel: 233,
+
+	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
+
+	for {
+		// mqtt.GetMqttClient().Publish("az/public/t2/70/uplink", 0, false, generatedata())
+		// time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/75/uplink", 0, false, generatedata())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/76/uplink", 0, false, generatedata())
+		time.Sleep(1 * time.Second)
+	}
+
+}
+
+func generatedata() (s string) {
+	data := &MqttAmmoniaData{
+		AmmoniaLevel: rand.Intn(255 - 0),
 		// FragranceOn       bool
 		// FragranceDuration int
 		// FraggranceCount   int
-		Timestamp: time.Now(),
+		Namespace:   "AMMONIA",
+		NamespaceID: 0,
+		Timestamp:   time.Now(),
 	}
-	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
-	mqtt.GetMqttClient().Publish("az/public/t2/71/uplink", 2, true, data)
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
 }
