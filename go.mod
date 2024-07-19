@@ -9,6 +9,12 @@ require (
 )
 
 require (
+	github.com/gorilla/websocket v1.5.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+)
+
+require (
+	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-chi/chi v1.5.5
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
@@ -16,6 +22,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pusher/push-notifications-go v0.0.0-20200210154345-764224c311b8 // indirect
