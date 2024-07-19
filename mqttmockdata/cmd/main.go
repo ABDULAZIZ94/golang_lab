@@ -20,10 +20,10 @@ type (
 		Timestamp   time.Time
 	}
 	MqttOccupancyData struct {
-		Namespace   string    `json:"namespace"`
-		NamespaceID int       `json:"namespaceID"`
-		Activated   int       `json:"activated"`
-		Timestamp   time.Time `json:"timestamp"`
+		Namespace   string `json:"namespace"`
+		NamespaceID int    `json:"namespaceID"`
+		Activated   int    `json:"activated"`
+		Timestamp   int64  `json:"timestamp"`
 	}
 
 	AmmoniaData struct {
@@ -36,10 +36,10 @@ type (
 		Timestamp time.Time
 	}
 	MqttAmmoniaData struct {
-		Namespace    string    `json:"namespace"`
-		NamespaceID  int       `json:"namespaceID"`
-		Timestamp    time.Time `json:"timestamp"`
-		AmmoniaLevel int       `json:"ammonialevel"`
+		Namespace    string `json:"namespace"`
+		NamespaceID  int    `json:"namespaceID"`
+		Timestamp    int64  `json:"timestamp"`
+		AmmoniaLevel int    `json:"ammonialevel"`
 	}
 	FragranceData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
@@ -51,12 +51,12 @@ type (
 		Timestamp         time.Time
 	}
 	MqttFragranceData struct {
-		Namespace         string    `json:"namespace"`
-		NamespaceID       int       `json:"namespaceID"`
-		FragranceOn       int       `json:"activated"`
-		FragranceDuration int       `json:"fragranceDuration"`
-		FraggranceCount   int       `json:"fragranceCount"`
-		Timestamp         time.Time `json:"timestamp"`
+		Namespace         string `json:"namespace"`
+		NamespaceID       int    `json:"namespaceID"`
+		FragranceOn       int    `json:"activated"`
+		FragranceDuration int    `json:"fragranceDuration"`
+		FraggranceCount   int    `json:"fragranceCount"`
+		Timestamp         int64  `json:"timestamp"`
 	}
 
 	SmokeData struct {
@@ -67,10 +67,10 @@ type (
 		Timestamp time.Time
 	}
 	MqttSmokeData struct {
-		Namespace   string    `json:"namespace"`
-		NamespaceID int       `json:"namespaceID"`
-		Activated   int       `json:"activated"`
-		Timestamp   time.Time `json:"timestamp"`
+		Namespace   string `json:"namespace"`
+		NamespaceID int    `json:"namespaceID"`
+		Activated   int    `json:"activated"`
+		Timestamp   int64  `json:"timestamp"`
 	}
 	PanicBtnData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
@@ -80,10 +80,10 @@ type (
 		Timestamp   time.Time
 	}
 	MqttPanicBtnData struct {
-		Namespace   string    `json:"namespace"`
-		NamespaceID int       `json:"namespaceID"`
-		Activated   int       `json:"activated"`
-		Timestamp   time.Time `json:"timestamp"`
+		Namespace   string `json:"namespace"`
+		NamespaceID int    `json:"namespaceID"`
+		Activated   int    `json:"activated"`
+		Timestamp   int64  `json:"timestamp"`
 	}
 )
 
@@ -96,7 +96,8 @@ func main() {
 
 	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
 
-	total_fragrance_cummulative := 0
+	total_fragrance_cummulative1 := 0
+	total_fragrance_cummulative2 := 0
 	fragrance_data := ""
 	for {
 		//publish ammonia data
@@ -120,9 +121,10 @@ func main() {
 		mqtt.GetMqttClient().Publish("az/public/t2/72/uplink", 0, false, generatePanicBtnData())
 		time.Sleep(1 * time.Second)
 		//publish frangrance data
-		fragrance_data, total_fragrance_cummulative = generateFragranceData(total_fragrance_cummulative)
+		fragrance_data, total_fragrance_cummulative1 = generateFragranceData(total_fragrance_cummulative1)
 		mqtt.GetMqttClient().Publish("az/public/t2/68/uplink", 0, false, fragrance_data)
 		time.Sleep(1 * time.Second)
+		fragrance_data, total_fragrance_cummulative2 = generateFragranceData(total_fragrance_cummulative2)
 		mqtt.GetMqttClient().Publish("az/public/t2/67/uplink", 0, false, fragrance_data)
 		time.Sleep(1 * time.Second)
 	}
@@ -131,10 +133,10 @@ func main() {
 
 func generateAmmoniaData() (s string) {
 	data := &MqttAmmoniaData{
-		AmmoniaLevel: rand.Intn(255 - 0),
+		AmmoniaLevel: rand.Intn(256 - 0),
 		Namespace:    "AMMONIA",
 		NamespaceID:  0,
-		Timestamp:    time.Now(),
+		Timestamp:    time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
@@ -142,10 +144,10 @@ func generateAmmoniaData() (s string) {
 
 func generateSmokeData() (s string) {
 	data := &MqttSmokeData{
-		Namespace:   "AMMONIA",
+		Namespace:   "SMOKE",
 		NamespaceID: 0,
-		Activated:   rand.Intn(1 - 0),
-		Timestamp:   time.Now(),
+		Activated:   rand.Intn(2 - 0),
+		Timestamp:   time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
@@ -154,8 +156,8 @@ func generateOccupancyData() (s string) {
 	data := &MqttOccupancyData{
 		Namespace:   "OCCUPANCY",
 		NamespaceID: 0,
-		Activated:   rand.Intn(1 - 0),
-		Timestamp:   time.Now(),
+		Activated:   rand.Intn(2 - 0),
+		Timestamp:   time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
@@ -165,18 +167,18 @@ func generatePanicBtnData() (s string) {
 		Namespace:   "PANIC",
 		NamespaceID: 0,
 		Activated:   rand.Intn(1 - 0),
-		Timestamp:   time.Now(),
+		Timestamp:   time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
 }
 
 func generateFragranceData(fragrance_count int) (s string, fragrance_cummulative int) {
-	fragrance_on := rand.Intn(1 - 0)
+	fragrance_on := rand.Intn(2 - 0)
 	fragrance_duration := 0
 	if fragrance_on == 1 {
-		fragrance_duration = rand.Intn(2 - 0)
-		fragrance_cummulative = fragrance_count + rand.Intn(1-0)
+		fragrance_duration = rand.Intn(3 - 0)
+		fragrance_cummulative = fragrance_count + fragrance_duration
 	} else {
 		fragrance_duration = 0
 		fragrance_cummulative = fragrance_count
@@ -188,7 +190,7 @@ func generateFragranceData(fragrance_count int) (s string, fragrance_cummulative
 		FragranceOn:       fragrance_on,
 		FragranceDuration: fragrance_duration,
 		FraggranceCount:   fragrance_cummulative,
-		Timestamp:         time.Now(),
+		Timestamp:         time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data), fragrance_cummulative
