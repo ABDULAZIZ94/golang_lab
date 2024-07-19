@@ -1,8 +1,25 @@
--- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
+-- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+SELECT *
+FROM toilet_infos
+
 SELECT *
 FROM toilet_infos
 WHERE
     toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
+--  tenant id perbadanan putrajaya  59944171-3a4a-460d-5897-8bb38c524d54
+
+-- location mbk, zoo teruntum kuantan 57fd94bb-d029-4aa7-7d77-ea8b3f19a330, 
+-- location mbk , taman bandar kuantan da7a998b-94fc-4376-789f-029a93f25f10
+SELECT *
+FROM toilet_infos
+WHERE
+    tenant_id = '59944171-3a4a-460d-5897-8bb38c524d54'
+
+SELECT *
+FROM toilet_infos
+WHERE
+    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
 -- basic table
 SELECT * FROM devices
@@ -14,7 +31,7 @@ SELECT * FROM device_pairs
 SELECT *
 FROM device_pairs
 WHERE
-    toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+    toilet_info_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
 SELECT * FROM toilet_infos
 -- new table
