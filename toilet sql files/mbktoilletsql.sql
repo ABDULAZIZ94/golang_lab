@@ -1,4 +1,4 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
 SELECT *
 FROM toilet_infos
 
@@ -408,3 +408,49 @@ WHERE
             AND tenant_id = ''
         )
     )
+
+-- get average data per each devices
+SELECT device_token, AVG(ammonia_level)
+FROM public.ammonia_data
+GROUP BY
+    device_token
+
+-- experiment sql
+SELECT device_token, sum(
+        CASE
+            WHEN fragrance_on = TRUE THEN 1
+            ELSE 0
+        END
+    )
+FROM public.fragrance_data
+GROUP BY
+    device_token
+
+SELECT * FROM fragrance_data
+
+SELECT device_token, sum(id)
+FROM fragrance_data
+WHERE
+    fragrance_on = FALSE
+GROUP BY
+    device_token
+
+SELECT device_token, count(id)
+FROM public.fragrance_data
+GROUP BY
+    device_token
+
+SELECT * FROM panic_btn_data
+
+SELECT device_token, count(
+        CASE
+            WHEN panic_button = TRUE THEN 1
+            ELSE 0
+        END
+    )
+FROM panic_btn_data
+GROUP BY
+    device_token
+
+-- test query
+SELECT * FROM public.devices ORDER BY device_token ASC
