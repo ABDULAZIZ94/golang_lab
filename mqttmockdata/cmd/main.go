@@ -16,8 +16,14 @@ type (
 	OccupancyData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
 		DeviceToken string
-		Occupied    bool
+		Occupied    int
 		Timestamp   time.Time
+	}
+	MqttOccupancyData struct {
+		Namespace   string    `json:"namespace"`
+		NamespaceID int       `json:"namespaceID"`
+		Activated   int       `json:"activated"`
+		Timestamp   time.Time `json:"timestamp"`
 	}
 
 	AmmoniaData struct {
@@ -44,6 +50,14 @@ type (
 		FraggranceCount   int
 		Timestamp         time.Time
 	}
+	MqttFragranceData struct {
+		Namespace         string    `json:"namespace"`
+		NamespaceID       int       `json:"namespaceID"`
+		FragranceOn       int       `json:"activated"`
+		FragranceDuration int       `json:"fragranceDuration"`
+		FraggranceCount   int       `json:"fragranceCount"`
+		Timestamp         time.Time `json:"timestamp"`
+	}
 
 	SmokeData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
@@ -52,12 +66,24 @@ type (
 		// PanicButton bool
 		Timestamp time.Time
 	}
+	MqttSmokeData struct {
+		Namespace   string    `json:"namespace"`
+		NamespaceID int       `json:"namespaceID"`
+		Activated   int       `json:"activated"`
+		Timestamp   time.Time `json:"timestamp"`
+	}
 	PanicBtnData struct {
 		Id          int `gorm:"primary_key; auto_increment; not_null"`
 		DeviceToken string
 		// SmokeSensor bool
 		PanicButton bool
 		Timestamp   time.Time
+	}
+	MqttPanicBtnData struct {
+		Namespace   string    `json:"namespace"`
+		NamespaceID int       `json:"namespaceID"`
+		Activated   int       `json:"activated"`
+		Timestamp   time.Time `json:"timestamp"`
 	}
 )
 
@@ -70,27 +96,100 @@ func main() {
 
 	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
 
+	total_fragrance_cummulative := 0
+	fragrance_data := ""
 	for {
-		// mqtt.GetMqttClient().Publish("az/public/t2/70/uplink", 0, false, generatedata())
-		// time.Sleep(1 * time.Second)
-		mqtt.GetMqttClient().Publish("az/public/t2/75/uplink", 0, false, generatedata())
+		//publish ammonia data
+		mqtt.GetMqttClient().Publish("az/public/t2/75/uplink", 0, false, generateAmmoniaData())
 		time.Sleep(1 * time.Second)
-		mqtt.GetMqttClient().Publish("az/public/t2/76/uplink", 0, false, generatedata())
+		mqtt.GetMqttClient().Publish("az/public/t2/76/uplink", 0, false, generateAmmoniaData())
+		time.Sleep(1 * time.Second)
+		//publish smoke data
+		mqtt.GetMqttClient().Publish("az/public/t2/70/uplink", 0, false, generateSmokeData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/69/uplink", 0, false, generateSmokeData())
+		time.Sleep(1 * time.Second)
+		//publish occupancy data
+		mqtt.GetMqttClient().Publish("az/public/t2/73/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/74/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+		//publish panic data
+		mqtt.GetMqttClient().Publish("az/public/t2/71/uplink", 0, false, generatePanicBtnData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/72/uplink", 0, false, generatePanicBtnData())
+		time.Sleep(1 * time.Second)
+		//publish frangrance data
+		fragrance_data, total_fragrance_cummulative = generateFragranceData(total_fragrance_cummulative)
+		mqtt.GetMqttClient().Publish("az/public/t2/68/uplink", 0, false, fragrance_data)
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/67/uplink", 0, false, fragrance_data)
 		time.Sleep(1 * time.Second)
 	}
 
 }
 
-func generatedata() (s string) {
+func generateAmmoniaData() (s string) {
 	data := &MqttAmmoniaData{
 		AmmoniaLevel: rand.Intn(255 - 0),
-		// FragranceOn       bool
-		// FragranceDuration int
-		// FraggranceCount   int
+		Namespace:    "AMMONIA",
+		NamespaceID:  0,
+		Timestamp:    time.Now(),
+	}
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
+}
+
+func generateSmokeData() (s string) {
+	data := &MqttSmokeData{
 		Namespace:   "AMMONIA",
 		NamespaceID: 0,
+		Activated:   rand.Intn(1 - 0),
 		Timestamp:   time.Now(),
 	}
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
+}
+func generateOccupancyData() (s string) {
+	data := &MqttOccupancyData{
+		Namespace:   "OCCUPANCY",
+		NamespaceID: 0,
+		Activated:   rand.Intn(1 - 0),
+		Timestamp:   time.Now(),
+	}
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
+}
+func generatePanicBtnData() (s string) {
+	data := &MqttPanicBtnData{
+		Namespace:   "PANIC",
+		NamespaceID: 0,
+		Activated:   rand.Intn(1 - 0),
+		Timestamp:   time.Now(),
+	}
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
+}
+
+func generateFragranceData(fragrance_count int) (s string, fragrance_cummulative int) {
+	fragrance_on := rand.Intn(1 - 0)
+	fragrance_duration := 0
+	if fragrance_on == 1 {
+		fragrance_duration = rand.Intn(2 - 0)
+		fragrance_cummulative = fragrance_count + rand.Intn(1-0)
+	} else {
+		fragrance_duration = 0
+		fragrance_cummulative = fragrance_count
+	}
+
+	data := &MqttFragranceData{
+		Namespace:         "FRAGRANCE",
+		NamespaceID:       0,
+		FragranceOn:       fragrance_on,
+		FragranceDuration: fragrance_duration,
+		FraggranceCount:   fragrance_cummulative,
+		Timestamp:         time.Now(),
+	}
+	text_data, _ := json.Marshal(data)
+	return string(text_data), fragrance_cummulative
 }
