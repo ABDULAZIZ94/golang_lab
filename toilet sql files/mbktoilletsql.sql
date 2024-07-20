@@ -557,3 +557,4 @@ where dp.toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
 
 -- delete pairing yang salah
 delete from device_pairs where device_pair_id in ('7ee4ed69-55d6-4e97-44a6-e7574727348a','08aa77ac-50a3-4c3b-4b6a-f31e7ba867da', '37c32c5f-7706-4ef7-7c6f-2d1d04622db5', '9c051cfa-0eb9-47b3-4b78-b40f007f64b8')
+

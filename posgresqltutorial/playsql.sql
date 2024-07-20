@@ -123,4 +123,13 @@ FROM user_jobs uj
     JOIN user_address ua ON uj.name = ua.name;
 SELECT * FROM users
 
+-- add new column
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS city_id (id);
 
+-- add new column with constraint
+ALTER TABLE orders ADD CONSTRAINT fk_city_id FOREIGN KEY (city_id) REFERENCES city (id);
+
+-- drop constraint
+ALTER TABLE table_name DROP CONSTRAINT foreign_key_name;
+
+ALTER TABLE sportspeople DROP CONSTRAINT fk_sport_id;
