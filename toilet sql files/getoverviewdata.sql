@@ -1,3 +1,4 @@
+-- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
 -- get list of devices in this identifier
 SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,  
 		TOILET_INFOS.TOILET_NAME AS Identifier ,DEVICE_TYPES.DEVICE_TYPE_NAME as  Namespace  

@@ -1,4 +1,4 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
 SELECT users.*,user_types.user_type_name , access_levels.access_level_name  
 FROM USERS  
 JOIN user_types on user_types.user_type_id = users.user_type_id  

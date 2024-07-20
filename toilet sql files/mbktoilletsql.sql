@@ -1,16 +1,55 @@
 -- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
-SELECT *
-FROM toilet_infos
+
+-- to add new sensor needs:
+-- add device type
+-- add to devices
+-- pair device
+-- create it own table
+
+-- usefull information
+--  tenant id perbadanan putrajaya  59944171-3a4a-460d-5897-8bb38c524d54
+-- location mbk, zoo teruntum kuantan 57fd94bb-d029-4aa7-7d77-ea8b3f19a330,
+-- location mbk , taman bandar kuantan da7a998b-94fc-4376-789f-029a93f25f10
+
+-- majlis kuantan
+-- tenant id :f8be7a6d-679c-4319-6906-d172ebf7c17e, toilet_info_id: 0a38e4d1-f9b9-4cb2-648f-20e0ac269984
+-- gateway_id : a91b5fe2-dd09-4d67-4a71-5a0b033f23c4, device_pair_id, 7e69638d-b002-4718-67e2-2191052cea97
+-- checking tables
+SELECT * FROM devices
+
+SELECT * FROM device_types
+
+SELECT * FROM device_pairs
+
+SELECT * FROM toilet_infos
+
+SELECT * FROM toilet_infos
+
+SELECT * FROM fragrance_data
+
+SELECT * FROM ammonia_data
+
+SELECT * FROM smells_data
+
+SELECT * FROM smoke_data
+
+SELECT * FROM occupancy_data
+
+SELECT * FROM tenants
+
+-- list gateways used for pairing and number of devices attached to the gateway
+select gateway_id, COUNT(device_pair_id) as total_atached_devices from device_pairs group by gateway_id
+
+-- list of device and its tenant name
+select devices.device_id, devices.device_name, devices.tenant_id, tenants.tenant_name 
+from devices
+join tenants on devices.tenant_id = tenants.tenant_id
 
 SELECT *
 FROM toilet_infos
 WHERE
     toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
 
---  tenant id perbadanan putrajaya  59944171-3a4a-460d-5897-8bb38c524d54
-
--- location mbk, zoo teruntum kuantan 57fd94bb-d029-4aa7-7d77-ea8b3f19a330, 
--- location mbk , taman bandar kuantan da7a998b-94fc-4376-789f-029a93f25f10
 SELECT *
 FROM toilet_infos
 WHERE
@@ -21,32 +60,12 @@ FROM toilet_infos
 WHERE
     tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
--- basic table
-SELECT * FROM devices
-
-SELECT * FROM device_types
-
-SELECT * FROM device_pairs
 
 SELECT *
 FROM device_pairs
 WHERE
     toilet_info_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
-SELECT * FROM toilet_infos
--- new table
-SELECT * FROM fragrance_data
-
-SELECT * FROM ammonia_data
-
-SELECT * FROM smells_data
-
-SELECT * FROM smoke_data
-
-SELECT * FROM occupancy_data
--- majlis kuantan
--- tenant id :f8be7a6d-679c-4319-6906-d172ebf7c17e, toilet_info_id: 0a38e4d1-f9b9-4cb2-648f-20e0ac269984
--- gateway_id : a91b5fe2-dd09-4d67-4a71-5a0b033f23c4, device_pair_id, 7e69638d-b002-4718-67e2-2191052cea97
 
 -- get list of devices in this identifier
 SELECT
@@ -131,7 +150,7 @@ SET TIMEZONE = 'Asia/Kuala_Lumpur';
 
 SELECT NOW()::timestamp;
 
--- rand 740032bd-00a7-4d0b-4d66-3c7b7d0d1d6d
+-- rand like 740032bd-00a7-4d0b-4d66-3c7b7d0d1d6d
 -- 8f88b1ef-0e5c-4766-b4c8-797aa946ef36
 -- 31e25e7d-5a89-4c47-bb7a-88d1b8e85a5d
 -- e7c90ba9-fc49-4883-8b2f-64eabedbc502
@@ -348,7 +367,6 @@ VALUES (
         current_timestamp,
         NULL
     )
--- add toilet infos
 
 -- pair ids
 7e69638d-b002-4718-67e2-2191052cea97
