@@ -417,3 +417,44 @@ VALUES (1, 'Raju kumar', '(408)-111-1234', 'raju.kumar@geeksforgeeks.org'),
 
 select * from customers;
 select * from contacts;
+
+
+-- foreign key set null example
+DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS customers;
+
+CREATE TABLE customers(
+   customer_id INT GENERATED ALWAYS AS IDENTITY,
+   customer_name VARCHAR(255) NOT NULL,
+   PRIMARY KEY(customer_id)
+);
+
+CREATE TABLE contacts(
+   contact_id INT GENERATED ALWAYS AS IDENTITY,
+   customer_id INT,
+   contact_name VARCHAR(255) NOT NULL,
+   phone VARCHAR(15),
+   email VARCHAR(100),
+   PRIMARY KEY(contact_id),
+   CONSTRAINT fk_customer
+      FOREIGN KEY(customer_id) 
+      REFERENCES customers(customer_id)
+      ON DELETE SET NULL
+);
+
+INSERT INTO customers(customer_name)
+VALUES('GeeksforGeeks org'),
+      ('Dolphin LLC');       
+       
+INSERT INTO contacts(customer_id, contact_name, phone, email)
+VALUES(1, 'Raju Kumar', '(408)-111-1234', 'raju.kumar@geeksforgeeks.org'),
+      (1, 'Raju Kumar', '(408)-111-1235', 'raju.kumar@bluebird.dev'),
+      (2, 'Nikhil Aggarwal', '(408)-222-1234', 'nikhil.aggarwal@geeksforgeeks.org');
+
+
+DELETE
+FROM customers
+WHERE customer_id = 1;
+
+select * from customers;
+select * from contacts;
