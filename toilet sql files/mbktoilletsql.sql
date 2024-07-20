@@ -76,7 +76,14 @@ join tenants as o
     on t.tenant_id = o.tenant_id
 
 
+-- when to update toilet infos?
+select device_token, avg(ammonia_level) as avg_lvl
+from ammonia_data
+where
+    TIMESTAMP BETWEEN make_timestamp(2024, 7, 20, 18, 0, 0) and make_timestamp(2024, 7, 20, 18, 30, 0)
+group by device_token
 
+-- select toilet infos for specific toilet id
 SELECT *
 FROM toilet_infos
 WHERE
