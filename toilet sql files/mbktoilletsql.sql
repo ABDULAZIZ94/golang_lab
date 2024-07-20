@@ -77,11 +77,21 @@ join tenants as o
 
 
 -- when to update toilet infos?
+
+-- select for each device the average ammonia level with a timestamp
 select device_token, avg(ammonia_level) as avg_lvl
 from ammonia_data
 where
     TIMESTAMP BETWEEN make_timestamp(2024, 7, 20, 18, 0, 0) and make_timestamp(2024, 7, 20, 18, 30, 0)
 group by device_token
+
+-- #2 select for each device the average ammonia level with a timestamp
+select device_token, avg(ammonia_level) as avg_lvl
+from ammonia_data
+where
+    TIMESTAMP BETWEEN make_timestamp(2024, 7, 19, 18, 0, 0) and make_timestamp(2024, 7, 20, 18, 30, 0)
+group by
+    device_token
 
 -- select toilet infos for specific toilet id
 SELECT *
