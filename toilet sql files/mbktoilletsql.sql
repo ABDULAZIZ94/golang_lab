@@ -63,7 +63,7 @@ WITH gateway as (select
         from
     device_pairs
     group by gateway_id)
-        select devices.device_id, devices.device_name, devices.tenant_id, tenants.tenant_name
+        select devices.device_id, devices.device_name, devices.tenant_id, tenants.tenant_name, gateway. total_atached_devices
         from devices
             join tenants on devices.tenant_id = tenants.tenant_id
             join gateway on devices.device_id = gateway.gateway_id
