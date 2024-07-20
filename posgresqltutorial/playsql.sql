@@ -337,4 +337,47 @@ VALUES
     (3, 'Srinivas Goud', 1000);
 
 --check data
-select * from bankstatements;
+select * from bankstatements;;
+
+
+-- transactions
+-- begin and commit
+BEGIN;
+    UPDATE BankStatements
+        SET balance = balance - 500
+        WHERE 
+        customer_id = 1;
+    SELECT customer_id, full_name, balance
+        FROM BankStatements;
+    UPDATE BankStatements
+        SET balance = balance + 500
+        WHERE 
+        customer_id = 2;
+COMMIT;
+    SELECT customer_id, full_name, balance 
+    FROM BankStatements;
+
+
+--transaction
+-- begin and rollback
+BEGIN;
+
+
+DELETE
+FROM BankStatements
+WHERE customer_id = 1;
+
+
+SELECT customer_id,
+       full_name,
+       balance
+FROM BankStatements;
+
+
+ROLLBACK;
+
+
+SELECT customer_id,
+       full_name,
+       balance
+FROM BankStatements;
