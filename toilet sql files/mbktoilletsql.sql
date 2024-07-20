@@ -46,15 +46,15 @@ from devices
 join tenants on devices.tenant_id = tenants.tenant_id
 
 -- list of gateway with numbers of devices atached on  it and tenant name
-select
-    gateway_id,
-    COUNT(device_pair_id) as total_atached_devices
-from device_pairs
-join devices_details on device_pairs.device_id = device_details.device_id
-    (select devices.device_id, devices.device_name, devices.tenant_id, tenants.tenant_name
-    from devices
-        join tenants on devices.tenant_id = tenants.tenant_id) as devices_details
-group by gateway_id
+-- select
+--     gateway_id,
+--     COUNT(device_pair_id) as total_atached_devices
+-- from device_pairs
+-- join devices_details on device_pairs.device_id = device_details.device_id
+--     (select devices.device_id, devices.device_name, devices.tenant_id, tenants.tenant_name
+--     from devices
+--         join tenants on devices.tenant_id = tenants.tenant_id) as devices_details
+-- group by gateway_id
 
 -- #2 list of gateway with numbers of devices atached on  it and tenant name
 WITH gateway as (select
@@ -68,6 +68,14 @@ WITH gateway as (select
             join tenants on devices.tenant_id = tenants.tenant_id
             join gateway on devices.device_id = gateway.gateway_id
     
+
+-- toilet info with its tenant name and total devices on it
+select t.toilet_name, o.tenant_name, t.fan_status, t.display_status, t.occupied_status
+from toilet_infos as t
+join tenants as o 
+    on t.tenant_id = o.tenant_id
+
+
 
 SELECT *
 FROM toilet_infos
