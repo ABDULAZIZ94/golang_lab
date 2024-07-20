@@ -1,0 +1,5 @@
+{
+    "prettier.enable": false,
+    "prettier.embeddedLanguageFormatting": "off",
+    "editor.defaultFoldingRangeProvider": "golang.go"
+}

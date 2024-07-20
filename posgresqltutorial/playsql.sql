@@ -204,4 +204,115 @@ $$ ;
 -- current date time quarter , 3rd quarter
  SELECT EXTRACT(QUARTER FROM TIMESTAMP '2023-07-20 13:30:15');
 
- 
+--  ##When specifying Column Names
+-- Insert into tableName (col1, col2) values (value,value),(value,value),(value,value);
+
+-- ## when not specifying Column Names
+-- Insert into tableName  values (value,value),(value,value),(value,value);
+
+SELECT CAST ('2020-01-01' AS DATE);
+
+SELECT CAST ('01-OCT-2020' AS DATE);
+
+--error
+SELECT CAST ('10C' AS INTEGER);
+
+-- boolean casting
+SELECT CAST('true' AS BOOLEAN),
+       CAST('false' as BOOLEAN),
+       CAST('T' as BOOLEAN),
+       CAST('F' as BOOLEAN);
+
+
+-- testing if
+DO $$
+DECLARE
+  a integer := 10;
+  b integer := 20;
+BEGIN
+  IF a > b THEN
+    RAISE NOTICE 'a is greater than b';
+  END IF;
+
+  IF a < b THEN
+    RAISE NOTICE 'a is less than b';
+  END IF;
+
+  IF a = b THEN
+    RAISE NOTICE 'a is equal to b';
+  END IF;
+END $$;
+
+-- if example 2
+DO $$
+DECLARE
+   a integer := 10;
+   b integer := 10;
+BEGIN
+  IF a > b THEN
+     RAISE NOTICE 'a is greater than b';
+  ELSIF a < b THEN
+     RAISE NOTICE 'a is less than b';
+  ELSE
+     RAISE NOTICE 'a is equal to b';
+  END IF;
+END $$;
+
+-- test loop
+do $$
+declare
+  n integer:= 6;
+  cnt integer := 1 ;
+begin
+loop
+ exit when cnt = n ;
+ raise notice '%', cnt;
+ cnt := cnt + 1 ;
+end loop;
+end; $$;
+
+
+-- while
+do $$
+declare
+    add integer := 0;
+begin
+while add <10 loop
+    raise notice 'Out addition count %', add;
+    add := add+1;
+end loop;
+end;
+$$;
+
+
+
+--while 2
+do $$
+declare
+    add integer := 10;
+begin
+while add > 0 loop
+    raise notice 'Out addition count %',add;
+    add := add-1;
+end loop;
+end;
+$$;
+
+
+--continue / skip iteration
+do $$
+declare
+  cnt int = 0;
+begin
+ loop
+ -- increment of cnt
+    cnt = cnt + 1;
+ -- exit the loop if cnt > 10
+ exit when cnt > 10;
+ -- skip the iteration if cnt is an odd number
+ continue when mod(cnt,2) = 1;
+ -- print out the cnt
+ raise notice '%', cnt;
+ end loop;
+end;
+$$;
