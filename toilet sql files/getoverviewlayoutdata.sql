@@ -236,6 +236,10 @@ JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
 JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
 WHERE DEVICE_PAIRS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
 
+select * from toilet_infos
+
+select tenant_name, * from toilet_infos
+join tenants on toilet_infos.tenant_id = tenants.tenant_id
 
 select * from ammonia_data
 

@@ -521,3 +521,39 @@ GROUP BY
 
 -- test query
 SELECT * FROM public.devices ORDER BY device_token ASC
+
+select * from toilet_infos
+
+-- toilet female
+select * from toilet_infos where toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
+
+-- toilet male
+select * from toilet_infos where toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
+select * from device_pairs
+
+select *from devices
+
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+
+-- take only male
+select dp.device_pair_id,
+       dp.toilet_info_id,
+       ti.toilet_name,
+       d.device_name
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+where dp.toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
+-- pair yang salah
+7ee4ed69-55d6-4e97-44a6-e7574727348a
+08aa77ac-50a3-4c3b-4b6a-f31e7ba867da
+37c32c5f-7706-4ef7-7c6f-2d1d04622db5
+9c051cfa-0eb9-47b3-4b78-b40f007f64b8
+
+-- delete pairing yang salah
+delete from device_pairs where device_pair_id in ('7ee4ed69-55d6-4e97-44a6-e7574727348a','08aa77ac-50a3-4c3b-4b6a-f31e7ba867da', '37c32c5f-7706-4ef7-7c6f-2d1d04622db5', '9c051cfa-0eb9-47b3-4b78-b40f007f64b8')
