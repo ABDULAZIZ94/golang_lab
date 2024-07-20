@@ -458,3 +458,50 @@ WHERE customer_id = 1;
 
 select * from customers;
 select * from contacts;
+
+
+-- self join
+CREATE TABLE employee (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR (255) NOT NULL,
+    last_name VARCHAR (255) NOT NULL,
+    manager_id INT,
+    FOREIGN KEY (manager_id) 
+    REFERENCES employee (employee_id) 
+    ON DELETE CASCADE
+);
+
+INSERT INTO employee (
+    employee_id,
+    first_name,
+    last_name,
+    manager_id
+)
+VALUES
+    (1, 'Sandeep', 'Jain', NULL),
+    (2, 'Abhishek ', 'Kelenia', 1),
+    (3, 'Harsh', 'Aggarwal', 1),
+    (4, 'Raju', 'Kumar', 2),
+    (5, 'Nikhil', 'Aggarwal', 2),
+    (6, 'Anshul', 'Aggarwal', 2),
+    (7, 'Virat', 'Kohli', 3),
+    (8, 'Rohit', 'Sharma', 3);
+
+
+SELECT e.first_name || ' ' || e.last_name employee,
+       m .first_name || ' ' || m .last_name manager
+FROM employee e
+INNER JOIN employee m ON m .employee_id = e.manager_id
+ORDER BY manager;
+
+-- create schema example
+CREATE SCHEMA IF NOT EXISTS marketing;
+
+-- check schema
+SELECT *
+FROM pg_catalog.pg_namespace
+ORDER BY nspname;
+
+-- select * from information_schema -- not works
+
+-- show databases; --not works
