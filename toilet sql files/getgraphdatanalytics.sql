@@ -1,9 +1,9 @@
 -- generate timestamp
 WITH GENTIME AS (
     SELECT uplinkTS  
-    FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('  2024-06-01   16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+    FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-06-01 16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     -- date_trunc('HOUR', TO_TIMESTAMP('  endDate   16:00:00', 'YYYY-MM-DD HH24:MI:SS')  interval '23' HOUR)  
-    date_trunc('HOUR', TO_TIMESTAMP('  2024-06-10   15:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+    date_trunc('HOUR', TO_TIMESTAMP('2024-06-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     interval '1' HOUR) uplinkTS)
 
 -- generate timestamp based on date and interval
@@ -12,7 +12,6 @@ WITH GENTIME AS (
     FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('  2024-06-01  16:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     date_trunc('HOUR', TO_TIMESTAMP('  2024-06-10  ', 'YYYY-MM-DD HH24:MI:SS')),  
     interval '1' HOUR) uplinkTS)
-
 -- parse counter
 SELECT uplinkTS::text, 
     COALESCE(BIN_FULL, '0')::text AS BIN_FULL,  
@@ -62,7 +61,29 @@ WITH GENTIME AS (
                               interval '10 hours') uplinkTS)
 
 -- original
-WITH GENTIME as (SELECT uplinkTS " +
-			"FROM generate_series(date_trunc('" + agg + "', TO_TIMESTAMP('" + startDate + "', 'YYYY-MM-DD HH24:MI:SS')), " +
-			"date_trunc('" + agg + "', TO_TIMESTAMP('" + endDate + "', 'YYYY-MM-DD HH24:MI:SS')), " +
-			"interval '" + interval + "') uplinkTS) "
+WITH GENTIME as (SELECT uplinkTS  
+			FROM generate_series(date_trunc('  agg  ', TO_TIMESTAMP('  startDate  ', 'YYYY-MM-DD HH24:MI:SS')),  
+			date_trunc('  agg  ', TO_TIMESTAMP('  endDate  ', 'YYYY-MM-DD HH24:MI:SS')),  
+			interval '  interval  ') uplinkTS) 
+
+
+-- try SQL
+WITH GENTIME AS
+    ( SELECT uplinkTS
+     FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-06-01 16:00:00', 'YYYY-MM-DD HH24:MI:SS')), date_trunc('HOUR', TO_TIMESTAMP('2024-06-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS')), interval '1' HOUR) uplinkTS)
+SELECT uplinkTS::text,
+       COALESCE(BIN_FULL, '0')::text AS BIN_FULL,
+       COALESCE(BUSUK, '0')::text AS BUSUK,
+       COALESCE(URINAL_CLOG, '0')::text AS URINAL_CLOG,
+       COALESCE(SANITARY_BIN_FULL, '0')::text AS SANITARY_BIN_FULL,
+       COALESCE(PIPE_LEAK, '0')::text AS PIPE_LEAK,
+       COALESCE(SLIPPERY, '0')::text AS SLIPPERY,
+       COALESCE(OUT_TISSUE, '0')::text AS OUT_TISSUE,
+       COALESCE(REFRESH_TOILET, '0')::text AS REFRESH_TOILET,
+       COALESCE(OUT_SOAP, '0')::text AS OUT_SOAP,
+       COALESCE(CLOGGED_TOILET, '0')::text AS CLOGGED_TOILET
+FROM GENTIME
+
+WITH GENTIME AS
+    ( SELECT uplinkTS
+     FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-06-01 16:00:00', 'YYYY-MM-DD HH24:MI:SS')), date_trunc('HOUR', TO_TIMESTAMP('2024-06-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS')), interval '1' HOUR) uplinkTS)

@@ -133,3 +133,75 @@ ALTER TABLE orders ADD CONSTRAINT fk_city_id FOREIGN KEY (city_id) REFERENCES ci
 ALTER TABLE table_name DROP CONSTRAINT foreign_key_name;
 
 ALTER TABLE sportspeople DROP CONSTRAINT fk_sport_id;
+
+select random()*(100-0)
+
+select random()::text
+
+select md5(random()::text)
+
+
+-- create function
+CREATE OR REPLACE FUNCTION aziz_func (p1 int, p2 int)
+returns int 
+language plpgsql as 
+$$
+BEGIN
+    RETURN p1 * p2;
+END;
+$$ ;
+
+select aziz_func(2, 5) as aziz_times
+
+
+-- example 2 craete user function
+create function get_film_count(len_from int, len_to int) 
+returns int 
+language plpgsql as 
+$$
+declare
+   film_count integer;
+begin
+   select count(*)
+   into film_count
+   from film
+   where length between len_from and len_to;
+
+   return film_count;
+end;
+$$;
+
+
+-- create function
+select * from users limit 10
+
+select * from users where id=1
+
+select * from users fetch first 10 row only;
+
+CREATE OR REPLACE FUNCTION aziz_age() returns int language plpgsql as 
+$$
+DECLARE
+    total_age int;
+BEGIN
+    select sum(age) 
+    into total_age
+    from users 
+    fetch first 10 row only;
+    update users
+    set age=999
+    where id =1;
+    RETURN total_age;
+END;
+$$ ;
+
+
+ select aziz_age()
+
+ SELECT EXTRACT(QUARTER FROM TIMESTAMP '2020-12-31 13:30:15');
+
+
+-- current date time quarter , 3rd quarter
+ SELECT EXTRACT(QUARTER FROM TIMESTAMP '2023-07-20 13:30:15');
+
+ 
