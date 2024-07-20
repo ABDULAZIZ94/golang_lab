@@ -316,3 +316,25 @@ begin
  end loop;
 end;
 $$;
+
+
+-- create table
+CREATE TABLE BankStatements (
+    customer_id serial PRIMARY KEY,
+    full_name VARCHAR NOT NULL,
+    balance INT
+);
+
+-- insert data
+INSERT INTO BankStatements (
+    customer_id ,
+    full_name,
+    balance
+)
+VALUES
+    (1, 'Sekhar rao', 1000),
+    (2, 'Abishek Yadav', 500),
+    (3, 'Srinivas Goud', 1000);
+
+--check data
+select * from bankstatements;
