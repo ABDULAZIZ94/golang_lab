@@ -542,6 +542,18 @@ ALTER ROLE abdaziz2 SUPERUSER;
 
 ALTER ROLE abdaziz LOGIN PASSWORD 'aziz1234';
 
+--plsql block
+DO $$
+<<first_block>>
+DECLARE
+  counter integer := 0;
+BEGIN
+   counter := counter + 1;
+   RAISE NOTICE 'The current value of counter is %', counter;
+END first_block $$;
+
+-- generate random uuid
+select gen_random_uuid()
 
 -- plsql block and subblock
 DO $$
@@ -563,3 +575,15 @@ BEGIN
    RAISE NOTICE 'The current value of counter in the outer block is %', counter;
 
 END outer_block $$;
+
+
+-- basic variable
+do $$
+declare
+    counter integer :=1;
+    first_name varchar(50) := 'abd';
+    last_name varchar(50) :='aziz';
+    payment numeric(11,2):= 20.5;
+begin
+    raise notice '% % % has paid RM % ', counter, first_name, last_name, payment;
+end $$;
