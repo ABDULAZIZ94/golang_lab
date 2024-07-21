@@ -541,3 +541,25 @@ CREATE ROLE abdaziz2 LOGIN PASSWORD 'aziz1234';
 ALTER ROLE abdaziz2 SUPERUSER;
 
 ALTER ROLE abdaziz LOGIN PASSWORD 'aziz1234';
+
+
+-- plsql block and subblock
+DO $$
+<<outer_block>>
+DECLARE
+  counter integer := 0;
+BEGIN
+   counter := counter + 1;
+   RAISE NOTICE 'The current value of counter is %', counter;
+
+   DECLARE
+       counter integer := 0;
+   BEGIN
+       counter := counter + 10;
+       RAISE NOTICE 'The current value of counter in the subblock is %', counter;
+       RAISE NOTICE 'The current value of counter in the outer block is %', outer_block.counter;
+   END;
+
+   RAISE NOTICE 'The current value of counter in the outer block is %', counter;
+
+END outer_block $$;
