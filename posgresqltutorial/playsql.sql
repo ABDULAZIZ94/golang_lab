@@ -779,3 +779,359 @@ SELECT
 FROM
 	products
 INNER JOIN product_groups USING (group_id);
+
+
+-- first value
+SELECT
+	product_name,
+	group_name,
+	price,
+	FIRST_VALUE (price) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS lowest_price_per_group
+FROM
+	products
+INNER JOIN product_groups USING (group_id);
+
+
+-- last value
+SELECT
+	product_name,
+	group_name,
+	price,
+	LAST_VALUE (price) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price RANGE BETWEEN UNBOUNDED PRECEDING
+		AND UNBOUNDED FOLLOWING
+	) AS highest_price_per_group
+FROM
+	products
+INNER JOIN product_groups USING (group_id);
+
+
+-- lag, access previous row
+SELECT
+	product_name,
+	group_name,
+	price,
+	LAG (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS prev_price,
+	price - LAG (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS cur_prev_diff
+FROM
+	products
+INNER JOIN product_groups USING (group_id);
+
+
+--lead accest next row
+SELECT
+	product_name,
+	group_name,
+	price,
+	LEAD (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS next_price,
+	price - LEAD (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS cur_next_diff
+FROM
+	products
+INNER JOIN product_groups USING (group_id);
+
+
+-- cume_dist example
+CREATE TABLE sales_stats(
+    name VARCHAR(100) NOT NULL,
+    year SMALLINT NOT NULL CHECK (year > 0),
+    amount DECIMAL(10,2) CHECK (amount >= 0),
+    PRIMARY KEY (name,year)
+);
+
+
+INSERT INTO 
+    sales_stats(name, year, amount)
+VALUES
+    ('John Doe',2018,120000),
+    ('Jane Doe',2018,110000),
+    ('Jack Daniel',2018,150000),
+    ('Yin Yang',2018,30000),
+    ('Stephane Heady',2018,200000),
+    ('John Doe',2019,150000),
+    ('Jane Doe',2019,130000),
+    ('Jack Daniel',2019,180000),
+    ('Yin Yang',2019,25000),
+    ('Stephane Heady',2019,270000);
+
+
+-- using cume_dist() over a result set example
+SELECT 
+    name,
+    year, 
+    amount,
+    CUME_DIST() OVER (
+        ORDER BY amount
+    ) 
+FROM 
+    sales_stats
+WHERE 
+    year = 2018;
+
+
+-- cume_dist over partition
+SELECT 
+    name,
+	year,
+	amount,
+    CUME_DIST() OVER (
+		PARTITION BY year
+        ORDER BY amount
+    )
+FROM 
+    sales_stats;
+
+
+-- dense_rank()
+CREATE TABLE dense_ranks ( c VARCHAR(10));
+
+INSERT INTO dense_ranks(c)
+VALUES('A'),('A'),('B'),('C'),('C'),('D'),('E');
+
+SELECT c from dense_ranks;
+
+SELECT
+	c,
+	DENSE_RANK() OVER (
+		ORDER BY c
+	) dense_rank_number
+FROM
+	dense_ranks;
+
+
+-- dense rank over a result set
+SELECT
+	product_id,
+	product_name,
+	price,
+	DENSE_RANK () OVER ( 
+		ORDER BY price DESC
+	) price_rank 
+FROM
+	products;
+
+
+-- dense rank over partition
+SELECT
+	product_id,
+	product_name,
+	group_id,
+	price,
+	DENSE_RANK () OVER ( 
+		PARTITION BY group_id
+		ORDER BY price DESC
+	) price_rank 
+FROM
+	products;
+
+
+--dense_rank() with cte
+WITH cte AS(
+	SELECT
+		product_id,
+		product_name,
+		group_id,
+		price,
+		DENSE_RANK () OVER ( 
+			PARTITION BY group_id
+			ORDER BY price DESC
+		) price_rank 
+	FROM
+		products
+) 
+SELECT 
+	product_id, 
+	product_name, 
+	price
+FROM 
+	cte
+WHERE 
+	price_rank = 1;
+
+
+--lead
+CREATE TABLE sales(
+	year SMALLINT CHECK(year > 0),
+	group_id INT NOT NULL,
+	amount DECIMAL(10,2) NOT NULL,
+	PRIMARY KEY(year,group_id)
+);
+
+INSERT INTO 
+	sales(year, group_id, amount) 
+VALUES
+	(2018,1,1474),
+	(2018,2,1787),
+	(2018,3,1760),
+	(2019,1,1915),
+	(2019,2,1911),
+	(2019,3,1118),
+	(2020,1,1646),
+	(2020,2,1975),
+	(2020,3,1516);
+
+SELECT * FROM sales;
+
+SELECT 
+	year, 
+	SUM(amount)
+FROM sales
+GROUP BY year
+ORDER BY year;
+
+
+WITH cte AS (
+	SELECT 
+		year, 
+		SUM(amount) amount
+	FROM sales
+	GROUP BY year
+	ORDER BY year
+) 
+SELECT
+	year, 
+	amount,
+	LEAD(amount,1) OVER (
+		ORDER BY year
+	) next_year_sales
+FROM
+	cte;
+
+--cte 2
+WITH cte AS (
+	SELECT 
+		year, 
+		SUM(amount) amount
+	FROM sales
+	GROUP BY year
+	ORDER BY year
+), cte2 AS (
+	SELECT
+		year, 
+		amount,
+		LEAD(amount,1) OVER (
+			ORDER BY year
+		) next_year_sales
+	FROM
+		cte
+)	
+SELECT 
+	year, 
+	amount, 
+	next_year_sales,  
+	(next_year_sales - amount) variance
+FROM 
+	cte2;
+
+
+-- ntile
+SELECT 
+	year,
+	name,
+	amount
+FROM 
+	actual_sales
+ORDER BY 
+	year, name;
+
+CREATE TABLE actual_sales(
+    name VARCHAR(100) NOT NULL,
+    year SMALLINT NOT NULL CHECK (year > 0),
+    amount DECIMAL(10,2) CHECK (amount >= 0),
+    PRIMARY KEY (name,year)
+);
+
+
+INSERT INTO 
+    actual_sales(name, year, amount)
+VALUES
+    ('John Doe',2018,120000),
+    ('Jane Doe',2018,110000),
+    ('Jack Daniel',2018,150000),
+    ('Yin Yang',2018,30000),
+    ('Stephane Heady',2018,200000),
+    ('John Doe',2019,150000),
+    ('Jane Doe',2019,130000),
+    ('Jack Daniel',2019,180000),
+    ('Yin Yang',2019,25000),
+    ('Stephane Heady',2019,270000);
+
+
+
+SELECT 
+	name,
+	amount,
+	NTILE(3) OVER(
+		ORDER BY amount
+	)
+FROM
+	sales_stats
+WHERE
+	year = 2019;
+
+
+-- ntile over partition
+SELECT 
+	name,
+	amount,
+	NTILE(3) OVER(
+		PARTITION BY year
+		ORDER BY amount
+	)
+FROM
+	sales_stats;
+
+
+-- nth_value()
+SELECT 
+    product_id,
+    product_name,
+    price,
+    NTH_VALUE(product_name, 2) 
+    OVER(
+        ORDER BY price DESC
+        RANGE BETWEEN 
+            UNBOUNDED PRECEDING AND 
+            UNBOUNDED FOLLOWING
+    )
+FROM 
+    products;
+
+
+--nth_value() over partition
+SELECT 
+    product_id,
+    product_name,
+    price,
+    group_id,
+    NTH_VALUE(product_name, 2) 
+    OVER(
+        PARTITION BY group_id
+        ORDER BY price DESC
+        RANGE BETWEEN 
+            UNBOUNDED PRECEDING AND 
+            UNBOUNDED FOLLOWING
+    )
+FROM 
+    products;
