@@ -1135,3 +1135,103 @@ SELECT
     )
 FROM 
     products;
+
+-- date trunc
+SELECT DATE_TRUNC('hour', TIMESTAMP '2017-03-17 02:09:30');
+
+SELECT DATE_TRUNC('month', rental_date) m,
+       COUNT (rental_id)
+FROM rental
+GROUP BY m
+ORDER BY m;
+
+
+SELECT staff_id,
+       date_trunc('year', rental_date) y,
+       COUNT (rental_id) rental
+FROM rental
+GROUP BY staff_id,
+         y
+ORDER BY staff_id;
+
+
+--generate series
+SELECT generate_series(1,5);
+
+SELECT generate_series(1,10,2);
+
+
+SELECT *
+FROM generate_series( '2024-03-29 00:00:00'::timestamp, '2024-03-29 23:00:00'::timestamp, '1 hour'::interval);
+
+
+SET TIME ZONE 'UTC';
+
+--1 day interval
+SELECT *
+FROM generate_series( '2024-11-02 00:00 -04:00'::timestamptz, '2024-11-05 00:00 -05:00'::timestamptz, '1 day'::interval, 'America/New_York');
+
+SELECT floor(random()* (200-100+ 1) + 100) rand
+FROM generate_series(1,5);
+
+
+--generate test data
+CREATE TABLE employees(
+   id INT GENERATED ALWAYS AS IDENTITY,
+   name VARCHAR(100) NOT NULL,
+   age INT NOT NULL DEFAULT 0 CHECK (age >= 18 and age <=65)
+);
+
+
+
+INSERT INTO employees(name, age)
+SELECT 'employee ' || n name,
+       floor(random()* (65-18+ 1) + 18) age
+FROM generate_series(1,100) n RETURNING *;
+
+
+select * from employees
+
+
+--create date table in analystics application
+CREATE TABLE dates(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    date DATE NOT NULL UNIQUE,
+    month INT NOT NULL GENERATED ALWAYS AS (EXTRACT(month FROM date)) STORED,
+    month_name VARCHAR(20) GENERATED ALWAYS AS (
+        CASE EXTRACT(month FROM date)
+            WHEN 1 THEN 'January'
+            WHEN 2 THEN 'February'
+            WHEN 3 THEN 'March'
+            WHEN 4 THEN 'April'
+            WHEN 5 THEN 'May'
+            WHEN 6 THEN 'June'
+            WHEN 7 THEN 'July'
+            WHEN 8 THEN 'August'
+            WHEN 9 THEN 'September'
+            WHEN 10 THEN 'October'
+            WHEN 11 THEN 'November'
+            WHEN 12 THEN 'December'
+        END
+    ) STORED,
+    quarter INT NOT NULL GENERATED ALWAYS AS ((EXTRACT(month FROM date) - 1) / 3 + 1) STORED,
+    quarter_name CHAR(2) GENERATED ALWAYS AS (
+        CASE 
+            WHEN ((EXTRACT(month FROM date) - 1) / 3 + 1) = 1 THEN 'Q1'
+            WHEN ((EXTRACT(month FROM date) - 1) / 3 + 1) = 2 THEN 'Q2'
+            WHEN ((EXTRACT(month FROM date) - 1) / 3 + 1) = 3 THEN 'Q3'
+            ELSE 'Q4'
+        END
+    ) STORED,
+    year INT NOT NULL GENERATED ALWAYS AS (EXTRACT(year FROM date)) STORED
+);
+
+
+-- generate series dates
+INSERT INTO dates(date)
+SELECT * FROM generate_series(
+    '2024-01-01'::date, 
+    '2024-12-31'::date, 
+    '1 day'::interval
+)
+RETURNING *;
