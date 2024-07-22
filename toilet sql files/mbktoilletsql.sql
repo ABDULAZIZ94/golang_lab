@@ -1,4 +1,4 @@
--- Active: 1721143226972@@127.0.0.1@5432@smarttoilet
+-- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
 
 -- to add new sensor needs:
 -- add device type
@@ -12,9 +12,29 @@
 -- location mbk , taman bandar kuantan da7a998b-94fc-4376-789f-029a93f25f10
 
 -- majlis kuantan
--- tenant id :f8be7a6d-679c-4319-6906-d172ebf7c17e, toilet_info_id: 0a38e4d1-f9b9-4cb2-648f-20e0ac269984
+-------------------------------------------------------------------------------------------------------------------------
+-- tenant id :f8be7a6d-679c-4319-6906-d172ebf7c17e, 
+-- toilet_info_id: 0a38e4d1-f9b9-4cb2-648f-20e0ac269984 : toilet male_
+-- toilet_info_id: 9eca5dcc-7946-4367-60a5-d7bd09b1e16a : toilet female
+
 -- gateway_id : a91b5fe2-dd09-4d67-4a71-5a0b033f23c4, device_pair_id, 7e69638d-b002-4718-67e2-2191052cea97
 -- checking tables
+
+select * from toilet_infos
+
+select * from tenants
+
+select * from locations
+
+-- list toilet for mbk with its locations
+select ti.toilet_info_id, ti.toilet_name, te.tenant_name, loc.location_name
+from toilet_infos ti
+join tenants te on ti.tenant_id = te.tenant_id
+join locations loc on ti.location_id = loc.location_id
+order by loc.location_name
+
+
+
 SELECT * FROM devices
 
 SELECT * FROM device_types
@@ -539,7 +559,7 @@ from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
 
--- take only male
+-- take only male, list devices on that toilet
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
@@ -548,6 +568,17 @@ from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
 where dp.toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+
+-- take only female, list devices on that toilet
+select dp.device_pair_id,
+       dp.toilet_info_id,
+       ti.toilet_name,
+       d.device_name
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
+
 
 -- pair yang salah
 7ee4ed69-55d6-4e97-44a6-e7574727348a
