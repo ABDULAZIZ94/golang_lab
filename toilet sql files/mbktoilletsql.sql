@@ -31,6 +31,13 @@ select * from tenants
 
 select * from locations
 
+--list devices and its ammonia_data 
+select d.device_token, avg(ad.ammonia_level)
+from devices d
+join ammonia_data ad on d.device_token = ad.device_token
+group by d.device_token
+order by d.device_token
+
 -- list toilet for mbk with its locations
 select ti.toilet_info_id, ti.toilet_name, te.tenant_name, loc.location_name
 from toilet_infos ti
@@ -62,6 +69,8 @@ SELECT * FROM smoke_data
 SELECT * FROM occupancy_data
 
 SELECT * FROM tenants
+
+select * from occupancy_data
 
 -- list gateways used for pairing and number of devices attached to the gateway
 select gateway_id, COUNT(device_pair_id) as total_atached_devices from device_pairs group by gateway_id
@@ -571,7 +580,8 @@ join devices as d on dp.device_id = d.device_id
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
-       d.device_name
+       d.device_name,
+       d.device_token
 from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
@@ -581,7 +591,8 @@ where dp.toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
-       d.device_name
+       d.device_name,
+       d.device_token
 from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
@@ -615,14 +626,52 @@ where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
 37c32c5f-7706-4ef7-7c6f-2d1d04622db5
 9c051cfa-0eb9-47b3-4b78-b40f007f64b8
 
+68aba9d4-b09d-4e4b-6e6f-69222ca280f2
+0d06d2d9-0cff-4e3c-46d6-c4bccd1fc4b8
+1a264bf4-2a6d-4947-5390-caa4c37dc61c
+
 -- delete pairing yang salah
 delete from device_pairs where device_pair_id in ('7ee4ed69-55d6-4e97-44a6-e7574727348a','08aa77ac-50a3-4c3b-4b6a-f31e7ba867da', '37c32c5f-7706-4ef7-7c6f-2d1d04622db5', '9c051cfa-0eb9-47b3-4b78-b40f007f64b8')
 
+delete from device_pairs where device_pair_id in ('68aba9d4-b09d-4e4b-6e6f-69222ca280f2','0d06d2d9-0cff-4e3c-46d6-c4bccd1fc4b8', '1a264bf4-2a6d-4947-5390-caa4c37dc61c')
+
+
 -- gateway its location, and toilet name.
-select p.device_pair_id, i.toilet_name, d.device_name, l.location_name
+select p.device_pair_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name
 from device_pairs p
 join toilet_infos i on i.toilet_info_id = p.toilet_info_id 
 join locations l on i.location_id = l.location_id
 join devices d on d.device_id = p.device_id
-where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
-order by location_name, device_name
+where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' 
+    and i.toilet_info_id='0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+order by location_name, toilet_name, device_name
+
+-- list all gateway
+-- gateway tak di pair, device sahaja di pair ke gateway
+select* 
+from devices d
+where device_type_id =1 and tenant_id='f8be7a6d-679c-4319-6906-d172ebf7c17e'
+
+-- list toilet belong tp mbk
+select * from toilet_infos
+where tenant_id='f8be7a6d-679c-4319-6906-d172ebf7c17e'
+
+
+select loc.location_name, loc.location_id,  ti.* 
+from toilet_infos ti
+join locations loc on loc.location_id = ti.location_id
+where ti.tenant_id='f8be7a6d-679c-4319-6906-d172ebf7c17e'
+
+
+-- list all devices from all toilet belong to mbk, with its pair_id , check i gateway idss
+
+select p.device_pair_id, p.gateway_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name
+from device_pairs p
+join toilet_infos i on i.toilet_info_id = p.toilet_info_id 
+join locations l on i.location_id = l.location_id
+join devices d on d.device_id = p.device_id
+where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' 
+order by p.gateway_id, location_name, toilet_name, device_name
+
+-- device pair conflict
+-- 8f2e5997-7ac3-4369-688b-671aae4459b5
