@@ -455,7 +455,9 @@ a92c4a1f-5b98-48b0-bf6c-8a7b5b4e2b95
 f5700e7d-1d47-4c5c-b5a4-74b61d497843
 3b2e0f6c-2b49-4c1f-9203-14c9d295a92d
 
--- create pair
+-- new device pair id
+
+-- manually create pair
 INSERT INTO
     device_pairs (
         "device_pair_id",
@@ -616,3 +618,11 @@ where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
 -- delete pairing yang salah
 delete from device_pairs where device_pair_id in ('7ee4ed69-55d6-4e97-44a6-e7574727348a','08aa77ac-50a3-4c3b-4b6a-f31e7ba867da', '37c32c5f-7706-4ef7-7c6f-2d1d04622db5', '9c051cfa-0eb9-47b3-4b78-b40f007f64b8')
 
+-- gateway its location, and toilet name.
+select p.device_pair_id, i.toilet_name, d.device_name, l.location_name
+from device_pairs p
+join toilet_infos i on i.toilet_info_id = p.toilet_info_id 
+join locations l on i.location_id = l.location_id
+join devices d on d.device_id = p.device_id
+where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+order by location_name, device_name
