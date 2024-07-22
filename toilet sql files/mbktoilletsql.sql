@@ -18,7 +18,12 @@
 -- toilet_info_id: 9eca5dcc-7946-4367-60a5-d7bd09b1e16a : toilet female
 
 -- gateway_id : a91b5fe2-dd09-4d67-4a71-5a0b033f23c4, device_pair_id, 7e69638d-b002-4718-67e2-2191052cea97
+
 -- checking tables
+-- 9eca5dcc-7946-4367-60a5-d7bd09b1e16a TOILET FEMALE Majlis Bandaraya Kuantan Taman Bandar Kuantan
+-- 5654c008-dbcc-4656-5601-0a0c50652213 TOILET MALE Majlis Bandaraya Kuantan Taman Bandar Kuantan
+-- 0a38e4d1-f9b9-4cb2-648f-20e0ac269984 TOILET MALE Majlis Bandaraya Kuantan Zoo Teruntum Kuantan
+-- 2a9fbea0-4dca-4af6-457b-348bf682cb54 TOILET FEMALE Majlis Bandaraya Kuantan Zoo Teruntum Kuantan
 
 select * from toilet_infos
 
@@ -31,6 +36,7 @@ select ti.toilet_info_id, ti.toilet_name, te.tenant_name, loc.location_name
 from toilet_infos ti
 join tenants te on ti.tenant_id = te.tenant_id
 join locations loc on ti.location_id = loc.location_id
+where ti.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 order by loc.location_name
 
 
@@ -559,7 +565,7 @@ from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
 
--- take only male, list devices on that toilet
+-- devices list on that toilet mbk, zooteruntum, male
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
@@ -569,7 +575,28 @@ join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
 where dp.toilet_info_id = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
 
--- take only female, list devices on that toilet
+-- devices list on that toilet mbk, zooteruntum, female
+select dp.device_pair_id,
+       dp.toilet_info_id,
+       ti.toilet_name,
+       d.device_name
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+where dp.toilet_info_id = '2a9fbea0-4dca-4af6-457b-348bf682cb54'
+
+
+-- list devices on that toilet, mkb, taman bandar kuantan, male
+select dp.device_pair_id,
+       dp.toilet_info_id,
+       ti.toilet_name,
+       d.device_name
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+where dp.toilet_info_id = '5654c008-dbcc-4656-5601-0a0c50652213'
+
+-- list devices on that toilet, mkb, taman bandar kuantan, female
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
