@@ -482,11 +482,11 @@ join devices as d on dp.device_id = d.device_id
 where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
     and d.device_type_id =12)
 select od.id, od.occupied as occupancy,
-od.device_token , dl.device_name, Q1.people_use
+od.device_token , dl.device_name, Q1.cubical_counter
 from occupancy_data od
 join device_list dl on dl.device_token = od.device_token
 left join(
-    select COALESCE(sum(CASE WHEN occupied THEN 1 ELSE 0 END),0) as people_use,
+    select COALESCE(sum(CASE WHEN occupied THEN 1 ELSE 0 END),0) as cubical_counter,
     device_token
     from occupancy_data
     where timestamp BETWEEN to_timestamp('2024-07-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
