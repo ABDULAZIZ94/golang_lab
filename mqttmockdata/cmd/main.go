@@ -186,7 +186,7 @@ func generatePanicBtnData() (s string) {
 	data := &MqttPanicBtnData{
 		Namespace:   "PANIC",
 		NamespaceID: 0,
-		Activated:   rand.Intn(1 - 0),
+		Activated:   rand.Intn(2 - 0),
 		Timestamp:   time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)
