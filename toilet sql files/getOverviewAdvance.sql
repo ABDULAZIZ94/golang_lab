@@ -460,3 +460,29 @@ JOIN TOILET_INFOS TI ON TI.TOILET_INFO_ID = DP.TOILET_INFO_ID
 WHERE TI.TOILET_INFO_ID =  '2a9fbea0-4dca-4af6-457b-348bf682cb54'
     AND D.DEVICE_TYPE_ID = '12'
 
+
+update devices
+set device_name = 'OCCUPANCY_MALE_M3'
+where device_id = '3648c6aa-6fb1-405a-6209-7408a38eb6fa'
+
+
+-- toilet_info_id = 9eca5dcc-7946-4367-60a5-d7bd09b1e16a , taman bandar
+
+select * from occupancy_data where device_token in ('91', '92', '93', '94')
+
+WITH DEVICE_LIST AS (select dp.device_pair_id,
+    --    dp.toilet_info_id,
+    --    ti.toilet_name,
+       d.device_name,
+       d.device_token
+from device_pairs as dp
+join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+join devices as d on dp.device_id = d.device_id
+where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
+    and d.device_type_id =12)
+SELECT * FROM DEVICE_LIST dl
+left join (
+    select occupied as occupancy,
+    device_token
+    from occupancy_data 
+)Q1 on dl.device_token = Q1.device_token

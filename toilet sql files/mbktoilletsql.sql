@@ -662,6 +662,7 @@ from toilet_infos ti
 join locations loc on loc.location_id = ti.location_id
 where ti.tenant_id='f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
+select * from devices where device_type_id = 12
 
 -- list all devices from all toilet belong to mbk, with its pair_id , check i gateway idss
 
