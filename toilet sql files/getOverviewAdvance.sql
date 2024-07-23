@@ -469,6 +469,7 @@ where device_id = '3648c6aa-6fb1-405a-6209-7408a38eb6fa'
 -- toilet_info_id = 9eca5dcc-7946-4367-60a5-d7bd09b1e16a , taman bandar
 
 select * from occupancy_data where device_token in ('91', '92', '93', '94')
+order by timestamp desc limit 100
 
 WITH DEVICE_LIST AS (select dp.device_pair_id,
     --    dp.toilet_info_id,
@@ -480,9 +481,19 @@ join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
 where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
     and d.device_type_id =12)
-SELECT * FROM DEVICE_LIST dl
-left join (
-    select occupied as occupancy,
+select od.id, od.occupied as occupancy,
+od.device_token , dl.device_name, Q1.people_use
+from occupancy_data od
+join device_list dl on dl.device_token = od.device_token
+left join(
+    select COALESCE(sum(CASE WHEN occupied THEN 1 ELSE 0 END),0) as people_use,
     device_token
-    from occupancy_data 
-)Q1 on dl.device_token = Q1.device_token
+    from occupancy_data
+    where timestamp BETWEEN to_timestamp('2024-07-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+    AND to_timestamp('2024-07-23 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+    group by device_token
+) Q1 on Q1.device_token = dl.device_token
+order by timestamp desc limit 4
+
+
+    
