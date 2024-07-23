@@ -131,6 +131,16 @@ func main() {
 		time.Sleep(1 * time.Second)
 		mqtt.GetMqttClient().Publish("az/public/t2/82/uplink", 0, false, generateOccupancyData())
 		time.Sleep(1 * time.Second)
+
+		mqtt.GetMqttClient().Publish("az/public/t2/91/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/92/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/93/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+		mqtt.GetMqttClient().Publish("az/public/t2/94/uplink", 0, false, generateOccupancyData())
+		time.Sleep(1 * time.Second)
+
 		//publish panic data
 		mqtt.GetMqttClient().Publish("az/public/t2/71/uplink", 0, false, generatePanicBtnData())
 		time.Sleep(1 * time.Second)
