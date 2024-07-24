@@ -506,9 +506,11 @@ left join(
 ) Q1 on Q1.device_token = dl.device_token
 left join 
 (
-    select distinct device_id, alias from device_aliases  
+    select distinct device_id, alias from device_aliases  order by alias desc
 )Q2 using(device_id)
 order by timestamp desc limit 4
+
+-- next time create timestamp
 
 select * from device_aliases
 

@@ -676,3 +676,7 @@ order by p.gateway_id, location_name, toilet_name, device_name
 
 -- device pair conflict
 -- 8f2e5997-7ac3-4369-688b-671aae4459b5
+
+select * from toilet_types
+
+select * from locations
