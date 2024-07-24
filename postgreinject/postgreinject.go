@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math/rand"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,13 +21,27 @@ func main() {
 
 	model := MoneyData{}
 
-	db.Model(&model).Create(
-		&MoneyData{
-			IsDebit:     true,
-			IsCredit:    false,
-			Ammount:     23.00,
-			Description: "funny tax",
-		},
-	)
+	for i := range [100]int{} {
+		db.Model(&model).Create(
+			&MoneyData{
+				Id:          i,
+				IsDebit:     true,
+				IsCredit:    false,
+				Ammount:     float32(rand.Intn(300-0) + 0),
+				Description: "cukai lucu",
+			},
+		)
+	}
 
+	for i := range [1000]int{} {
+		db.Model(&model).Create(
+			&MoneyData{
+				Id:          i * i,
+				IsDebit:     true,
+				IsCredit:    false,
+				Ammount:     float32(rand.Intn(300-0) + 0),
+				Description: "cukai lucu",
+			},
+		)
+	}
 }
