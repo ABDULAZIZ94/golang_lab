@@ -100,9 +100,9 @@ select * from counter_data
 -- 
 WITH GENTIME AS (
     SELECT generate_series(
-        date_trunc('week', TO_TIMESTAMP('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-        date_trunc('week', TO_TIMESTAMP('2024-12-01 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-        interval '1 week'
+        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+        interval '1 HOUR'
     ) AS uplinkTS
 )
 SELECT uplinkTS::text, second_query.ammonia_level
@@ -118,7 +118,61 @@ ORDER BY uplinkTS ASC
 select * from ammonia_data order by timestamp desc limit 100
 
 
-SELECT DISTINCT date_trunc('WEEK', timestamp) AS uplinkTS, avg(ammonia_level)
-FROM ammonia_data  
-WHERE device_token = '79'  
-GROUP BY uplinkTS, ammonia_level
+SELECT DISTINCT uplinkTS, avg(ammonia_level) as ammonia_level
+FROM
+    (SELECT date_trunc('HOUR', timestamp) AS uplinkTS, ammonia_level
+    FROM ammonia_data  
+    WHERE device_token = '79'  
+    GROUP BY uplinkTS, ammonia_level)
+GROUP BY uplinkTS
+
+
+-- test combine
+
+WITH GENTIME AS (
+    SELECT generate_series(
+        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+        interval '1 HOUR'
+    ) AS uplinkTS
+)
+SELECT DISTINCT uplinkTS::text, avg(ammonia_level) as ammonia_level
+FROM
+    (SELECT date_trunc('HOUR', timestamp) AS uplinkTS, ammonia_level
+    FROM ammonia_data  
+    WHERE device_token = '79'  
+    GROUP BY uplinkTS, ammonia_level)
+GROUP BY uplinkTS
+
+-- 
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-07-22', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-07-24', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 HOUR'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT
+            date_trunc('HOUR', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token = '79'
+        GROUP BY
+            uplinkTS, ammonia_level
+    )
+GROUP BY
+    uplinkTS
+
+select * from ammonia_data
