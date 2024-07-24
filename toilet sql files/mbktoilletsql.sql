@@ -666,7 +666,7 @@ select * from devices where device_type_id = 12
 
 -- list all devices from all toilet belong to mbk, with its pair_id , check i gateway idss
 
-select p.device_pair_id, p.gateway_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name
+select p.device_pair_id, p.gateway_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name, d.device_token
 from device_pairs p
 join toilet_infos i on i.toilet_info_id = p.toilet_info_id 
 join locations l on i.location_id = l.location_id
