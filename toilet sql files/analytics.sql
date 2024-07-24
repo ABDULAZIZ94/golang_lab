@@ -97,24 +97,6 @@ ORDER BY uplinkTS ASC
 
 select * from counter_data
 
--- 
-WITH GENTIME AS (
-    SELECT generate_series(
-        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-        date_trunc('HOUR', TO_TIMESTAMP('2024-07-23 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-        interval '1 HOUR'
-    ) AS uplinkTS
-)
-SELECT uplinkTS::text, second_query.ammonia_level
-FROM GENTIME
-LEFT JOIN  
-    (SELECT date_trunc('WEEK', timestamp) AS uplinkTS, ammonia_level
-    FROM ammonia_data  
-    WHERE device_token = '79'  
-    GROUP BY uplinkTS, ammonia_level) second_query USING (uplinkTS) 
-ORDER BY uplinkTS ASC
-
-
 select * from ammonia_data order by timestamp desc limit 100
 
 
@@ -144,7 +126,7 @@ FROM
     GROUP BY uplinkTS, ammonia_level)
 GROUP BY uplinkTS
 
--- 
+-- fail query
 WITH
     GENTIME as (
         SELECT uplinkTS
