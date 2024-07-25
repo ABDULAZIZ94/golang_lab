@@ -723,8 +723,33 @@ create table if not exists violation_types (
     primary key(id)
 )
 
+
+
+
 insert into violation_types("violation_types","violation_descriptions")
 values('Hop over the gate','a person broke the toilet rules by hop over the gate so the person can go to the toilet for free'),
 ('Under the gate','a person broke the toilet rules by under the gate so the person can go to the toilet for free')
 
 select * from violation_types
+
+
+create or replace function random_name()
+returns text
+language plpgsql
+as
+$$
+declare 
+    i1 int =  floor(random() * 4 + 1)::int;
+    i2 int =  floor(random() * 4 + 1)::int;
+    f_name text[] = ARRAY['ali', 'kasim', 'kadri', 'latif'];
+    l_name text[] = ARRAY['salim', 'kasyif', 'syukri', 'hamzah'];
+    r_name text;
+begin
+    select f_name[i1] || ' ' || l_name[i2]
+    into r_name;
+
+    return r_name;
+end;
+$$;
+
+select random_name()
