@@ -739,13 +739,13 @@ language plpgsql
 as
 $$
 declare 
-    i1 int =  floor(random() * 4 + 1)::int;
-    i2 int =  floor(random() * 4 + 1)::int;
-    f_name text[] = ARRAY['ali', 'kasim', 'kadri', 'latif'];
-    l_name text[] = ARRAY['salim', 'kasyif', 'syukri', 'hamzah'];
+    i1 int =  floor(random() * 14 + 1)::int;
+    i2 int =  floor(random() * 8 + 1)::int;
+    f_name text[] = ARRAY['ali', 'kasim', 'kadri', 'latif', 'halim', 'karim', 'malik', 'kuddus', 'salam', 'mukmin', 'aziz','jabar','kabir','ghafar'];
+    l_name text[] = ARRAY['salim', 'kasyif', 'syukri', 'hamzah' ,'alif', 'bung','tamim', 'thalhah'];
     r_name text;
 begin
-    select f_name[i1] || ' ' || l_name[i2]
+    select f_name[i1] || ' bin ' || l_name[i2]
     into r_name;
 
     return r_name;
