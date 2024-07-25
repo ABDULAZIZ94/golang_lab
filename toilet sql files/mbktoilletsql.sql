@@ -680,3 +680,29 @@ order by p.gateway_id, location_name, toilet_name, device_name
 select * from toilet_types
 
 select * from locations
+
+
+-- list devices that not paired
+ select d.device_token, d.device_name, d.device_type_id, dp.device_pair_id
+ from devices d
+ left join device_pairs dp on dp.device_id = d.device_id 
+
+ select * from device_pairs
+
+ select * from devices
+
+
+ -- list gateway that not used for pairing
+SELECT * FROM
+-- list gateway
+(select d.device_name, d.device_id from devices d
+where device_type_id = 1)Q0
+left join
+-- paired gateway and total device paired and location name
+(select DISTINCT dp.gateway_id as device_id, d.device_name, count(device_pair_id) as paired_device, loc.location_name
+from device_pairs dp  
+join devices d on d.device_id = dp.gateway_id
+join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+join locations loc on ti.location_id = loc.location_id
+where d.device_type_id = 1
+group by dp.gateway_id, d.device_name, loc.location_name) Q1 using(device_id)
