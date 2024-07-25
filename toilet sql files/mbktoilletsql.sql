@@ -753,3 +753,5 @@ end;
 $$;
 
 select random_name()
+
+select gen_random_uuid()
