@@ -637,7 +637,7 @@ delete from device_pairs where device_pair_id in ('68aba9d4-b09d-4e4b-6e6f-69222
 
 
 -- gateway its location, and toilet name.
-select p.device_pair_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name
+select p.device_pair_id,i.toilet_info_id, i.toilet_name, d.device_name, l.location_name, l.location_id
 from device_pairs p
 join toilet_infos i on i.toilet_info_id = p.toilet_info_id 
 join locations l on i.location_id = l.location_id
@@ -683,9 +683,12 @@ select * from locations
 
 
 -- list devices that not paired
- select d.device_token, d.device_name, d.device_type_id, dp.device_pair_id
+ select d.device_token, d.device_name, d.device_type_id, dp.device_pair_id, d.device_id, ti.toilet_name, loc.location_name
  from devices d
  left join device_pairs dp on dp.device_id = d.device_id 
+ left join toilet_infos ti on dp.toilet_info_id = ti.toilet_info_id
+ left join locations loc on ti.location_id = loc.location_id
+
 
  select * from device_pairs
 

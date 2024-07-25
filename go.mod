@@ -24,6 +24,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
+	github.com/mcuadros/go-defaults v1.2.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pusher/push-notifications-go v0.0.0-20200210154345-764224c311b8 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
