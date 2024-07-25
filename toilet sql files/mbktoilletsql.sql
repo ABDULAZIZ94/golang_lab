@@ -1,4 +1,4 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1721143226972@@127.0.0.1@5432@postgres
 
 -- to add new sensor needs:
 -- add device type
@@ -709,3 +709,22 @@ join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
 join locations loc on ti.location_id = loc.location_id
 where d.device_type_id = 1
 group by dp.gateway_id, d.device_name, loc.location_name) Q1 using(device_id)
+
+--rename database
+ALTER DATABASE smarttoilet RENAME TO smarttoilet2;
+
+
+-- generate violation types tables
+
+create table if not exists violation_types (
+    id serial, 
+    violation_types varchar(255), 
+    violation_descriptions varchar(255),
+    primary key(id)
+)
+
+insert into violation_types("violation_types","violation_descriptions")
+values('Hop over the gate','a person broke the toilet rules by hop over the gate so the person can go to the toilet for free'),
+('Under the gate','a person broke the toilet rules by under the gate so the person can go to the toilet for free')
+
+select * from violation_types
