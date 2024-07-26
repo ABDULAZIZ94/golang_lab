@@ -158,3 +158,31 @@ GROUP BY
     uplinkTS
 
 select * from ammonia_data
+
+
+--gentime function
+create or replace function gentime_f(start_ts text, end_ts text, trunc_s text, interval_s text)
+returns TABLE(uplinkTS TIMESTAMP)
+as $$
+begin
+    SET timezone = 'Asia/Kuala_Lumpur';
+    return query
+        SELECT uplinkTS
+        FROM generate_series(date_trunc(trunc_s, to_timestamp(start_ts,'YYYY-MM-DD HH24:MI:SS')), 
+        date_trunc(trunc_s, to_timestamp(end_ts, 'YYYY-MM-DD HH24:MI:SS')),
+        interval_s);
+end;
+$$ language PLPGSQL;
+
+SET timezone = 'Asia/Kuala_Lumpur';
+
+select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::text)
+
+select gentime_f('2024-07-22 00:00:00'::var , '2024-07-27 23:59:59' , 'HOUR', '1 HOUR')
+
+SELECT gentime_f(
+    '2024-07-22 00:00:00'::timestamp,    -- First parameter: Start timestamp
+    '2024-07-27 23:59:59'::timestamp,    -- Second parameter: End timestamp
+    'HOUR'::text,                        -- Third parameter: Unit of time
+    '1 HOUR'::text                       -- Fourth parameter: Interval
+);
