@@ -1,4 +1,4 @@
--- Active: 1721143226972@@127.0.0.1@5432@postgres
+-- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
 
 -- to add new sensor needs:
 -- add device type

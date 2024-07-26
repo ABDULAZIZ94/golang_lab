@@ -43,11 +43,11 @@ ORDER BY id DESC
 -- limit 10
 -- offset 130
 
-
-select vd.*
+select vd.*,vt.violation_types, vt.violation_descriptions
 from
     violation_data vd
-    join device_pairs dp on dp.device_id = vd.device_id
+join device_pairs dp on dp.device_id = vd.device_id
+join violation_types vt on vd.violation_type_id = vt.id
 Where
     toilet_info_id in (
         select ti.toilet_info_id
@@ -61,7 +61,7 @@ ORDER BY id DESC
 -- limit 25
 -- offset 23
 
-
+select * from violation_types
 
 
 
