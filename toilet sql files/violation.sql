@@ -703,3 +703,13 @@ FROM (
                 'YYYY-MM-DD HH24:MI:SS'
             )
     ) Q14 ON 1=1
+
+-- modify violation data
+
+select * from violation_data
+
+alter table violation_data rename column "violation" to "violation_id"
+
+ALTER TABLE violation_data ALTER COLUMN "violation_id" TYPE integer USING "violation_id"::integer;
+
+UPDATE violation_data SET "violation_id" = '1' where "violation_id" = 'Hop over gate'
