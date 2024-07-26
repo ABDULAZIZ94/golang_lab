@@ -708,8 +708,11 @@ FROM (
 
 select * from violation_data
 
-alter table violation_data rename column "violation" to "violation_id"
+alter table violation_data rename column "violation_id" to "violation_type_id"
 
 ALTER TABLE violation_data ALTER COLUMN "violation_id" TYPE integer USING "violation_id"::integer;
 
 UPDATE violation_data SET "violation_id" = '1' where "violation_id" = 'Hop over gate'
+
+
+select * from violation_type
