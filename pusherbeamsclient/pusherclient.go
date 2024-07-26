@@ -40,5 +40,5 @@ func main() {
 		w.Write(beamsTokenJson)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("127.0.0.1:80", nil)
 }

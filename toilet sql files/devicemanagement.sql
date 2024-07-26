@@ -1,16 +1,3 @@
-SELECT devices.*,device_type_name FROM DEVICES 
-JOIN device_types on device_types.device_type_id = devices.device_type_id 
-WHERE 1=1
--- DEVICE_ID
-
---check if device available / has record in devices table
-SELECT device_token
-FROM devices
-where device_token = '13'
-
-select * from devices
-
-select * from device_pairs
-
-select * from device_types
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:e4962095818f3d85d7d5a2bdefa7b89bd2b38e9e6c4067b1cecb004b747ecc43
+size 360

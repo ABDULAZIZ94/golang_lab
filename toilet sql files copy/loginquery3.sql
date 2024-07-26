@@ -1,7 +1,3 @@
-SELECT users.*, user_types.user_type_name,access_levels.access_level_name 
-FROM USERS 
-JOIN user_types 
-ON user_types.user_type_id = users.user_type_id 
-JOIN access_levels 
-ON access_levels.access_level_id = users.access_level_id 
-WHERE USERS.EMAIL = 'AZIZ2@MAIL.COM' AND access_levels.access_level_id = 4
+version https://git-lfs.github.com/spec/v1
+oid sha256:3c68811484008f712c4503b4202b95edeb6a4b1980aef697be0313655a9b89d2
+size 311

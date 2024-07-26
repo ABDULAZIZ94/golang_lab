@@ -1,9 +1,3 @@
--- SELECT setting_values.* FROM setting_values where entity_id = 
-SELECT setting_values.* FROM setting_values
-
-SELECT feedback_panels.button_name,feedback_panel_settings.* FROM feedback_panel_settings 
-JOIN  feedback_panels ON feedback_panels.button_id = feedback_panel_settings.button_id
--- where fp_set_id = ''
-where 1=1
-limit 10
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:f7674d141bf0d19dd75cd12b473127e6fe8f584e4343ae797c1e766f732cf2e1
+size 342
