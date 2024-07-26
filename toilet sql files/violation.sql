@@ -10,6 +10,8 @@ select * from locations
 
 select * from toilet_infos
 
+select * from violation_data order by id desc
+
 -- taman bandar da7a998b-94fc-4376-789f-029a93f25f10
 select vd.*
 from violation_data vd
@@ -23,6 +25,23 @@ Where toilet_info_id in (
 ORDER BY id DESC
 limit 10
 offset 130
+
+-- individual column
+select 
+    vd.id, COALESCE(vd.violation,'0')::text as violation, COALESCE(vd.video_url,'0')::text as video_url,
+    COALESCE(vd.device_id,'0')::text as device_id, COALESCE(vd.created_at, timestamp '2000-01-01 00:00:00') as created_at
+    , COALESCE(vd.updated_at, timestamp '2000-01-01 00:00:00') as updated_at, COALESCE(vd.deleted_at, timestamp '2000-01-01 00:00:00') as deleted_at
+from violation_data vd
+join device_pairs dp on dp.device_id = vd.device_id 
+Where toilet_info_id in (
+    select ti.toilet_info_id
+    from locations loc
+    join toilet_infos ti on ti.location_id =loc.location_id
+    where loc.location_id = 'da7a998b-94fc-4376-789f-029a93f25f10'
+)
+ORDER BY id DESC
+-- limit 10
+-- offset 130
 
 
 select vd.*
@@ -39,9 +58,8 @@ Where
             loc.location_id = 'da7a998b-94fc-4376-789f-029a93f25f10'
     )
 ORDER BY id DESC
-limit 25
-offset
-    23
+-- limit 25
+-- offset 23
 
 
 
