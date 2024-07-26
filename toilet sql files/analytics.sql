@@ -161,7 +161,7 @@ select * from ammonia_data
 
 
 --gentime function
-create or replace function gentime_f(start_ts text, end_ts text, trunc_s text, interval_s text)
+create or replace function gentime_f(start_ts timestamp with time zone, end_ts timestamp with time zone, trunc_s text, interval_s interval)
 returns TABLE(uplinkTS TIMESTAMP)
 as $$
 begin
@@ -170,15 +170,17 @@ begin
         SELECT uplinkTS
         FROM generate_series(date_trunc(trunc_s, to_timestamp(start_ts,'YYYY-MM-DD HH24:MI:SS')), 
         date_trunc(trunc_s, to_timestamp(end_ts, 'YYYY-MM-DD HH24:MI:SS')),
-        interval_s);
+        interval_s::interval);
 end;
 $$ language PLPGSQL;
 
 SET timezone = 'Asia/Kuala_Lumpur';
 
-select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::text)
+select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::interval)
 
-select gentime_f('2024-07-22 00:00:00'::var , '2024-07-27 23:59:59' , 'HOUR', '1 HOUR')
+select gentime_f('2024-07-22 00:00:00'::varchar , '2024-07-27 23:59:59'::text , 'HOUR', '1 HOUR')
+
+select gentime_f('2024-07-22 00:00:00' , '2024-07-27 23:59:59' , 'HOUR'::text, '1 HOUR'::interval)
 
 SELECT gentime_f(
     '2024-07-22 00:00:00'::timestamp,    -- First parameter: Start timestamp
