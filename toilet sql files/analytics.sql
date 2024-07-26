@@ -188,3 +188,65 @@ SELECT gentime_f(
     'HOUR'::text,                        -- Third parameter: Unit of time
     '1 HOUR'::text                       -- Fourth parameter: Interval
 );
+
+
+--gentime function 2
+create or replace function gentime_f(start_ts timestamp with time zone, end_ts timestamp with time zone, trunc_s text, interval_s interval)
+returns TABLE(uplinkTS TIMESTAMP)
+as $$
+begin
+    raise notice 'Out addition count %',start_ts;
+    raise notice 'Out addition count %',end_ts;
+    RAISE NOTICE 'The current value of counter is ';
+    SET timezone = 'Asia/Kuala_Lumpur';
+    return query
+        SELECT generate_series(date_trunc(trunc_s, start_ts), 
+        date_trunc(trunc_s, end_ts),
+        interval_s::interval) as uplinkTS;
+end;
+$$ language PLPGSQL;
+
+SET timezone = 'Asia/Kuala_Lumpur';
+
+select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::interval)
+
+select gentime_f('2024-07-22 00:00:00'::varchar , '2024-07-27 23:59:59'::text , 'HOUR', '1 HOUR')
+
+select gentime_f('2023-07-22 00:00:00' , '2024-07-27 23:59:59' , 'HOUR'::text, '1 HOUR'::interval)
+
+SELECT gentime_f(
+    '2024-07-22 00:00:00'::timestamp,    -- First parameter: Start timestamp
+    '2024-07-27 23:59:59'::timestamp,    -- Second parameter: End timestamp
+    'HOUR'::text,                        -- Third parameter: Unit of time
+    '1 HOUR'::text                       -- Fourth parameter: Interval
+);
+
+
+SELECT generate_series(
+    date_trunc('week', TO_TIMESTAMP('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+    date_trunc('week', TO_TIMESTAMP('2024-12-01 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+    interval '1 week'
+) AS uplinkTS
+
+
+-- fix
+CREATE OR REPLACE FUNCTION gentime_f(
+    start_ts TIMESTAMP,      -- Timestamp with time zone
+    end_ts TIMESTAMP,        -- Timestamp with time zone
+    trunc_s TEXT,             -- Text specifying truncation (e.g., 'hour', 'day')
+    interval_s INTERVAL       -- Interval for generating the series
+)
+RETURNS TABLE(uplinkTS TIMESTAMP)  -- Ensure return type matches TIMESTAMP
+AS $$
+BEGIN
+    RAISE NOTICE 'Start timestamp: %', start_ts;
+    RAISE NOTICE 'End timestamp: %', end_ts;
+    
+    RETURN QUERY
+    SELECT generate_series(
+        date_trunc(trunc_s, start_ts), 
+        date_trunc(trunc_s, end_ts),
+        interval_s
+    ) AS uplinkTS;
+END;
+$$ LANGUAGE plpgsql;
