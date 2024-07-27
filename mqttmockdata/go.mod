@@ -1,4 +1,4 @@
-module mqttmockdata_module
+module mqttmockdata
 
 go 1.22.4
 

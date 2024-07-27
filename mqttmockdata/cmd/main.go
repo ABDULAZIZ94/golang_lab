@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"mqttmockdata_module/mqtt"
+	"mqttmockdata/mqtt"
 	"os"
 	"time"
 
@@ -90,7 +90,7 @@ type (
 func main() {
 	fmt.Println("mock mqqt data generators")
 	//read env from files instead windows env (applicable for dev only)
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env.docker"); err != nil {
 		log.Print("No .env file found")
 	}
 
