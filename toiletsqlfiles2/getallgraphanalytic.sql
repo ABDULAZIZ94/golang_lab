@@ -35,3 +35,4 @@ WITH GENTIME as (SELECT uplinkTS
 
 -- pakai namespace
 
+GetAllGraphAnalytic
