@@ -706,10 +706,22 @@ $$ LANGUAGE plpgsql;
 -- try fix 3
 
 CREATE OR REPLACE FUNCTION getoverviewdata() RETURNS TABLE ( 
-    ts TIMESTAMPTZ, total_counter INTEGER, last_counter_cnt_timestamp TIMESTAMPTZ,
-	odour_level INTEGER, tmp INTEGER, lux INTEGER, fan_status INTEGER, blower_status INTEGER, 
-    occupied_status INTEGER, display_status INTEGER, toilet_name INTEGER, toilet_type_id INTEGER,
-    total_fragrance INTEGER, total_autoclean INTEGER, total_complaint INTEGER) AS $$
+    ts TIMESTAMPTZ, 
+    total_counter INTEGER, 
+    last_counter_cnt_timestamp TIMESTAMPTZ,
+	odour_level INTEGER, 
+    tmp INTEGER, 
+    lux INTEGER, 
+    fan_status INTEGER, 
+    blower_status INTEGER, 
+    occupied_status INTEGER, 
+    display_status INTEGER, 
+    toilet_name TEXT, 
+    toilet_type_id INTEGER,
+    total_fragrance INTEGER, 
+    total_autoclean INTEGER, 
+    total_complaint INTEGER
+    ) AS $$
 BEGIN
     RETURN QUERY
     WITH DEVICE_LIST AS (
@@ -797,21 +809,21 @@ BEGIN
         LIMIT 1
     )
     SELECT
-        Q2.last_update AS ts,
-        COALESCE(Q1.ttltraffic, 0) AS total_counter,
-        Q9.last_counter_ts AS last_counter_cnt_timestamp,
-        Q2.odour_level AS odour_level,
-        Q2.tmp AS tmp,
-        Q2.lux AS lux,
-        Q6.fan_status AS fan_status,
-        Q6.blower_status AS blower_status,
-        Q6.occupied_status AS occupied_status,
-        Q6.display_status AS display_status,
-        Q6.toilet_name AS toilet_name,
-        Q6.toilet_type_id AS toilet_type_id,
-        Q7.total_fragrance AS total_fragrance,
-        Q8.total_autoclean AS total_autoclean,
-        Q5.total_complaint AS total_complaint
+        Q2.last_update::TIMESTAMPTZ AS ts,
+        COALESCE(Q1.ttltraffic, 0)::INTEGER AS total_counter,
+        Q9.last_counter_ts::TIMESTAMPTZ AS last_counter_cnt_timestamp,
+        Q2.odour_level::INTEGER AS odour_level,
+        Q2.tmp::INTEGER AS tmp,
+        Q2.lux::INTEGER AS lux,
+        Q6.fan_status::INTEGER AS fan_status,
+        Q6.blower_status::INTEGER AS blower_status,
+        Q6.occupied_status::INTEGER AS occupied_status,
+        Q6.display_status::INTEGER AS display_status,
+        Q6.toilet_name::TEXT AS toilet_name,
+        Q6.toilet_type_id::INTEGER AS toilet_type_id,
+        Q7.total_fragrance::INTEGER AS total_fragrance,
+        Q8.total_autoclean::INTEGER AS total_autoclean,
+        Q5.total_complaint::INTEGER AS total_complaint 
     FROM Q1
     CROSS JOIN Q2
     CROSS JOIN Q5
@@ -823,7 +835,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-select getoverviewdata()
+select * from getoverviewdata()
 
 drop function getoverviewdata()
 
