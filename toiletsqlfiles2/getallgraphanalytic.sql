@@ -1,3 +1,5 @@
+-- sget device metadata
+
 SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,  
 TOILET_INFOS.TOILET_NAME AS Identifier ,DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,  
 DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID , TOILET_INFOS.TOILET_TYPE_ID  
@@ -26,13 +28,13 @@ date_trunc('HOUR', TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS'))
 interval '1 HOUR') uplinkTS
 
 
-WITH GENTIME as (SELECT uplinkTS  
-    FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-07-22 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
-    date_trunc('HOUR', TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
-    interval '1 HOUR') uplinkTS)
+-- WITH GENTIME as (SELECT uplinkTS  
+--     FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-07-22 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
+--     date_trunc('HOUR', TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
+--     interval '1 HOUR') uplinkTS)
 
 
 
 -- pakai namespace
 
-GetAllGraphAnalytic
+-- GetAllGraphAnalytic
