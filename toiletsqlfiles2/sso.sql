@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9f870bd873986c44eb1aad5f5c3c1f5c78559eb58053858214e3b4a90988f1d3
-size 488
+
+-- user login
+SELECT users.*, user_types.user_type_name,access_levels.access_level_name   
+FROM USERS   JOIN user_types ON user_types.user_type_id = users.user_type_id   
+JOIN access_levels ON access_levels.access_level_id = users.access_level_id   
+WHERE USERS.EMAIL = ? if strings.ToUpper(loginType) == CONTRACTOR 
+ 
+  AND user_types.user_type_id = 4 } else if strings.ToUpper(loginType) == TENANT 
+{ loginQuery = loginQuery   AND access_levels.access_level_id < 4 } else {
+

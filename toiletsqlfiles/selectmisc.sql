@@ -1,3 +1,3 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1ea80d83af80ecddc7717800a007f2deffd859a70ad43eb67477b37759b0839f
-size 128
+SELECT * FROM public.misc_action_data
+WHERE misc_data_id = 'a90d1c0b-4ff7-4b4a-5984-2552aea25569'	
+ORDER BY misc_data_id ASC; 

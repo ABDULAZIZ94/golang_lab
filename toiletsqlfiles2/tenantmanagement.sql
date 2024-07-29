@@ -1,3 +1,2 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:91af66dd7ed8830e28fddbdea952ffb962264d3899cb4a93adfabd4f01e8be9d
-size 105
+-- Active: 1720683458566@@127.0.0.1@5432@smarttoilet2
+SELECT * FROM users WHERE email = 'AZIZ2@MAIL.COM'
