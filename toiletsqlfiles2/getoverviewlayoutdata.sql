@@ -1,4 +1,4 @@
--- Active: 1722094393794@@157.230.253.116@5432@smarttoilet4
+-- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
 
 -- get list of devivices based on device_pairs table that paired to a toilet id
 SELECT
@@ -705,11 +705,11 @@ $$ LANGUAGE plpgsql;
 
 -- try fix 3
 
-CREATE OR REPLACE FUNCTION getoverviewdata() RETURNS TABLE ( ts TIMESTAMPTZ,
-	total_counter INTEGER, last_counter_cnt_timestamp TIMESTAMPTZ,
-	odour_level INTEGER, tmp INTEGER, lux INTEGER, fan_status INTEGER, blower_status INTEGER, occupied_status INTEGER,
-	 display_status INTEGER, toilet_name INTEGER,
-	 toilet_type_id INTEGER, total_fragrance INTEGER, total_autoclean INTEGER, total_complaint INTEGER) AS $$
+CREATE OR REPLACE FUNCTION getoverviewdata() RETURNS TABLE ( 
+    ts TIMESTAMPTZ, total_counter INTEGER, last_counter_cnt_timestamp TIMESTAMPTZ,
+	odour_level INTEGER, tmp INTEGER, lux INTEGER, fan_status INTEGER, blower_status INTEGER, 
+    occupied_status INTEGER, display_status INTEGER, toilet_name INTEGER, toilet_type_id INTEGER,
+    total_fragrance INTEGER, total_autoclean INTEGER, total_complaint INTEGER) AS $$
 BEGIN
     RETURN QUERY
     WITH DEVICE_LIST AS (
@@ -740,7 +740,7 @@ BEGIN
     Q2 AS (
         SELECT
             TIMESTAMP AS last_update,
-            LUX AS lux,
+            ENVIROMENT_DATA.LUX AS lux,
             TEMPERATURE AS tmp,
             IAQ AS odour_level
         FROM ENVIROMENT_DATA
@@ -761,12 +761,12 @@ BEGIN
     ),
     Q6 AS (
         SELECT
-            FAN_STATUS AS fan_status,
-            BLOWER_STATUS AS blower_status,
-            OCCUPIED_STATUS AS occupied_status,
-            DISPLAY_STATUS AS display_status,
-            TOILET_NAME AS toilet_name,
-            TOILET_TYPE_ID AS toilet_type_id
+            TOILET_INFOS.FAN_STATUS AS fan_status,
+            TOILET_INFOS.BLOWER_STATUS AS blower_status,
+            TOILET_INFOS.OCCUPIED_STATUS AS occupied_status,
+            TOILET_INFOS.DISPLAY_STATUS AS display_status,
+            TOILET_INFOS.TOILET_NAME AS toilet_name,
+            TOILET_INFOS.TOILET_TYPE_ID AS toilet_type_id
         FROM TOILET_INFOS
         WHERE TOILET_INFOS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
     ),
@@ -782,7 +782,7 @@ BEGIN
             COUNT(CASE WHEN AUTO_CLEAN_STATE = '1' THEN 1 END) AS total_autoclean
         FROM CLEANER_REPORTS
         WHERE CLEANER_REPORTS.TOILET_TYPE_ID = (
-            SELECT TOILET_TYPE_ID
+            SELECT TOILET_INFOS.TOILET_TYPE_ID
             FROM TOILET_INFOS
             WHERE TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
         )
@@ -828,116 +828,116 @@ select getoverviewdata()
 drop function getoverviewdata()
 
 -- fix 4
-CREATE OR REPLACE FUNCTION getoverviewdata() RETURNS TABLE (AQ integer) AS $$
-BEGIN
-    RETURN QUERY
-    WITH DEVICE_LIST AS (
-        SELECT
-            DEVICES.DEVICE_NAME,
-            DEVICES.DEVICE_ID,
-            DEVICES.DEVICE_TOKEN,
-            TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
-            TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
-            DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
-            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
-            TOILET_TYPES.TOILET_TYPE_ID
-        FROM DEVICE_PAIRS
-        JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
-        JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
-        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
-        JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
-        WHERE DEVICE_PAIRS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
-    ),
-    Q1 AS (
-        SELECT
-            SUM(people_in) AS ttltraffic
-        FROM COUNTER_DATA
-        JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = COUNTER_DATA.DEVICE_TOKEN
-        WHERE DEVICE_LIST.NAMESPACE_ID = 2
-          AND TIMESTAMP >= TO_TIMESTAMP('2024-06-01 16:00:00','YYYY-MM-DD HH24:MI:SS')
-    ),
-    Q2 AS (
-        SELECT
-            TIMESTAMP AS last_update,
-            LUX AS lux,
-            TEMPERATURE AS tmp,
-            IAQ AS odour_level
-        FROM ENVIROMENT_DATA
-        JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = ENVIROMENT_DATA.DEVICE_TOKEN
-        WHERE DEVICE_LIST.NAMESPACE_ID = 3
-        ORDER BY TIMESTAMP DESC
-        LIMIT 1
-    ),
-    Q5 AS (
-        SELECT
-            COUNT(*) AS total_complaint
-        FROM FEEDBACK_PANEL_DATA
-        JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = FEEDBACK_PANEL_DATA.DEVICE_TOKEN
-        JOIN DEVICE_PAIRS ON DEVICE_PAIRS.DEVICE_ID = DEVICE_LIST.DEVICE_ID
-        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
-        WHERE TIMESTAMP >= TO_TIMESTAMP('2024-06-01 16:00:00','YYYY-MM-DD HH24:MI:SS')
-          AND DEVICE_LIST.TOILET_TYPE_ID = FEEDBACK_PANEL_DATA.TOILET_TYPE_ID
-    ),
-    Q6 AS (
-        SELECT
-            FAN_STATUS AS fan_status,
-            BLOWER_STATUS AS blower_status,
-            OCCUPIED_STATUS AS occupied_status,
-            DISPLAY_STATUS AS display_status,
-            TOILET_NAME AS toilet_name,
-            TOILET_TYPE_ID AS toilet_type_id
-        FROM TOILET_INFOS
-        WHERE TOILET_INFOS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
-    ),
-    Q7 AS (
-        SELECT
-            COUNT(*) AS total_fragrance
-        FROM MISC_ACTION_DATA
-        JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = MISC_ACTION_DATA.DEVICE_TOKEN
-        WHERE MISC_ACTION_DATA.NAMESPACE = 'FRESHENER'
-    ),
-    Q8 AS (
-        SELECT
-            COUNT(CASE WHEN AUTO_CLEAN_STATE = '1' THEN 1 END) AS total_autoclean
-        FROM CLEANER_REPORTS
-        WHERE CLEANER_REPORTS.TOILET_TYPE_ID = (
-            SELECT TOILET_TYPE_ID
-            FROM TOILET_INFOS
-            WHERE TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
-        )
-    ),
-    Q9 AS (
-        SELECT
-            TIMESTAMP AS last_counter_ts
-        FROM COUNTER_DATA
-        JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = COUNTER_DATA.DEVICE_TOKEN
-        WHERE DEVICE_LIST.NAMESPACE_ID = 2
-        ORDER BY TIMESTAMP DESC
-        LIMIT 1
-    )
-    select lux from (SELECT
-        Q2.last_update AS ts,
-        COALESCE(Q1.ttltraffic, 0) AS total_counter,
-        Q9.last_counter_ts AS last_counter_cnt_timestamp,
-        Q2.odour_level AS odour_level,
-        Q2.tmp AS tmp,
-        Q2.lux AS lux,
-        Q6.fan_status AS fan_status,
-        Q6.blower_status AS blower_status,
-        Q6.occupied_status AS occupied_status,
-        Q6.display_status AS display_status,
-        Q6.toilet_name AS toilet_name,
-        Q6.toilet_type_id AS toilet_type_id,
-        Q7.total_fragrance AS total_fragrance,
-        Q8.total_autoclean AS total_autoclean,
-        Q5.total_complaint AS total_complaint
-    FROM Q1
-    CROSS JOIN Q2
-    CROSS JOIN Q5
-    CROSS JOIN Q6
-    CROSS JOIN Q7
-    CROSS JOIN Q8
-    LEFT JOIN Q9 ON TRUE) AS AQ;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION getoverviewdata() RETURNS TABLE (AQ integer) AS $$
+-- BEGIN
+--     RETURN QUERY
+--     WITH DEVICE_LIST AS (
+--         SELECT
+--             DEVICES.DEVICE_NAME,
+--             DEVICES.DEVICE_ID,
+--             DEVICES.DEVICE_TOKEN,
+--             TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+--             TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+--             DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+--             DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+--             TOILET_TYPES.TOILET_TYPE_ID
+--         FROM DEVICE_PAIRS
+--         JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+--         JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+--         JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+--         JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+--         WHERE DEVICE_PAIRS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+--     ),
+--     Q1 AS (
+--         SELECT
+--             SUM(people_in) AS ttltraffic
+--         FROM COUNTER_DATA
+--         JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = COUNTER_DATA.DEVICE_TOKEN
+--         WHERE DEVICE_LIST.NAMESPACE_ID = 2
+--           AND TIMESTAMP >= TO_TIMESTAMP('2024-06-01 16:00:00','YYYY-MM-DD HH24:MI:SS')
+--     ),
+--     Q2 AS (
+--         SELECT
+--             TIMESTAMP AS last_update,
+--             LUX AS lux,
+--             TEMPERATURE AS tmp,
+--             IAQ AS odour_level
+--         FROM ENVIROMENT_DATA
+--         JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = ENVIROMENT_DATA.DEVICE_TOKEN
+--         WHERE DEVICE_LIST.NAMESPACE_ID = 3
+--         ORDER BY TIMESTAMP DESC
+--         LIMIT 1
+--     ),
+--     Q5 AS (
+--         SELECT
+--             COUNT(*) AS total_complaint
+--         FROM FEEDBACK_PANEL_DATA
+--         JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = FEEDBACK_PANEL_DATA.DEVICE_TOKEN
+--         JOIN DEVICE_PAIRS ON DEVICE_PAIRS.DEVICE_ID = DEVICE_LIST.DEVICE_ID
+--         JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+--         WHERE TIMESTAMP >= TO_TIMESTAMP('2024-06-01 16:00:00','YYYY-MM-DD HH24:MI:SS')
+--           AND DEVICE_LIST.TOILET_TYPE_ID = FEEDBACK_PANEL_DATA.TOILET_TYPE_ID
+--     ),
+--     Q6 AS (
+--         SELECT
+--             FAN_STATUS AS fan_status,
+--             TOILET_INFOS.BLOWER_STATUS AS blower_status,
+--             OCCUPIED_STATUS AS occupied_status,
+--             DISPLAY_STATUS AS display_status,
+--             TOILET_NAME AS toilet_name,
+--             TOILET_TYPE_ID AS toilet_type_id
+--         FROM TOILET_INFOS
+--         WHERE TOILET_INFOS.TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+--     ),
+--     Q7 AS (
+--         SELECT
+--             COUNT(*) AS total_fragrance
+--         FROM MISC_ACTION_DATA
+--         JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = MISC_ACTION_DATA.DEVICE_TOKEN
+--         WHERE MISC_ACTION_DATA.NAMESPACE = 'FRESHENER'
+--     ),
+--     Q8 AS (
+--         SELECT
+--             COUNT(CASE WHEN AUTO_CLEAN_STATE = '1' THEN 1 END) AS total_autoclean
+--         FROM CLEANER_REPORTS
+--         WHERE CLEANER_REPORTS.TOILET_TYPE_ID = (
+--             SELECT TOILET_TYPE_ID
+--             FROM TOILET_INFOS
+--             WHERE TOILET_INFO_ID = '0a38e4d1-f9b9-4cb2-648f-20e0ac269984'
+--         )
+--     ),
+--     Q9 AS (
+--         SELECT
+--             TIMESTAMP AS last_counter_ts
+--         FROM COUNTER_DATA
+--         JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = COUNTER_DATA.DEVICE_TOKEN
+--         WHERE DEVICE_LIST.NAMESPACE_ID = 2
+--         ORDER BY TIMESTAMP DESC
+--         LIMIT 1
+--     )
+--     select lux from (SELECT
+--         Q2.last_update AS ts,
+--         COALESCE(Q1.ttltraffic, 0) AS total_counter,
+--         Q9.last_counter_ts AS last_counter_cnt_timestamp,
+--         Q2.odour_level AS odour_level,
+--         Q2.tmp AS tmp,
+--         Q2.lux AS lux,
+--         Q6.fan_status AS fan_status,
+--         Q6.blower_status AS blower_status,
+--         Q6.occupied_status AS occupied_status,
+--         Q6.display_status AS display_status,
+--         Q6.toilet_name AS toilet_name,
+--         Q6.toilet_type_id AS toilet_type_id,
+--         Q7.total_fragrance AS total_fragrance,
+--         Q8.total_autoclean AS total_autoclean,
+--         Q5.total_complaint AS total_complaint
+--     FROM Q1
+--     CROSS JOIN Q2
+--     CROSS JOIN Q5
+--     CROSS JOIN Q6
+--     CROSS JOIN Q7
+--     CROSS JOIN Q8
+--     LEFT JOIN Q9 ON TRUE) AS AQ;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
