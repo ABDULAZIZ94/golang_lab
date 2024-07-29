@@ -15,6 +15,20 @@ WHERE TOILET_INFOS.TOILET_INFO_ID IN (
     WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 )
 
+
+-- compare
+SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,  
+TOILET_INFOS.TOILET_NAME AS Identifier ,DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,  
+DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID , TOILET_INFOS.TOILET_TYPE_ID  
+FROM DEVICE_PAIRS  
+JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID  
+JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID  
+JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID  
+WHERE toilet_infos.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+
+
+select * from devices
+
 -- sum all data according to device_type_id aka namespace_id
 -- make sure apply time interval
 
@@ -22,6 +36,8 @@ WHERE TOILET_INFOS.TOILET_INFO_ID IN (
 -- sum all environment
 
 select * from toilet_infos
+
+select * from device_pairs
 
 -- generate timestamp interval
 SELECT uplinkTS  
