@@ -1,4 +1,4 @@
--- Active: 1722094393794@@157.230.253.116@5432@smarttoilet
+-- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
 --GENERATE TIMESTAMP BASED ON DATE AND INTERVAL
 WITH GENTIME as (
     SELECT uplinkTS  
@@ -204,28 +204,28 @@ end;
 $$ language PLPGSQL;
 
 drop function gentime_f2;
-SET timezone = 'Asia/Kuala_Lumpur';
+-- SET timezone = 'Asia/Kuala_Lumpur';
 
-select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::interval)
+-- select gentime_f('2024-07-22 00:00:00'::text , '2024-07-27 23:59:59'::text , 'HOUR'::text, '1 HOUR'::interval)
 
-select gentime_f('2024-07-22 00:00:00'::varchar , '2024-07-27 23:59:59'::text , 'HOUR', '1 HOUR')
+-- select gentime_f('2024-07-22 00:00:00'::varchar , '2024-07-27 23:59:59'::text , 'HOUR', '1 HOUR')
 
 select gentime_f2('2024-07-22 00:00:00'::timestamptz , '2024-07-22 23:59:59'::timestamptz , 'HOUR'::text, '1 HOUR'::interval)
 
-SELECT gentime_f(
-    '2024-07-22 00:00:00'::timestamp,    -- First parameter: Start timestamp
-    '2024-07-27 23:59:59'::timestamp,    -- Second parameter: End timestamp
-    'HOUR'::text,                        -- Third parameter: Unit of time
-    '1 HOUR'::text                       -- Fourth parameter: Interval
-);
+-- SELECT gentime_f(
+--     '2024-07-22 00:00:00'::timestamp,    -- First parameter: Start timestamp
+--     '2024-07-27 23:59:59'::timestamp,    -- Second parameter: End timestamp
+--     'HOUR'::text,                        -- Third parameter: Unit of time
+--     '1 HOUR'::text                       -- Fourth parameter: Interval
+-- );
 
-
+-- list proc
 SELECT proname, nspname
 FROM pg_proc
 JOIN pg_namespace ON pg_proc.pronamespace = pg_namespace.oid
 ORDER BY proname, nspname;
 
-
+-- raw query
 SELECT generate_series(
     date_trunc('week', TO_TIMESTAMP('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
     date_trunc('week', TO_TIMESTAMP('2024-12-01 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
@@ -233,17 +233,18 @@ SELECT generate_series(
 ) AS uplinkTS
 
 
-DROP FUNCTION IF EXISTS schema_name.function_name(args);
+-- DROP FUNCTION IF EXISTS schema_name.function_name(args);
 
-drop function if exists public.gentime_f(start_ts timestamp with time zone, end_ts timestamp with time zone, trunc_s text, interval_s interval);
+-- drop function if exists public.gentime_f(start_ts timestamp with time zone, end_ts timestamp with time zone, trunc_s text, interval_s interval);
 
+-- list namespace
 SELECT nspname
 FROM pg_namespace
 WHERE nspname NOT LIKE 'pg_%'
     AND nspname <> 'information_schema';
 
 
-
+-- list proc
 SELECT proname,
        nspname
 FROM pg_proc
@@ -252,7 +253,7 @@ ORDER BY proname,
          nspname;
 
 
-
+-- gentime f
 create or replace function gentime_f() 
     returns table(uplinkTS TIMESTAMP) as $$
 begin
@@ -266,33 +267,41 @@ end;
 $$ language PLPGSQL;
 
 
+drop function gentime_f
+
 select gentime_f()
 
 
-CREATE OR REPLACE FUNCTION gentime_f() RETURNS TABLE(uplinkTS TIMESTAMP) AS $$
-BEGIN
-    -- Set the timezone to 'Asia/Kuala_Lumpur'
-    PERFORM set_config('timezone', 'Asia/Kuala_Lumpur', true);
+ -- gentime f
+-- CREATE OR REPLACE FUNCTION gentime_f() RETURNS TABLE(uplinkTS TIMESTAMP) AS $$
+-- BEGIN
+--     -- Set the timezone to 'Asia/Kuala_Lumpur'
+--     PERFORM set_config('timezone', 'Asia/Kuala_Lumpur', true);
 
-    RETURN QUERY
-    SELECT generate_series(
-        date_trunc('week', TO_TIMESTAMP('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-        date_trunc('week', TO_TIMESTAMP('2024-12-01 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-        INTERVAL '1 week'
-    ) AS uplinkTS;
-END;
-$$ LANGUAGE plpgsql;
+--     RETURN QUERY
+--     SELECT generate_series(
+--         date_trunc('week', TO_TIMESTAMP('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+--         date_trunc('week', TO_TIMESTAMP('2024-12-01 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+--         INTERVAL '1 week'
+--     ) AS uplinkTS;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
 
 SELECT * FROM gentime_f();
 
 SELECT gentime_f();
 
+-- prepared statement
+
 PREPARE gt(text) as select gentime_f();
 
 execute gt('aaa')
 
 -- test full
+-- gentime f
+-- working
+
 CREATE OR REPLACE FUNCTION gentime_f() RETURNS TABLE(uplinkTS TIMESTAMP WITH TIME ZONE) AS $$
 BEGIN
     -- PERFORM set_config('timezone', 'Asia/Kuala_Lumpur', true);
@@ -304,8 +313,5 @@ BEGIN
     ) AS uplinkTS;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
 
 drop function gentime_f()
