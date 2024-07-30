@@ -1,4 +1,4 @@
--- Active: 1722094393794@@157.230.253.116@5432@smarttoilet
+-- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
 
 -- to add new sensor needs:
 -- add device type
