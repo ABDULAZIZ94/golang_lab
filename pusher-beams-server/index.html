@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <title>Notification Test</title>
+</head>
+
+<body>
+    <h1>Notification Test</h1>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+
+                    const beamsClient = new PusherPushNotifications.Client({
+                        instanceId: 'adb2017d-2ae7-4778-9839-cbf0303212c7',
+                        serviceWorkerRegistration: registration,
+                    });
+
+                    beamsClient.start()
+                        .then(() => beamsClient.addDeviceInterest('debug-hello'))
+                        .then(() => console.log('Successfully registered and subscribed!'))
+                        .catch(console.error);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        } else {
+            console.error('Service Workers are not supported in this browser.');
+        }
+    </script>
+</body>
+
+</html>

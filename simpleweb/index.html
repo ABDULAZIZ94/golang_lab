@@ -1,19 +1,37 @@
 <!DOCTYPE html>
-    <head>
-        <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-        <title>dummy web</title>
-    </head>
-    <body>
-        <h1>Dummy web</h1>
-        <script>
-            const beamsClient = new PusherPushNotifications.Client({
-              instanceId: 'adb2017d-2ae7-4778-9839-cbf0303212c7',
-            });
-          
-            beamsClient.start()
-              .then(() => beamsClient.addDeviceInterest('hello'))
-              .then(() => console.log('Successfully registered and subscribed!'))
-              .catch(console.error);
-          </script>
-    </body>
+<html>
+
+<head>
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <title>dummy web</title>
+</head>
+
+<body>
+    <h1>Dummy web</h1>
+    <script>
+        var bc = 'debug-hello'
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: 'adb2017d-2ae7-4778-9839-cbf0303212c7',
+        });
+
+        beamsClient.start()
+            .then(() => beamsClient.addDeviceInterest(bc))
+            .then(() => console.log('Successfully registered and subscribed to: '+bc))
+            .catch(console.error);
+
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register('/service-worker.js')
+        //         .then(registration => {
+        //             console.log('Service Worker registered with scope:', registration.scope);
+        //             beamsClient.useServiceWorker(registration);
+        //         })
+        //         .catch(error => {
+        //             console.error('Service Worker registration failed:', error);
+        //         });
+        // } else {
+        //     console.error('Service Workers are not supported in this browser.');
+        // }
+    </script>
+</body>
+
 </html>

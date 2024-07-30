@@ -2,5 +2,5 @@
     "prettier.enable": false,
     "prettier.embeddedLanguageFormatting": "off",
     "editor.defaultFoldingRangeProvider": "golang.go",
-    "editor.fontSize": 8
+    "editor.fontSize": 12
 }

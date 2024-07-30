@@ -24,7 +24,7 @@ func main() {
 			},
 		},
 	}
-	id, _ := beamsClient.PublishToInterests([]string{"hello"}, j)
+	id, _ := beamsClient.PublishToInterests([]string{"debug-hello"}, j)
 
 	fmt.Printf("publisher id: %v", id)
 }
