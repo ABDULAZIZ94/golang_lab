@@ -23,6 +23,18 @@ func main() {
 				},
 			},
 		},
+		"fcm": map[string]interface{}{
+			"notification": map[string]interface{}{
+			"title": "Hello",
+			"body":  "Hello, world",
+			},
+		},
+		"web": map[string]interface{}{
+			"notification": map[string]interface{}{
+				"title": "Hello",
+				"body":  "Hello, world",
+			},
+		},
 	}
 	id, _ := beamsClient.PublishToInterests([]string{"debug-hello"}, j)
 
