@@ -321,5 +321,17 @@ select date_trunc('HOUR', check_in_ts ) as  trunc_check_in_ts,
 * from cleaner_reports
 where check_in_ts between  TO_TIMESTAMP('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
 
+-- gentime_f2
+create or replace function gentime_f2(start_ts timestamp with time zone, end_ts timestamp with time zone, trunc_s text, interval_s interval)
+returns TABLE(uplinkTS TIMESTAMP WITH TIME ZONE)
+as $$
+begin
+    SET timezone = 'Asia/Kuala_Lumpur';
+    return query
+        SELECT generate_series(date_trunc(trunc_s, start_ts), 
+        date_trunc(trunc_s, end_ts),
+        interval_s::interval) as uplinkTS;
+end;
+$$ language PLPGSQL;
 
 
