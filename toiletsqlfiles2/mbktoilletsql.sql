@@ -1,4 +1,4 @@
--- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
+-- Active: 1720588692836@@alpha.vectolabs.com@9998@smarttoilet
 
 -- to add new sensor needs:
 -- add device type
@@ -755,3 +755,13 @@ $$;
 select random_name()
 
 select gen_random_uuid()
+
+
+SELECT * FROM public.users
+where user_name like 'aziz'
+ORDER BY user_id ASC 
+
+SELECT * FROM public.users
+
+INSERT INTO DEVICE_TYPES("device_type_id", "device_type_name") 
+VALUES (10, 'SMOKE_ALARM'), (11, 'PANIC_BUTTON'), (12, 'OCCUPANCY'), (13, 'AMMONIA_SENSOR'), (14, 'SECURITY_CAMERA')

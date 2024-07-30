@@ -19,3 +19,5 @@ insert into device_aliases("device_id", "alias") values('c7c36586-a4ef-4f43-7d65
 insert into device_aliases("device_id", "alias") values('3648c6aa-6fb1-405a-6209-7408a38eb6fa','OCCUPANCY_MALE_M3')
 
 insert into device_aliases("device_id", "alias") values('c5eca81d-fe64-47f6-491b-4d2f7225cb51','OCCUPANCY_MALE_M4')
+
+
