@@ -267,16 +267,16 @@ select * from user_reactions
 
 
 WITH GENTIME as (SELECT uplinkTS  
-FROM generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
-date_trunc('HOUR', TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
-interval '1 HOUR') uplinkTS)
+FROM generate_series(date_trunc('DAY', TO_TIMESTAMP('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
+date_trunc('DAY', TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),  
+interval '1 DAY') uplinkTS)
     SELECT uplinkTS::text, 
     COALESCE(TOTAL_TIME_MALE,0) AS TOTAL_TIME_MALE,  
     COALESCE(TOTAL_TIME_FEMALE,0) AS TOTAL_TIME_FEMALE,  
     COALESCE(TOTAL_TIME,0) AS TOTAL_TIME  
     FROM GENTIME  
     LEFT JOIN  
-    (SELECT date_trunc('HOUR', CHECK_IN_TS) AS uplinkTS,  
+    (SELECT date_trunc('DAY', CHECK_IN_TS) AS uplinkTS,  
     AVG(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN duration END) TOTAL_TIME_MALE,  
     AVG(CASE WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN duration END) TOTAL_TIME_FEMALE,  
     AVG(DURATION) TOTAL_TIME  
@@ -284,3 +284,13 @@ interval '1 HOUR') uplinkTS)
     WHERE CLEANER_REPORTS.LOCATION_ID IN (  
     SELECT location_id from toilet_infos where toilet_info_id IN ( SELECT toilet_info_id FROM TOILET_INFOS WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'))  
     GROUP BY uplinkTS) second_query USING (uplinkTS) ORDER BY uplinkTS ASC
+
+
+select * from cleaner_reports
+where check_in_ts between  TO_TIMESTAMP('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+
+
+select DISTINCT trunc_check_in_ts, count(trunc_check_in_ts) from
+    (select date_trunc('HOUR', check_in_ts ) as  trunc_check_in_ts, * from cleaner_reports
+    where check_in_ts between  TO_TIMESTAMP('2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP('2024-07-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS'))
+group by trunc_check_in_ts
