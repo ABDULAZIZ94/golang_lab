@@ -1,4 +1,5 @@
--- Active: 1722069307805@@157.230.253.116@5432@bosku@public
+-- Active: 1720588692836@@alpha.vectolabs.com@9998@smarttoilet
+
 
 -- get list of devices in this identifier
 SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,  
