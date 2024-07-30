@@ -763,5 +763,10 @@ ORDER BY user_id ASC
 
 SELECT * FROM public.users
 
+-- insert device types to device_types table
 INSERT INTO DEVICE_TYPES("device_type_id", "device_type_name") 
 VALUES (10, 'SMOKE_ALARM'), (11, 'PANIC_BUTTON'), (12, 'OCCUPANCY'), (13, 'AMMONIA_SENSOR'), (14, 'SECURITY_CAMERA')
+
+--list devices
+SELECT * FROM public.devices
+ORDER BY device_token, device_id ASC 
