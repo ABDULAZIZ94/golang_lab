@@ -1,4 +1,3 @@
--- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
 
 -- get device metadata
 -- get all devices velong to mbk
@@ -335,3 +334,564 @@ end;
 $$ language PLPGSQL;
 
 
+
+-- fail req
+SELECT
+    DEVICES.DEVICE_NAME,
+    DEVICES.DEVICE_ID,
+    DEVICES.DEVICE_TOKEN,
+    TOILET_INFOS.TOILET_NAME AS Identifier,
+    DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+    DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+    TOILET_INFOS.TOILET_TYPE_ID,
+    TOILET_INFOS.TOILET_INFO_ID
+FROM
+    DEVICE_PAIRS
+    JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+    JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+    JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+WHERE
+    TOILET_INFOS.TOILET_INFO_ID IN (
+        SELECT toilet_info_id , *
+        FROM TOILET_INFOS
+        WHERE
+            tenant_id = '992c7123-6eb3-45ee-55ca-71f166f60f53'
+    )
+
+
+--q0
+SELECT DEVICES.DEVICE_NAME,
+DEVICES.DEVICE_ID,
+DEVICES.DEVICE_TOKEN,
+TOILET_INFOS.TOILET_NAME AS Identifier,
+DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+TOILET_INFOS.TOILET_TYPE_ID
+FROM
+    DEVICE_PAIRS
+    JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+    JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+    JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+WHERE
+    TOILET_INFOS.TOILET_INFO_ID IN (
+        SELECT toilet_info_id
+        FROM TOILET_INFOS
+        WHERE
+            tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+    )
+
+
+-- q1 celaner report
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(TOTAL_MALE, 0) AS TOTAL_MALE,
+    COALESCE(TOTAL_FEMALE, 0) AS TOTAL_FEMALE
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', CHECK_IN_TS) AS uplinkTS, COUNT(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN 1
+                END
+            ) TOTAL_MALE, COUNT(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN 1
+                END
+            ) TOTAL_FEMALE
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.LOCATION_ID IN (
+                SELECT location_id
+                from toilet_infos
+                where
+                    toilet_info_id IN (
+                        SELECT toilet_info_id
+                        FROM TOILET_INFOS
+                        WHERE
+                            tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+                    )
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q2 user reactions
+
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(smelly_toilet, 0) AS smelly_toilet,
+    COALESCE(out_of_supplies, 0) AS out_of_supplies,
+    COALESCE(wet_floor, 0) AS wet_floor,
+    COALESCE(plumbing_issues, 0) AS plumbing_issues
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, COUNT(
+                CASE
+                    WHEN ur.complaint = '1' THEN 1
+                END
+            ) AS smelly_toilet, COUNT(
+                CASE
+                    WHEN ur.complaint = '2' THEN 1
+                END
+            ) AS out_of_supplies, COUNT(
+                CASE
+                    WHEN ur.complaint = '3' THEN 1
+                END
+            ) AS wet_floor, COUNT(
+                CASE
+                    WHEN ur.complaint = '4' THEN 1
+                END
+            ) AS plumbing_issues
+        FROM
+            user_reactions ur
+            LEFT JOIN complaints c ON c.complaint_id = ur.complaint
+        WHERE
+            toilet_id IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q3 usser reactions
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(happy, 0) AS happy,
+    COALESCE(satisfied, 0) AS satisfied,
+    COALESCE(not_satisfied, 0) AS not_satisfied,
+    COALESCE(not_happy, 0) AS not_happy
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, COUNT(
+                CASE
+                    WHEN ur.reaction = '1' THEN 1
+                END
+            ) AS happy, COUNT(
+                CASE
+                    WHEN ur.reaction = '2' THEN 1
+                END
+            ) AS satisfied, COUNT(
+                CASE
+                    WHEN ur.reaction = '3' THEN 1
+                END
+            ) AS not_satisfied, COUNT(
+                CASE
+                    WHEN ur.reaction = '4' THEN 1
+                END
+            ) AS not_happy
+        FROM user_reactions ur
+        WHERE
+            toilet_id IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q4 env data
+
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(lux, '0')::text AS lux,
+    COALESCE(humidity, '0')::text AS humidity,
+    COALESCE(temperature, '0')::text AS temperature,
+    COALESCE(iaq, '0')::text AS iaq
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, AVG(lux::decimal) as lux, AVG(humidity::decimal) as humidity, AVG(temperature::decimal) as temperature, AVG(iaq::decimal) as iaq
+        FROM enviroment_data
+        WHERE
+            device_token = '27'
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q5 cleaner reports
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(TOTAL_MALE, 0) AS TOTAL_MALE,
+    COALESCE(TOTAL_FEMALE, 0) AS TOTAL_FEMALE
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', CHECK_IN_TS) AS uplinkTS, COUNT(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN 1
+                END
+            ) TOTAL_MALE, COUNT(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN 1
+                END
+            ) TOTAL_FEMALE
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.LOCATION_ID IN (
+                SELECT location_id
+                from toilet_infos
+                where
+                    toilet_info_id IN (
+                        SELECT toilet_info_id
+                        FROM TOILET_INFOS
+                        WHERE
+                            tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+                    )
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+ 
+-- q6 user reactions
+
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(smelly_toilet, 0) AS smelly_toilet,
+    COALESCE(out_of_supplies, 0) AS out_of_supplies,
+    COALESCE(wet_floor, 0) AS wet_floor,
+    COALESCE(plumbing_issues, 0) AS plumbing_issues
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, COUNT(
+                CASE
+                    WHEN ur.complaint = '1' THEN 1
+                END
+            ) AS smelly_toilet, COUNT(
+                CASE
+                    WHEN ur.complaint = '2' THEN 1
+                END
+            ) AS out_of_supplies, COUNT(
+                CASE
+                    WHEN ur.complaint = '3' THEN 1
+                END
+            ) AS wet_floor, COUNT(
+                CASE
+                    WHEN ur.complaint = '4' THEN 1
+                END
+            ) AS plumbing_issues
+        FROM
+            user_reactions ur
+            LEFT JOIN complaints c ON c.complaint_id = ur.complaint
+        WHERE
+            toilet_id IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q7 user reactions
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(happy, 0) AS happy,
+    COALESCE(satisfied, 0) AS satisfied,
+    COALESCE(not_satisfied, 0) AS not_satisfied,
+    COALESCE(not_happy, 0) AS not_happy
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, COUNT(
+                CASE
+                    WHEN ur.reaction = '1' THEN 1
+                END
+            ) AS happy, COUNT(
+                CASE
+                    WHEN ur.reaction = '2' THEN 1
+                END
+            ) AS satisfied, COUNT(
+                CASE
+                    WHEN ur.reaction = '3' THEN 1
+                END
+            ) AS not_satisfied, COUNT(
+                CASE
+                    WHEN ur.reaction = '4' THEN 1
+                END
+            ) AS not_happy
+        FROM user_reactions ur
+        WHERE
+            toilet_id IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- q ammonia query
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT date_trunc('DAY', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token = '95'
+        GROUP BY
+            uplinkTS, ammonia_level
+    )
+GROUP BY
+    uplinkTS
+
+-- q ammonia live
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'WEEK', TO_TIMESTAMP(
+                        '2024-07-01', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'WEEK', TO_TIMESTAMP(
+                        '2024-07-23', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '7 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT date_trunc('WEEK', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token = '95'
+        GROUP BY
+            uplinkTS, ammonia_level
+    )
+GROUP BY
+    uplinkTS
+
+-- q ammonia cloud
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'WEEK', TO_TIMESTAMP(
+                        '2024-07-01', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'WEEK', TO_TIMESTAMP(
+                        '2024-07-23', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '7 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT date_trunc('WEEK', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token = '95'
+        GROUP BY
+            uplinkTS, ammonia_level
+    )
+GROUP BY
+    uplinkTS
+
+
+
+-- solving lux zero
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(lux, '0')::text AS lux,
+    COALESCE(humidity, '0')::text AS humidity,
+    COALESCE(temperature, '0')::text AS temperature,
+    COALESCE(iaq, '0')::text AS iaq
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, AVG(lux::decimal) as lux, AVG(humidity::decimal) as humidity, AVG(temperature::decimal) as temperature, AVG(iaq::decimal) as iaq
+        FROM enviroment_data
+        WHERE
+            device_token = '201'
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+
+-- check environment_data
+SELECT
+    timestamp AS uplinkTS,
+    AVG(lux::decimal) as lux,
+    AVG(humidity::decimal) as humidity,
+    AVG(temperature::decimal) as temperature,
+    AVG(iaq::decimal) as iaq
+FROM enviroment_data
+WHERE
+    device_token = '201'
+GROUP BY
+    uplinkTS
+
+
+
+
+select timestamp, * from enviroment_data
+order by timestamp DESC

@@ -1,4 +1,6 @@
 -- Active: 1720588692836@@alpha.vectolabs.com@9998@smarttoilet
+
+
 --GENERATE TIMESTAMP BASED ON DATE AND INTERVAL
 WITH GENTIME as (
     SELECT uplinkTS  
