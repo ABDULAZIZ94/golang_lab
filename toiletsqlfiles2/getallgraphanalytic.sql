@@ -1086,10 +1086,39 @@ FROM GENTIME
 ORDER BY uplinkTS ASC
 
 
-select distinct ts, avg(iaq), avg(temperature), avg(humidity), avg(lux)
+select distinct ts, avg(iaq) as avg_iaq, avg(temperature) as avg_temp, avg(humidity), avg(lux) as avg_lux
 from
 (
     select date_trunc('HOUR', timestamp) as ts, iaq, temperature, humidity, lux
     from enviroment_data
 )Q1
 group by ts
+
+
+
+select * from enviroment_data where lux > 200
+order by timestamp asc
+
+
+select * from user_reactions order by timestamp asc limit 10
+
+select * from reactions
+
+select * from complaints
+
+select DISTINCT ts, 
+    count(case when reaction = '1' then 1 END) as happy,
+    count( case when reaction = '2' then 1 END ) as satisfied,
+    count( case when reaction = '3' then 1 END ) as not_satisfied,
+    count( case when reaction = '4' then 1 END ) as not_happy
+FROM
+(select date_trunc('MONTH',timestamp)as ts, reaction, complaint from user_reactions) Q1
+group by ts
+order by ts
+
+
+-- check when feedback panel installed
+select t.tenant_name,d.created_at, * from devices d 
+join tenants t on t.tenant_id = d.tenant_id 
+where d.device_type_id = 7
+

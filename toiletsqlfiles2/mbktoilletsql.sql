@@ -792,3 +792,8 @@ select * from tenants
 
 
 select * from ammonia_data where device_token = '95' and ammonia_level = 1
+
+/* feedbackpanel 1-12 */
+/* userreactins 1-4 */
+/* complains 1-4 */
+/* settings */
