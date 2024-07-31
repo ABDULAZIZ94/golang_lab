@@ -1,3 +1,4 @@
+-- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
 
 -- get device metadata
 -- get all devices velong to mbk
