@@ -1,4 +1,4 @@
--- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722425575568@@alpha.vectolabs.com@9998@smarttoilet
 
 -- to add new sensor needs:
 -- add device type
@@ -673,7 +673,25 @@ join toilet_infos i on i.toilet_info_id = p.toilet_info_id
 join locations l on i.location_id = l.location_id
 join devices d on d.device_id = p.device_id
 where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' 
-order by device_token, p.gateway_id, location_name, toilet_name, device_name
+order by location_name, device_token, p.gateway_id, toilet_name, device_name
+
+
+select distinct location_name, count(location_name) from
+(select p.device_pair_id, p.gateway_id, i.toilet_info_id, i.toilet_name, d.device_name, l.location_name, d.device_token
+from
+    device_pairs p
+    join toilet_infos i on i.toilet_info_id = p.toilet_info_id
+    join locations l on i.location_id = l.location_id
+    join devices d on d.device_id = p.device_id
+where
+    i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+order by
+    location_name,
+    device_token,
+    p.gateway_id,
+    toilet_name,
+    device_name) Q1
+group by location_name
 
 -- device pair conflict
 -- 8f2e5997-7ac3-4369-688b-671aae4459b5
