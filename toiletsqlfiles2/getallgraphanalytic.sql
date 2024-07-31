@@ -1345,6 +1345,7 @@ WITH
     GROUP BY uplinkTS) second_query USING (uplinkTS) ORDER BY uplinkTS ASC
 
 
+-- device token with device type
 WITH DEVICE_LIST as (
     SELECT
         DEVICES.DEVICE_NAME,
@@ -1370,9 +1371,133 @@ WITH DEVICE_LIST as (
 select device_list.device_token, device_list.namespace_id from device_list 
 /* where device_list.namespace_id = '2' */
 
+
 select * from counter_data
 where counter_data.device_token IN
     (select device_list.device_token from device_list)
 
 
 select * from counter_data
+
+-- list unique counter total row of its data with its location and toilet
+select distinct c.device_token,count(c.device_token), ti.toilet_name, t.tenant_name
+from (select device_token from counter_data) c
+join devices d on d.device_token = c.device_token
+join device_pairs dp on d.device_id = dp.device_id
+join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+join tenants t on ti.tenant_id = t.tenant_id
+group by c.device_token, ti.toilet_name, t.tenant_name
+
+
+select * from device_pairs
+
+-- finding ammonia
+WITH
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-01', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT date_trunc('DAY', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token IN (
+                SELECT DEVICE_TOKEN
+                FROM DEVICE_LIST
+            )
+        GROUP BY
+            uplinkTS, ammonia_level
+    ) Q1 GROUP BY uplinkTS
+
+
+-- counter data
+WITH
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(people_in, '0')::text AS people_in,
+    COALESCE(people_out, '0')::text AS people_out
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, sum(people_in) AS people_in, sum(people_out) AS people_out
+        FROM counter_data
+        WHERE
+            device_token IN (
+                SELECT DEVICE_TOKEN
+                FROM DEVICE_LIST
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC

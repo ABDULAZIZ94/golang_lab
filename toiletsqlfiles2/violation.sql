@@ -1,4 +1,4 @@
--- Active: 1722425575568@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722446664818@@157.230.253.116@5432@smarttoilet
 select *
 from violation_data
 limit 10
