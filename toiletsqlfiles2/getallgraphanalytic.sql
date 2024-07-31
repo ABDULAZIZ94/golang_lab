@@ -1084,3 +1084,12 @@ FROM GENTIME
             uplinkTS
     ) second_query USING (uplinkTS)
 ORDER BY uplinkTS ASC
+
+
+select distinct ts, avg(iaq), avg(temperature), avg(humidity), avg(lux)
+from
+(
+    select date_trunc('HOUR', timestamp) as ts, iaq, temperature, humidity, lux
+    from enviroment_data
+)Q1
+group by ts
