@@ -1,4 +1,4 @@
--- Active: 1720588692836@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
 
 -- to add new sensor needs:
 -- add device type
@@ -603,7 +603,8 @@ where dp.toilet_info_id = '2a9fbea0-4dca-4af6-457b-348bf682cb54'
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
-       d.device_name
+       d.device_name,
+       d.device_token
 from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
@@ -672,7 +673,7 @@ join toilet_infos i on i.toilet_info_id = p.toilet_info_id
 join locations l on i.location_id = l.location_id
 join devices d on d.device_id = p.device_id
 where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' 
-order by p.gateway_id, location_name, toilet_name, device_name
+order by device_token, p.gateway_id, location_name, toilet_name, device_name
 
 -- device pair conflict
 -- 8f2e5997-7ac3-4369-688b-671aae4459b5
@@ -770,3 +771,24 @@ VALUES (10, 'SMOKE_ALARM'), (11, 'PANIC_BUTTON'), (12, 'OCCUPANCY'), (13, 'AMMON
 --list devices
 SELECT * FROM public.devices
 ORDER BY device_token, device_id ASC 
+
+-- list counter data desc
+SELECT * FROM public.counter_data
+ORDER BY timestamp DESC limit 100 
+
+
+select distinct device_token
+from
+(select * from ammonia_data)Q1
+
+
+update ammonia_data
+set device_token = '95'
+where device_token = '76'
+
+
+
+select * from tenants
+
+
+select * from ammonia_data where device_token = '95' and ammonia_level = 1
