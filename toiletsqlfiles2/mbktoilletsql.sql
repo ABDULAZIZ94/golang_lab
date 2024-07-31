@@ -604,7 +604,8 @@ select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
        d.device_name,
-       d.device_token
+       d.device_token,
+       d.device_id
 from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
@@ -614,7 +615,8 @@ where dp.toilet_info_id = '5654c008-dbcc-4656-5601-0a0c50652213'
 select dp.device_pair_id,
        dp.toilet_info_id,
        ti.toilet_name,
-       d.device_name
+       d.device_name,
+       d.device_id
 from device_pairs as dp
 join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
 join devices as d on dp.device_id = d.device_id
@@ -815,3 +817,28 @@ select * from ammonia_data where device_token = '95' and ammonia_level = 1
 /* userreactins 1-4 */
 /* complains 1-4 */
 /* settings */
+
+
+-- check duplicate device token
+select Q1.device_token, count(Q1.device_token) as n_occurance
+from
+(select * from devices) Q1
+group by Q1.
+
+select * from devices
+
+
+select * from devices where device_name LIKE '%FEED%'
+
+select * from devices where device_name LIKE 'FEED'
+
+
+-- where the panel deployed?
+-- 1 feedback panel for 2 toilet
+
+select d.device_id, d.device_name, d.created_at, l.location_name, ti.toilet_name, d.device_type_id
+from devices d 
+join device_pairs dp on dp.device_id = d.device_id
+join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+join locations l on l.location_id = ti.location_id 
+where device_name LIKE '%FEED%'

@@ -882,8 +882,88 @@ WITH DEVICE_LIST as (
                 tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
         )
 )
-select distinct device_name, count(device_name) from device_list
-group by device_name
+select distinct device_token, count(device_token) from device_list
+group by device_token
+
+-- test duplicate, no duplicate
+select DISTINCT  Q1.device_token, count(Q1.device_token) from
+(select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    ti.TOILET_INFO_ID IN (
+    SELECT toilet_info_id FROM TOILET_INFOS
+    WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e')) Q1
+group by Q1.device_token
+
+--2nd test
+select DISTINCT
+    Q1.device_pair_id,
+    count(Q1.device_pair_id)
+from (
+        select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+        from
+            device_pairs as dp
+            join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+            join devices as d on dp.device_id = d.device_id
+        where
+            ti.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ) Q1
+group by
+    Q1.device_token,
+    Q1.device_pair_id
+
+-- check duplicate pairs
+
+With 
+    multipair as (
+        select DISTINCT device_id, count (device_id) as c
+        from (select * from device_pairs) Q1 
+        group by device_id)
+select * from device_pairs 
+join devices on device_pairs.device_id = devices.device_id
+join toilet_infos on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+join locations on locations.location_id = toilet_infos.location_id
+where devices.device_id in(
+    select device_id from multipair where c > 1
+) order by device_pairs.device_id
+
+
+-- specific check duplicate
+With
+    multipair as (
+        select DISTINCT
+            device_id,
+            count(device_id) as c
+        from (
+                select *
+                from device_pairs
+            ) Q1
+        group by
+            device_id
+    )
+select device_pairs.device_pair_id, devices.device_id,devices.device_name, devices.device_token ,toilet_infos.toilet_name, locations.location_name
+from
+    device_pairs
+    join devices on device_pairs.device_id = devices.device_id
+    join toilet_infos on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+    join locations on locations.location_id = toilet_infos.location_id
+where
+    devices.device_id in (
+        select device_id
+        from multipair
+        where
+            c > 1
+    )
+order by device_pairs.device_id
+
 
 -- device lists for mbk
 select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
@@ -892,12 +972,21 @@ from
     join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
     join devices as d on dp.device_id = d.device_id
 where
-    TOILET_INFOS.TOILET_INFO_ID IN (
-    SELECT toilet_info_id FROM TOILET_INFOS
-    WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e')
+    ti.TOILET_INFO_ID IN (
+        SELECT toilet_info_id
+        FROM TOILET_INFOS
+        WHERE
+            tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+    )) Q1
 
-
-
+-- list devices on that toilet, mkb, taman bandar kuantan, female
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
 
 -- solving lux zero
 WITH
@@ -1142,7 +1231,7 @@ FROM GENTIME
     ) second_query USING (uplinkTS)
 ORDER BY uplinkTS ASC
 
-
+-- check average per agg from env sensor installed
 select distinct ts, avg(iaq) as avg_iaq, avg(temperature) as avg_temp, avg(humidity), avg(lux) as avg_lux
 from
 (
@@ -1152,11 +1241,37 @@ from
 group by ts
 
 
-
+-- check if 200 above is logic lux data
 select * from enviroment_data where lux > 200
 order by timestamp asc
 
+-- more complex
+select device_token, count(timestamp) 
+from (
+    select * from enviroment_data where lux > 200 order by timestamp asc
+) Q1
+group by device_token
 
+-- check advanced
+select Q1.device_token, count(Q1.timestamp)
+from (
+        select *
+        from enviroment_data
+        where
+            lux > 200
+        order by timestamp asc
+    ) Q1
+    join (
+        select *
+        from enviroment_data
+        where
+            lux > 200
+        order by timestamp asc
+    ) Q2 on Q1.device_token = Q2.device_token
+group by
+    Q1.device_token
+
+-- checking basic tables
 select * from user_reactions order by timestamp asc limit 10
 
 select * from reactions
