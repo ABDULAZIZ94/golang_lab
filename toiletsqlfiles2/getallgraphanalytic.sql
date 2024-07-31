@@ -1,4 +1,4 @@
--- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722425575568@@alpha.vectolabs.com@9998@smarttoilet
 
 -- get device metadata
 -- get all devices velong to mbk
@@ -840,6 +840,63 @@ FROM (
 GROUP BY
     uplinkTS
 
+-- gentime table
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        ' 2024 -07 -30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval ' 1 DAY '
+            ) uplinkTS
+    )
+    select * from gentime
+
+-- device list table belong to mbk
+-- bad query since generate duplicate
+WITH DEVICE_LIST as (
+    SELECT
+        DEVICES.DEVICE_NAME,
+        DEVICES.DEVICE_ID,
+        DEVICES.DEVICE_TOKEN,
+        TOILET_INFOS.TOILET_NAME AS Identifier,
+        DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+        DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+        TOILET_INFOS.TOILET_TYPE_ID
+    FROM
+        DEVICE_PAIRS
+        JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+        JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+    WHERE
+        TOILET_INFOS.TOILET_INFO_ID IN (
+            SELECT toilet_info_id
+            FROM TOILET_INFOS
+            WHERE
+                tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+        )
+)
+select distinct device_name, count(device_name) from device_list
+group by device_name
+
+-- device lists for mbk
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    TOILET_INFOS.TOILET_INFO_ID IN (
+    SELECT toilet_info_id FROM TOILET_INFOS
+    WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e')
+
+
 
 
 -- solving lux zero
@@ -1122,3 +1179,52 @@ select t.tenant_name,d.created_at, * from devices d
 join tenants t on t.tenant_id = d.tenant_id 
 where d.device_type_id = 7
 
+
+
+-- namespace 2
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        ' 2024 -07 -30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval ' 1 DAY '
+            ) uplinkTS
+    ),
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    )
+    SELECT uplinkTS::text, COALESCE(people_in, '0')::text AS people_in, 
+    COALESCE(people_out, '0')::text AS people_out  
+    FROM GENTIME  
+    LEFT JOIN  
+    (SELECT date_trunc('DAY', timestamp) AS uplinkTS,  
+    sum(people_in) AS people_in,sum(people_out) AS people_out  
+    FROM counter_data  
+    WHERE device_token IN (select device_token from DEVICE_LIST)  
+    GROUP BY uplinkTS) second_query USING (uplinkTS) ORDER BY uplinkTS ASC
