@@ -892,6 +892,194 @@ GROUP BY
 
 
 
-
+--- check enviroment device 201
 select timestamp, * from enviroment_data
+where device_token = '201'
 order by timestamp DESC
+
+
+-- check environemt device and its total data
+
+select distinct device_token , count(device_token)
+from
+(select * from enviroment_data) Q1
+group by device_token
+
+
+-- environemnt data and its toilet
+select distinct
+    Q1.device_token,
+    count(Q1.device_token),
+    tenants.tenant_name
+from (
+        select *
+        from enviroment_data
+    ) Q1
+left join devices on devices.device_token = Q1.device_token
+left join tenants on devices.tenant_id = tenants.tenant_id
+group by
+    Q1.device_token, tenants.tenant_name
+
+
+select * from tenants
+
+
+-- environment device 27
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(lux, '0')::text AS lux,
+    COALESCE(humidity, '0')::text AS humidity,
+    COALESCE(temperature, '0')::text AS temperature,
+    COALESCE(iaq, '0')::text AS iaq
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, AVG(lux::decimal) as lux, AVG(humidity::decimal) as humidity, AVG(temperature::decimal) as temperature, AVG(iaq::decimal) as iaq
+        FROM enviroment_data
+        WHERE
+            device_token = '27'
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+-- line 2275
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(lux, '0')::text AS lux,
+    COALESCE(humidity, '0')::text AS humidity,
+    COALESCE(temperature, '0')::text AS temperature,
+    COALESCE(iaq, '0')::text AS iaq
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, AVG(lux::decimal) as lux, AVG(humidity::decimal) as humidity, AVG(temperature::decimal) as temperature, AVG(iaq::decimal) as iaq
+        FROM enviroment_data
+        WHERE
+            device_token = '27'
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+
+
+-- checking available device types
+
+SELECT DISTINCT Q1.NAMESPACE_ID FROM
+(SELECT
+DEVICES.DEVICE_NAME,
+DEVICES.DEVICE_ID,
+DEVICES.DEVICE_TOKEN,
+TOILET_INFOS.TOILET_NAME AS Identifier,
+DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+TOILET_INFOS.TOILET_TYPE_ID
+FROM
+DEVICE_PAIRS
+JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+WHERE
+TOILET_INFOS.TOILET_INFO_ID IN (
+    SELECT toilet_info_id
+    FROM TOILET_INFOS
+    WHERE
+        tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+))Q1
+GROUP BY Q1.NAMESPACE_ID
+
+
+
+-- env query
+
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        ' 2024 -07 -30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval ' 1 DAY '
+            ) uplinkTS
+    ),
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    )
+ SELECT
+    uplinkTS::text,
+    COALESCE(lux, '0')::text AS lux,
+    COALESCE(humidity, '0')::text AS humidity,
+    COALESCE(temperature, '0')::text AS temperature,
+    COALESCE(iaq, '0')::text AS iaq
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, AVG(lux::decimal) as lux, 
+            AVG(humidity::decimal) as humidity, AVG(temperature::decimal) as temperature, 
+            AVG(iaq::decimal) as iaq
+        FROM enviroment_data
+        WHERE
+            device_token IN(
+                select device_token from DEVICE_LIST
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
