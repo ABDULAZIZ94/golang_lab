@@ -678,6 +678,23 @@ where i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 order by location_name, device_token, p.gateway_id, toilet_name, device_name
 
 
+-- list all devices from all toilet belong to mbk, with its pair_id , check i gateway idss
+
+select p.device_pair_id, p.gateway_id, i.toilet_info_id, i.toilet_name, d.device_name, l.location_name, d.device_token, d.device_type_id
+from
+    device_pairs p
+    join toilet_infos i on i.toilet_info_id = p.toilet_info_id
+    join locations l on i.location_id = l.location_id
+    join devices d on d.device_id = p.device_id
+where
+    i.tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+order by
+    location_name,
+    device_token,
+    p.gateway_id,
+    toilet_name,
+    device_name
+
 select distinct location_name, count(location_name) from
 (select p.device_pair_id, p.gateway_id, i.toilet_info_id, i.toilet_name, d.device_name, l.location_name, d.device_token
 from
