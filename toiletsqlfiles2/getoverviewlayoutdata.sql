@@ -1,4 +1,4 @@
--- Active: 1722069307805@@157.230.253.116@5432@smarttoilet
+-- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
 
 -- get list of devivices based on device_pairs table that paired to a toilet id
 SELECT
@@ -953,3 +953,55 @@ drop function getoverviewdata()
 -- END;
 -- $$ LANGUAGE plpgsql;
 
+
+-- fix this subquery alias
+WITH
+    DEVICE_LIST AS (
+        select dp.device_pair_id, d.device_name, d.device_token, d.device_id
+        from
+            device_pairs as dp
+            join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+            join devices as d on dp.device_id = d.device_id
+        where
+            dp.toilet_info_id = '5654c008-dbcc-4656-5601-0a0c50652213'
+            and d.device_type_id = 12
+    )
+select od.occupied as occupancy, right(Q2.alias, 2) as cubical_name, Q1.cubical_counter, dl.device_name
+from
+    occupancy_data od
+    join device_list dl on dl.device_token = od.device_token
+    left join (
+        select COALESCE(
+                sum(
+                    CASE
+                        WHEN occupied = TRUE
+                        AND prev_occupied = FALSE THEN 1
+                        ELSE 0
+                    END
+                ), 0
+            ) as cubical_counter, device_token
+        from (
+                select *, lag(occupied, 1) over (
+                        order by id
+                    ) prev_occupied
+                from occupancy_data
+            ) SQ1
+        where
+            timestamp BETWEEN to_timestamp (
+                '2024-08-01 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) AND to_timestamp  (
+                '2024-08-01 23:59:59',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        group by
+            device_token
+    ) Q1 on Q1.device_token = dl.device_token
+    left join (
+        select distinct
+            device_id,
+            alias
+        from device_aliases
+    ) Q2 using (device_id)
+order by timestamp desc
+limit 4

@@ -1,0 +1,311 @@
+{
+    "error": false,
+    "message": {
+        "LastUpdate": "2024-07-31 10:42:33",
+        "LastCleanTimestamp": "2024-07-31 19:03:49",
+        "LastAutocleanActiveTimestamp": "2024-07-10 08:04:28",
+        "LastCounterTimestamp": 0,
+        "TotalCounterLastClean": 0,
+        "TotalCounter": 0,
+        "TotalAutocleanCnt": 0,
+        "AvgCleanerResponseTime": 68.79457,
+        "Iaq": 0,
+        "Tmp": 31,
+        "Lux": 486,
+        "BinFull": 0,
+        "Busuk": 0,
+        "UrinalClog": 0,
+        "SanitaryBinFull": 0,
+        "PipeLeak": 0,
+        "Slippery": 0,
+        "OutTissue": 0,
+        "RefreshToilet": 0,
+        "OutSoap": 0,
+        "CloggedToilet": 0,
+        "SmellyToilet": 0,
+        "OutOfSupplies": 0,
+        "WetFloor": 0,
+        "PlumbingIssues": 0,
+        "AmmoniaLevel": 0,
+        "SmokeSensor": false,
+        "PanicbtnStatus": false,
+        "TotalViolation": 0,
+        "PanicbtnPushed": 0,
+        "UserReactions": {
+            "Happy": 0,
+            "Satisfied": 0,
+            "NotSatisfied": 0,
+            "NotHappy": 0
+        },
+        "CleanerData": {
+            "CleanerFrequency": [
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 16:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 17:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 18:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 19:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 20:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 21:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 22:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-07-31 23:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 00:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 01:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 02:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 03:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 04:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 05:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 06:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 07:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 08:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 09:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 10:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 11:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 12:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 13:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 14:00:00+00"
+                },
+                {
+                    "TotalMale": 0,
+                    "TotalFemale": 0,
+                    "UplinkTS": "2024-08-01 15:00:00+00"
+                }
+            ],
+            "CleanerPerformance": [
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 16:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 17:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 18:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 19:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 20:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 21:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 22:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-07-31 23:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 00:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 01:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 02:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 03:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 04:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 05:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 06:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 07:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 08:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 09:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 10:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 11:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 12:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 13:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 14:00:00+00"
+                },
+                {
+                    "TotalTimeMale": 0,
+                    "TotalTimeFemale": 0,
+                    "TotalTime": 0,
+                    "UplinkTS": "2024-08-01 15:00:00+00"
+                }
+            ]
+        }
+    }
+}
