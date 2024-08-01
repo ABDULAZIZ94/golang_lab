@@ -1,0 +1,38 @@
+here ok! devlist: []database.Device{database.Device{DeviceID: "a91b5fe2-dd09-4d67-4a71-5a0b033f23c4", TenantID: "f8be7a6d-679c-4319-6906-d172ebf7c17e", DeviceName: "GATEWAY_1", DeviceToken: "GW_MBK_001", Latitude: 1, Longitude: 1, DeviceTypeID: 1, GormDefault:database.GormDefault{CreatedAt:time.Date(2023, time.March,
+            7,
+            8,
+            7,
+            41,
+            960273000, time.Location("Etc/UTC")), UpdatedAt:time.Date(2023, time.March,
+            7,
+            8,
+            7,
+            41,
+            960273000, time.Location("Etc/UTC")), DeletedAt:<nil>
+        }
+    }, database.Device{DeviceID: "c1ca6024-1a80-4a4c-53d5-fdb43c7c529e", TenantID: "f8be7a6d-679c-4319-6906-d172ebf7c17e", DeviceName: "TAMAN_BANDAR_GATEWAY", DeviceToken: "GW_MBK_002", Latitude: 1, Longitude: 1, DeviceTypeID: 1, GormDefault:database.GormDefault{CreatedAt:time.Date(2024, time.February,
+            27,
+            3,
+            38,
+            4,
+            679133000, time.Location("Etc/UTC")), UpdatedAt:time.Date(2024, time.February,
+            27,
+            3,
+            38,
+            4,
+            679133000, time.Location("Etc/UTC")), DeletedAt:<nil>
+        }
+    }, database.Device{DeviceID: "6a07fad7-7262-40f6-54e1-b2ce83a83c98", TenantID: "f8be7a6d-679c-4319-6906-d172ebf7c17e", DeviceName: "MEGAVIEW_GATEWAY", DeviceToken: "GW_MBK_003", Latitude: 1, Longitude: 1, DeviceTypeID: 1, GormDefault:database.GormDefault{CreatedAt:time.Date(2024, time.July,
+            26,
+            12,
+            26,
+            12,
+            891226000, time.Location("Etc/UTC")), UpdatedAt:time.Date(2024, time.July,
+            26,
+            12,
+            26,
+            12,
+            891226000, time.Location("Etc/UTC")), DeletedAt:<nil>
+        }
+    }
+}

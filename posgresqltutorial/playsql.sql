@@ -1,4 +1,4 @@
--- Active: 1721143226972@@127.0.0.1@5432@pgtutorial
+-- Active: 1722401907309@@157.230.253.116@5432@smarttoilet
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
