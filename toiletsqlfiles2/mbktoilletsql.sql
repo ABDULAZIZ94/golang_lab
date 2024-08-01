@@ -1,4 +1,4 @@
--- Active: 1722446664818@@157.230.253.116@5432@smarttoilet
+
 
 -- to add new sensor needs:
 -- add device type
@@ -1180,3 +1180,7 @@ FROM (
             )
     ) Q14 ON 1 = 1
 
+
+
+-- invalid memory address
+ SELECT * FROM "devices"  WHERE "devices"."deleted_at" IS NULL AND ((tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' AND device_type_id = '1'))  
