@@ -1,4 +1,4 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1722446664818@@157.230.253.116@5432@smarttoilet
 select *
 from violation_data
 limit 10
@@ -25,6 +25,12 @@ Where toilet_info_id in (
 ORDER BY id DESC
 limit 10
 offset 130
+
+-- change violation_data device to paired device
+update violation_data
+set device_id = '0e933e0b-9e5c-46a4-509f-3c68529f876d'
+where device_id = '84ae4e2a-b8d7-446f-4bd8-ad658a724ee3'
+
 
 -- individual column
 select 

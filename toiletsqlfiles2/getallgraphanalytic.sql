@@ -1,4 +1,4 @@
--- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722425575568@@alpha.vectolabs.com@9998@smarttoilet
 
 -- get device metadata
 -- get all devices velong to mbk
@@ -840,7 +840,153 @@ FROM (
 GROUP BY
     uplinkTS
 
+-- gentime table
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        ' 2024 -07 -30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval ' 1 DAY '
+            ) uplinkTS
+    )
+    select * from gentime
 
+-- device list table belong to mbk
+-- bad query since generate duplicate
+WITH DEVICE_LIST as (
+    SELECT
+        DEVICES.DEVICE_NAME,
+        DEVICES.DEVICE_ID,
+        DEVICES.DEVICE_TOKEN,
+        TOILET_INFOS.TOILET_NAME AS Identifier,
+        DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+        DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+        TOILET_INFOS.TOILET_TYPE_ID
+    FROM
+        DEVICE_PAIRS
+        JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+        JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+    WHERE
+        TOILET_INFOS.TOILET_INFO_ID IN (
+            SELECT toilet_info_id
+            FROM TOILET_INFOS
+            WHERE
+                tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+        )
+)
+select distinct device_token, count(device_token) from device_list
+group by device_token
+
+-- test duplicate, no duplicate
+select DISTINCT  Q1.device_token, count(Q1.device_token) from
+(select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    ti.TOILET_INFO_ID IN (
+    SELECT toilet_info_id FROM TOILET_INFOS
+    WHERE tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e')) Q1
+group by Q1.device_token
+
+--2nd test
+select DISTINCT
+    Q1.device_pair_id,
+    count(Q1.device_pair_id)
+from (
+        select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+        from
+            device_pairs as dp
+            join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+            join devices as d on dp.device_id = d.device_id
+        where
+            ti.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ) Q1
+group by
+    Q1.device_token,
+    Q1.device_pair_id
+
+-- check duplicate pairs
+
+With 
+    multipair as (
+        select DISTINCT device_id, count (device_id) as c
+        from (select * from device_pairs) Q1 
+        group by device_id)
+select * from device_pairs 
+join devices on device_pairs.device_id = devices.device_id
+join toilet_infos on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+join locations on locations.location_id = toilet_infos.location_id
+where devices.device_id in(
+    select device_id from multipair where c > 1
+) order by device_pairs.device_id
+
+
+-- specific check duplicate
+With
+    multipair as (
+        select DISTINCT
+            device_id,
+            count(device_id) as c
+        from (
+                select *
+                from device_pairs
+            ) Q1
+        group by
+            device_id
+    )
+select device_pairs.device_pair_id, devices.device_id,devices.device_name, devices.device_token ,toilet_infos.toilet_name, locations.location_name
+from
+    device_pairs
+    join devices on device_pairs.device_id = devices.device_id
+    join toilet_infos on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+    join locations on locations.location_id = toilet_infos.location_id
+where
+    devices.device_id in (
+        select device_id
+        from multipair
+        where
+            c > 1
+    )
+order by device_pairs.device_id
+
+
+-- device lists for mbk
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    ti.TOILET_INFO_ID IN (
+        SELECT toilet_info_id
+        FROM TOILET_INFOS
+        WHERE
+            tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+    )) Q1
+
+-- list devices on that toilet, mkb, taman bandar kuantan, female
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
 
 -- solving lux zero
 WITH
@@ -1085,7 +1231,7 @@ FROM GENTIME
     ) second_query USING (uplinkTS)
 ORDER BY uplinkTS ASC
 
-
+-- check average per agg from env sensor installed
 select distinct ts, avg(iaq) as avg_iaq, avg(temperature) as avg_temp, avg(humidity), avg(lux) as avg_lux
 from
 (
@@ -1095,11 +1241,37 @@ from
 group by ts
 
 
-
+-- check if 200 above is logic lux data
 select * from enviroment_data where lux > 200
 order by timestamp asc
 
+-- more complex
+select device_token, count(timestamp) 
+from (
+    select * from enviroment_data where lux > 200 order by timestamp asc
+) Q1
+group by device_token
 
+-- check advanced
+select Q1.device_token, count(Q1.timestamp)
+from (
+        select *
+        from enviroment_data
+        where
+            lux > 200
+        order by timestamp asc
+    ) Q1
+    join (
+        select *
+        from enviroment_data
+        where
+            lux > 200
+        order by timestamp asc
+    ) Q2 on Q1.device_token = Q2.device_token
+group by
+    Q1.device_token
+
+-- checking basic tables
 select * from user_reactions order by timestamp asc limit 10
 
 select * from reactions
@@ -1122,3 +1294,210 @@ select t.tenant_name,d.created_at, * from devices d
 join tenants t on t.tenant_id = d.tenant_id 
 where d.device_type_id = 7
 
+
+
+-- namespace 2
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        ' 2024 -07 -30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval ' 1 DAY '
+            ) uplinkTS
+    ),
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    )
+    SELECT uplinkTS::text, COALESCE(people_in, '0')::text AS people_in, 
+    COALESCE(people_out, '0')::text AS people_out  
+    FROM GENTIME  
+    LEFT JOIN  
+    (SELECT date_trunc('DAY', timestamp) AS uplinkTS,  
+    sum(people_in) AS people_in,sum(people_out) AS people_out  
+    FROM counter_data  
+    WHERE device_token IN (select device_token from DEVICE_LIST)  
+    GROUP BY uplinkTS) second_query USING (uplinkTS) ORDER BY uplinkTS ASC
+
+
+-- device token with device type
+WITH DEVICE_LIST as (
+    SELECT
+        DEVICES.DEVICE_NAME,
+        DEVICES.DEVICE_ID,
+        DEVICES.DEVICE_TOKEN,
+        TOILET_INFOS.TOILET_NAME AS Identifier,
+        DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+        DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+        TOILET_INFOS.TOILET_TYPE_ID
+    FROM
+        DEVICE_PAIRS
+        JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+        JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+    WHERE
+        TOILET_INFOS.TOILET_INFO_ID IN (
+            SELECT toilet_info_id
+            FROM TOILET_INFOS
+            WHERE
+                tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+        )
+)
+select device_list.device_token, device_list.namespace_id from device_list 
+/* where device_list.namespace_id = '2' */
+
+
+select * from counter_data
+where counter_data.device_token IN
+    (select device_list.device_token from device_list)
+
+
+select * from counter_data
+
+-- list unique counter total row of its data with its location and toilet
+select distinct c.device_token,count(c.device_token), ti.toilet_name, t.tenant_name
+from (select device_token from counter_data) c
+join devices d on d.device_token = c.device_token
+join device_pairs dp on d.device_id = dp.device_id
+join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+join tenants t on ti.tenant_id = t.tenant_id
+group by c.device_token, ti.toilet_name, t.tenant_name
+
+
+select * from device_pairs
+
+-- finding ammonia
+WITH
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-01', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT date_trunc('DAY', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token IN (
+                SELECT DEVICE_TOKEN
+                FROM DEVICE_LIST
+            )
+        GROUP BY
+            uplinkTS, ammonia_level
+    ) Q1 GROUP BY uplinkTS
+
+
+-- counter data
+WITH
+    DEVICE_LIST as (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS Identifier,
+            DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_INFOS.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID IN (
+                SELECT toilet_info_id
+                FROM TOILET_INFOS
+                WHERE
+                    tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
+            )
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-07-30', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(people_in, '0')::text AS people_in,
+    COALESCE(people_out, '0')::text AS people_out
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('DAY', timestamp) AS uplinkTS, sum(people_in) AS people_in, sum(people_out) AS people_out
+        FROM counter_data
+        WHERE
+            device_token IN (
+                SELECT DEVICE_TOKEN
+                FROM DEVICE_LIST
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
