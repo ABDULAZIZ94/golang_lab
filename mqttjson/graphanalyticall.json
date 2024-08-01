@@ -1,0 +1,129 @@
+{
+    "error": false,
+    "message": {
+        "TrafficCounter": [
+            {
+                "PeopleIn": 0,
+                "PeopleOut": 0,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "PeopleIn": 0,
+                "PeopleOut": 0,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "Enviroment": [
+            {
+                "Lux": 306.8015,
+                "Humidity": 70.62351,
+                "Temperature": 32.113586,
+                "Iaq": 0.42931297,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "Lux": 326.3958,
+                "Humidity": 70.56071,
+                "Temperature": 32.140095,
+                "Iaq": 0.96231884,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "ComplaintType": [
+            {
+                "BinFull": 0,
+                "Busuk": 3,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 3,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 1,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 2,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "NewComplaintType": [
+            {
+                "SmellyToilet": 3,
+                "OutOfSupplies": 0,
+                "WetFloor": 3,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "SmellyToilet": 1,
+                "OutOfSupplies": 1,
+                "WetFloor": 2,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "CleaningFrequency": [
+            {
+                "TotalMale": 1,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "CleaningPerformance": [
+            {
+                "TotalTimeMale": 1458.8534,
+                "TotalTimeFemale": 0,
+                "TotalTime": 1458.8534,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "UserReactionTypeData": [
+            {
+                "Happy": 2,
+                "Satisfied": 3,
+                "NotSatisfied": 3,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-26 00:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 1,
+                "NotSatisfied": 2,
+                "NotHappy": 1,
+                "UplinkTS": "2024-07-27 00:00:00+00"
+            }
+        ],
+        "Ammonia": [
+            {
+                "AmmoniaLevel": 0,
+                "UplinkTS": "2024-07-26T00:00:00Z"
+            },
+            {
+                "AmmoniaLevel": 0,
+                "UplinkTS": "2024-07-27T00:00:00Z"
+            }
+        ]
+    }
+}

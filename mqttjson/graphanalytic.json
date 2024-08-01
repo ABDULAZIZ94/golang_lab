@@ -1,0 +1,2224 @@
+{
+    "error": false,
+    "message": {
+        "TrafficCounter": [],
+        "Enviroment": [
+            {
+                "Lux": 524.05,
+                "Humidity": 72.46667,
+                "Temperature": 31,
+                "Iaq": 3.1333334,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "Lux": 519.65,
+                "Humidity": 72.51667,
+                "Temperature": 31.35,
+                "Iaq": 0.71666664,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "Lux": 503.42624,
+                "Humidity": 71.09836,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "Lux": 507.2857,
+                "Humidity": 68.91071,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "Lux": 505.5926,
+                "Humidity": 68.77778,
+                "Temperature": 32.055557,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "Lux": 512.2982,
+                "Humidity": 68.61404,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "Lux": 528.85,
+                "Humidity": 68.21667,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "Lux": 513.45764,
+                "Humidity": 68.067795,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "Lux": 501.37704,
+                "Humidity": 67.16393,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "Lux": 489.28333,
+                "Humidity": 69.38333,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "Lux": 456.11667,
+                "Humidity": 71.45,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "Lux": 448.84906,
+                "Humidity": 73.320755,
+                "Temperature": 32.09434,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "Lux": 453.76923,
+                "Humidity": 72.21154,
+                "Temperature": 32,
+                "Iaq": 1.2307693,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "Lux": 455.6111,
+                "Humidity": 70.62963,
+                "Temperature": 32,
+                "Iaq": 3.1851852,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "Lux": 458.4643,
+                "Humidity": 68.60714,
+                "Temperature": 31.375,
+                "Iaq": 2.892857,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "Lux": 458.19644,
+                "Humidity": 69.07143,
+                "Temperature": 31,
+                "Iaq": 2.875,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "Lux": 457.35593,
+                "Humidity": 70.01695,
+                "Temperature": 31,
+                "Iaq": 3,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "Lux": 460.45,
+                "Humidity": 70.833336,
+                "Temperature": 31,
+                "Iaq": 2.9833333,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "Lux": 459.50848,
+                "Humidity": 72.61017,
+                "Temperature": 31,
+                "Iaq": 3,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "Lux": 459.4138,
+                "Humidity": 73.74138,
+                "Temperature": 31,
+                "Iaq": 2.275862,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "Lux": 458.6,
+                "Humidity": 74.75,
+                "Temperature": 31,
+                "Iaq": 2.2833333,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "Lux": 457.8,
+                "Humidity": 75.78333,
+                "Temperature": 31,
+                "Iaq": 2.85,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "Lux": 455.2,
+                "Humidity": 76,
+                "Temperature": 31,
+                "Iaq": 0.73333335,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "Lux": 473.01614,
+                "Humidity": 76.03226,
+                "Temperature": 31,
+                "Iaq": 2.903226,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "Lux": 518.2167,
+                "Humidity": 76.26667,
+                "Temperature": 31,
+                "Iaq": 2.4166667,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "Lux": 526.2632,
+                "Humidity": 75.1579,
+                "Temperature": 31,
+                "Iaq": 0.5964912,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "Lux": 526.0333,
+                "Humidity": 72.4,
+                "Temperature": 31.383333,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "Lux": 531.8077,
+                "Humidity": 70.21154,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "Lux": 560.7447,
+                "Humidity": 67.3617,
+                "Temperature": 32.87234,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "Lux": 500.45764,
+                "Humidity": 69,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "Lux": 523.45,
+                "Humidity": 69.933334,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "Lux": 511.61667,
+                "Humidity": 69.3,
+                "Temperature": 33.066666,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "Lux": 497.7,
+                "Humidity": 69.416664,
+                "Temperature": 33.333332,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "Lux": 485.28333,
+                "Humidity": 70.55,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "Lux": 462.66666,
+                "Humidity": 72.4,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "Lux": 450.05084,
+                "Humidity": 73.44068,
+                "Temperature": 32.932205,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "Lux": 447.01886,
+                "Humidity": 72.62264,
+                "Temperature": 32.981133,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "Lux": 449.0465,
+                "Humidity": 72.39535,
+                "Temperature": 33,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "Lux": 452.975,
+                "Humidity": 73,
+                "Temperature": 32.975,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "Lux": 456.05554,
+                "Humidity": 73.02778,
+                "Temperature": 32.22222,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "Lux": 458.82925,
+                "Humidity": 73.731705,
+                "Temperature": 32,
+                "Iaq": 0.07317073,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "Lux": 461.09302,
+                "Humidity": 74,
+                "Temperature": 32,
+                "Iaq": 3.0232558,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "Lux": 462.7447,
+                "Humidity": 74.02128,
+                "Temperature": 32,
+                "Iaq": 1.7446809,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "Lux": 461.7586,
+                "Humidity": 74.793106,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "Lux": 458.64584,
+                "Humidity": 74,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "Lux": 458.22916,
+                "Humidity": 73.916664,
+                "Temperature": 32,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "Lux": 460.4902,
+                "Humidity": 74,
+                "Temperature": 31.431372,
+                "Iaq": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "Lux": 475.85107,
+                "Humidity": 74,
+                "Temperature": 31,
+                "Iaq": 1.531915,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "Lux": 529.25,
+                "Humidity": 73.795456,
+                "Temperature": 31,
+                "Iaq": 2.2272727,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "ComplaintType": [
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 1,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 1,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "BinFull": 0,
+                "Busuk": 0,
+                "UrinalClog": 0,
+                "SanitaryBinFull": 0,
+                "PipeLeak": 0,
+                "Slippery": 0,
+                "OutTissue": 0,
+                "RefreshToilet": 0,
+                "OutSoap": 0,
+                "CloggedToilet": 0,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "NewComplaintType": [
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "SmellyToilet": 1,
+                "OutOfSupplies": 2,
+                "WetFloor": 1,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "SmellyToilet": 0,
+                "OutOfSupplies": 0,
+                "WetFloor": 0,
+                "PlumbingIssues": 0,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "CleaningFrequency": [
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "TotalMale": 1,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "TotalMale": 0,
+                "TotalFemale": 0,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "CleaningPerformance": [
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "TotalTimeMale": 64.207794,
+                "TotalTimeFemale": 0,
+                "TotalTime": 64.207794,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "TotalTimeMale": 0,
+                "TotalTimeFemale": 0,
+                "TotalTime": 0,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "UserReactionTypeData": [
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 00:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 01:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 02:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 03:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 04:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 05:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 06:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 07:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 08:00:00+00"
+            },
+            {
+                "Happy": 1,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 09:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 10:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 11:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 12:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 13:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 14:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 15:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 16:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 17:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 18:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 19:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 20:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 21:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 22:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-22 23:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 00:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 01:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 02:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 03:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 04:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 05:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 06:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 07:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 08:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 09:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 10:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 4,
+                "UplinkTS": "2024-07-23 11:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 12:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 13:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 14:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 15:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 16:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 17:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 18:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 19:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 20:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 21:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 22:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-23 23:00:00+00"
+            },
+            {
+                "Happy": 0,
+                "Satisfied": 0,
+                "NotSatisfied": 0,
+                "NotHappy": 0,
+                "UplinkTS": "2024-07-24 00:00:00+00"
+            }
+        ],
+        "Ammonia": []
+    }
+}
