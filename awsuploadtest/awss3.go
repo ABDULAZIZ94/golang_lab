@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 // Here, you can choose the region of your bucket
@@ -62,4 +63,34 @@ func main() {
 	}
 
 	fmt.Println("File uploaded successfully!!!")
+
+	// // The session the S3 Downloader will use
+	// sess, err = session.NewSession(&aws.Config{
+	// 	Credentials: credentials.NewStaticCredentials(
+	// 		"AKIAUM2TD2VTILTPLCUU",
+	// 		"uPzvajoeEDxAUaoHChKZO7subLsPl0J9zn24SFej",
+	// 		"", // a token will be created when the session it's used.
+	// 	),
+	// 	Region: aws.String(region),
+	// })
+
+	// Create a downloader with the session and default options
+	downloader := s3manager.NewDownloader(sess)
+
+	filename := "dfile.mp3"
+	// Create a file to write the S3 Object contents to.
+	f, err := os.Create(filename)
+	if err != nil {
+		fmt.Printf("failed to create file %q, %v", filename, err)
+	}
+
+	// Write the contents of S3 Object to the file
+	n, err := downloader.Download(f, &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		fmt.Printf("failed to download file, %v", err)
+	}
+	fmt.Printf("file downloaded, %d bytes\n", n)
 }
