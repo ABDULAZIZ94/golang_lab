@@ -3,6 +3,7 @@ module golab
 go 1.21.3
 
 require (
+	github.com/aws/aws-sdk-go v1.55.5
 	github.com/bitly/go-simplejson v0.5.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi/v5 v5.1.0
@@ -10,6 +11,7 @@ require (
 
 require (
 	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 )
 
