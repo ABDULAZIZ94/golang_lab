@@ -30,7 +30,8 @@ func main() {
 	}
 	svc := s3.New(sess)
 
-	bucket := "smart-toilet/toilet-music"
+	bucket := "smart-toilet/toilet-music/"
+	// bucket := "smart-toilet/toilet-music" //forget / at the end
 	filePath := "./music1.mp3"
 
 	file, err := os.Open(filePath)
