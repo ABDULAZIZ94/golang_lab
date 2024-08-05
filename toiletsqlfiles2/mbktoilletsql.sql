@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 -- to add new sensor needs:
@@ -634,9 +635,9 @@ where dp.toilet_info_id = '9eca5dcc-7946-4367-60a5-d7bd09b1e16a'
 1a264bf4-2a6d-4947-5390-caa4c37dc61c
 
 -- delete pairing yang salah
-delete from device_pairs where device_pair_id in ('7ee4ed69-55d6-4e97-44a6-e7574727348a','08aa77ac-50a3-4c3b-4b6a-f31e7ba867da', '37c32c5f-7706-4ef7-7c6f-2d1d04622db5', '9c051cfa-0eb9-47b3-4b78-b40f007f64b8')
+delete from device_pairs where device_pair_id in ('4a1e11a6-9031-4872-5b2e-3afbcbe98d5f','6e77d9d9-ac7d-4a2a-7034-9892468281a6', 'e6f82480-a68d-4663-5b61-01755b852984', 'b6cf87c7-6d4b-44ed-79e2-bb137c9d8433')
 
-delete from device_pairs where device_pair_id in ('68aba9d4-b09d-4e4b-6e6f-69222ca280f2','0d06d2d9-0cff-4e3c-46d6-c4bccd1fc4b8', '1a264bf4-2a6d-4947-5390-caa4c37dc61c')
+delete from device_pairs where device_pair_id in ('f7ec55da-f0e0-4dc9-7ca0-342cefc7c1f7', '79b67b4a-41da-412d-7bb8-7e174b872f12', '7971da62-c9fc-451a-6bbd-a1da8b32a1a1', '9a6ee98c-0c57-4978-512f-f1b34543b5f2')
 
 
 -- gateway its location, and toilet name.
@@ -762,7 +763,7 @@ create table if not exists violation_types (
 )
 
 
-
+select * from violation_types
 
 insert into violation_types("violation_types","violation_descriptions")
 values('Hop over the gate','a person broke the toilet rules by hop over the gate so the person can go to the toilet for free'),
