@@ -1185,3 +1185,39 @@ FROM (
 
 -- invalid memory address
  SELECT * FROM "devices"  WHERE "devices"."deleted_at" IS NULL AND ((tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e' AND device_type_id = '1'))  
+
+
+-- list all device unpaired
+select * from devices where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+and device_name like '%_FEMALE%'
+
+
+select * from devices where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+and device_type_id =1
+
+SELECT * FROM public.toilet_infos
+
+SELECT * FROM public.toilet_infos
+where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+ORDER BY toilet_info_id ASC 
+
+select * from devices
+
+select * from device_pairs
+
+
+-- check devices pairs
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
+left join device_pairs dp using(device_id)
+where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
+left join device_pairs dp using(device_id)
+where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+and d.device_name like '%_MALE%'
+
+
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
+left join device_pairs dp using(device_id)
+where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+and d.device_name like '%_FEMALE%'
