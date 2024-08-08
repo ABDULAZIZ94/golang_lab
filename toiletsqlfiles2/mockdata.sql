@@ -75,6 +75,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION rand_humidity() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (90-70))+70::INT;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION rand_lux() RETURNS INT AS $$
 BEGIN
    RETURN floor(random() * 1000)::INT;
@@ -83,6 +90,8 @@ $$ LANGUAGE plpgsql;
 
 SELECT rand_b();
 SELECT rand_10();
+
+select rand_humidity()
 
 SELECT rand_ammonia();
 
@@ -132,26 +141,32 @@ ALTER TABLE my_table ALTER COLUMN id SET NOT NULL;
 SELECT setval('ammonia_data_seq', (SELECT MAX(id) FROM ammonia_data));
 
 
--- generate mock occupancy data
-DO $$
-DECLARE
-    rec RECORD; 
-    al BOOLEAN;
-BEGIN
-    -- Note: Assume rand_ammonia() is a valid function that returns an integer
-    FOR rec IN
-        SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '15 seconds'
-        ) AS uplinkTS
-    LOOP
-        al := rand_b();  -- Variable assignment with :=
-        INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
-        VALUES ('113', al, rec.uplinkTS);
-        RAISE NOTICE 'device: 118, occupied: %, timestamp: %', al, rec.uplinkTS;
-    END LOOP;
-END $$;
+-- generate mock env data
+-- DO $$
+-- DECLARE
+--     rec RECORD; 
+--     al BOOLEAN;
+-- BEGIN
+--     -- Note: Assume rand_ammonia() is a valid function that returns an integer
+--     FOR rec IN
+--         SELECT generate_series(
+--             date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+--             date_trunc('second', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+--             INTERVAL '15 seconds'
+--         ) AS uplinkTS
+--     LOOP
+--         -- Variable assignment with :=
+--         env_id := uuid_generate_v4();
+--         device_token := '';
+--         iaq := rand_iaq();
+--         temperature := rand_temp();
+--         humidity := rand_humidity();
+--         lux := rand_lux();
+--         INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
+--         VALUES ('113', al, rec.uplinkTS);
+--         RAISE NOTICE 'device: 118, occupied: %, timestamp: %', al, rec.uplinkTS;
+--     END LOOP;
+-- END $$;
 
 select * from occupancy_data
 
@@ -170,7 +185,12 @@ SELECT setval('occupancy_data_seq', (SELECT MAX(id) FROM ammonia_data));
 DO $$
 DECLARE
     rec RECORD; 
-    al BOOLEAN;
+    env_id text;
+    device_token text;
+    iaq int;
+    temperature int;
+    humidity int;
+    lux int;
 BEGIN
     FOR rec IN
         SELECT generate_series(
@@ -179,10 +199,26 @@ BEGIN
             INTERVAL '15 seconds'
         ) AS uplinkTS
     LOOP
-        al := rand_b();  -- Variable assignment with :=
-        INSERT INTO enviroment_data ("device_token", "occupied", "timestamp")
-        VALUES ('113', al, rec.uplinkTS);
-        RAISE NOTICE 'device: 118, occupied: %, timestamp: %', al, rec.uplinkTS;
+        env_id := uuid_generate_v4();
+        device_token := '105';
+        iaq := rand_iaq();
+        temperature := rand_temp();
+        humidity := rand_humidity();
+        lux := rand_lux();
+        INSERT INTO enviroment_data ("env_data_id", "device_token", "iaq", "temperature", "humidity", "lux", "timestamp")
+        VALUES (env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS);
+        RAISE NOTICE 'env_id: %, device: %, iaq: %, temp: %, humidity: %, lux:%, timestamp: %',
+         env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS;
+        env_id := uuid_generate_v4();
+        device_token := '115';
+        iaq := rand_iaq();
+        temperature := rand_temp();
+        humidity := rand_humidity();
+        lux := rand_lux();
+        INSERT INTO enviroment_data ("env_data_id", "device_token", "iaq", "temperature", "humidity", "lux", "timestamp")
+        VALUES (env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS);
+        RAISE NOTICE 'env_id: %, device: %, iaq: %, temp: %, humidity: %, lux:%, timestamp: %',
+         env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS;
     END LOOP;
 END $$;
 
