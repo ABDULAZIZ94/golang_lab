@@ -1216,7 +1216,7 @@ where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
 left join device_pairs dp using(device_id)
 where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
-and d.device_name like '%_MALE%'
+and d.device_name like '%\_MALE%'
 
 
 select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
