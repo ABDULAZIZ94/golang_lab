@@ -1225,4 +1225,6 @@ where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 and d.device_name like '%_FEMALE%'
 
 
+SELECT * FROM ammonia_data where device_token = '113'
+
 -- change device token

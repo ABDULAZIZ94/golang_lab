@@ -99,6 +99,7 @@ SELECT substring(md5(random()::text) from 1 for 20)
 
 -- select floor(random() * 2)::INT
 
+-- generate mock ammonia data
 DO $$
 DECLARE
     rec RECORD; 
@@ -129,3 +130,27 @@ ALTER TABLE my_table ALTER COLUMN id SET NOT NULL;
 ALTER TABLE my_table ALTER COLUMN id SET NOT NULL;
 
 SELECT setval('ammonia_data_seq', (SELECT MAX(id) FROM ammonia_data));
+
+
+-- generate mock occupancy data
+DO $$
+DECLARE
+    rec RECORD; 
+    al INT;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '15 seconds'
+        ) AS uplinkTS
+    LOOP
+        al := rand_b();  -- Variable assignment with :=
+        INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
+        VALUES ('113', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 118, occupied: %, timestamp: %', al, rec.uplinkTS;
+    END LOOP;
+END $$;
+
+select * from occupancy_data
