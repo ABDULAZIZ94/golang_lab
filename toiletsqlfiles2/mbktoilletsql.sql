@@ -1199,6 +1199,7 @@ and device_type_id =1
 
 SELECT * FROM public.toilet_infos
 
+-- list kemaman toilets
 SELECT * FROM public.toilet_infos
 where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 ORDER BY toilet_info_id ASC 
@@ -1209,16 +1210,17 @@ select * from device_pairs
 
 
 -- check devices pairs
-select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token, dp.toilet_info_id from devices d
 left join device_pairs dp using(device_id)
 where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 
+-- devices for male
 select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
 left join device_pairs dp using(device_id)
 where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 and d.device_name like '%\_MALE%'
 
-
+--devices for female
 select d.device_id, dp.device_pair_id, d.device_name, d.device_token from devices d
 left join device_pairs dp using(device_id)
 where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
@@ -1227,4 +1229,15 @@ and d.device_name like '%_FEMALE%'
 
 SELECT * FROM ammonia_data where device_token = '113'
 
--- change device token
+-- set toilet info id to missed paired toilet and device
+-- set to 36f74ec4-cdb0-4271-6c2d-2baa48d6e583
+
+UPDATE device_pairs 
+SET toilet_info_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+from(
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token, dp.toilet_info_id from devices d
+left join device_pairs dp using(device_id)
+where d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' and 
+toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165' and device_name like '%\_FEMALE%')Q1
+
+

@@ -136,7 +136,7 @@ SELECT setval('ammonia_data_seq', (SELECT MAX(id) FROM ammonia_data));
 DO $$
 DECLARE
     rec RECORD; 
-    al INT;
+    al BOOLEAN;
 BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
@@ -154,3 +154,44 @@ BEGIN
 END $$;
 
 select * from occupancy_data
+
+
+CREATE SEQUENCE occupancy_data_seq;
+
+ALTER TABLE my_table ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE my_table ALTER COLUMN id SET NOT NULL;
+
+SELECT setval('occupancy_data_seq', (SELECT MAX(id) FROM ammonia_data));
+
+
+
+-- generate mock environmental data
+DO $$
+DECLARE
+    rec RECORD; 
+    al BOOLEAN;
+BEGIN
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '15 seconds'
+        ) AS uplinkTS
+    LOOP
+        al := rand_b();  -- Variable assignment with :=
+        INSERT INTO enviroment_data ("device_token", "occupied", "timestamp")
+        VALUES ('113', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 118, occupied: %, timestamp: %', al, rec.uplinkTS;
+    END LOOP;
+END $$;
+
+
+select uuid_generate_v4()
+
+--uuid
+-- SELECT uuid_in(overlay(overlay(md5(random()::text || ':' || random()::text) placing '4' from 13) placing to_hex(floor(random()*(11-8+1) + 8)::int)::text from 17)::cstring);
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+select * from enviroment_data
