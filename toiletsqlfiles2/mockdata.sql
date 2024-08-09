@@ -1,4 +1,4 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1723227376949@@157.230.253.116@5432@smarttoilet
 
 
 -- functions
@@ -128,7 +128,7 @@ BEGIN
     FOR rec IN
         SELECT generate_series(
             date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '6 hour'
         ) AS uplinkTS
     LOOP
@@ -366,7 +366,28 @@ BEGIN
     END LOOP;
 END $$;
 
+--
 
+DO $$
+DECLARE
+    rec RECORD; 
+    al int;
+    deviceid text;
+BEGIN
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        al := rand_12();
+        deviceid = 'bfacd822-e2ee-4a0b-4042-58f0ada3bb48';  -- Variable assignment with :=
+        INSERT INTO violation_data("created_at", "updated_at","deleted_at", "violation_type_id", "video_url", "device_id")
+        VALUES (current_timestamp, current_timestamp, current_timestamp, al, md5(random()::text), deviceid);
+        RAISE NOTICE 'device: %, violation_type: %, timestamp: %',deviceid, al, rec.uplinkTS;
+    END LOOP;
+END $$;
 
 --
 select * from smoke_data
@@ -401,3 +422,55 @@ BEGIN
         RAISE NOTICE 'device: 110, smoke: %, timestamp: %', al, rec.uplinkTS;
     END LOOP;
 END $$;
+
+
+-- generate mock ppeople counter
+
+select * from counter_data
+
+DO $$
+DECLARE
+    rec RECORD; 
+    ind int;
+    outd int;
+    ind2 int;
+    outd2 int;
+    device_t text;
+    device_t2 text;
+    uuid1 text;
+    uuid2 text;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        ind := rand_10();
+        outd := rand_10 ();
+        ind2:= rand_10 ();
+        outd2 := rand_10 ();
+        uuid1 := uuid_generate_v4 ();
+        uuid2 := uuid_generate_v4 ();
+        device_t = '103';
+        device_t2 = '104';
+        
+        INSERT INTO counter_data ("counter_data_id", "device_token", "people_in","people_out", "timestamp")
+        VALUES (uuid1, device_t,ind, outd, rec.uplinkTS);
+        RAISE NOTICE 'uuid: %v, device: %, in: %, out:%, timestamp: %', uuid1, device_t, ind, outd, rec.uplinkTS;
+        
+        INSERT INTO counter_data ("counter_data_id", "device_token", "people_in","people_out", "timestamp")
+        VALUES (uuid2, device_t2,ind, outd, rec.uplinkTS);
+        RAISE NOTICE 'uuid: %v, device: %, in: %, out:%, timestamp: %', uuid2, device_t2, ind2, outd2, rec.uplinkTS;
+    END LOOP;
+END $$;
+
+
+
+CREATE SEQUENCE occupancy_data_seq;
+
+nextval('occupancy_data_seq'::regclass)
+
+SELECT * FROM public.occupancy_data ORDER BY id ASC

@@ -1,4 +1,4 @@
--- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 --GENERATE TIMESTAMP BASED ON DATE AND INTERVAL
@@ -318,3 +318,32 @@ $$ LANGUAGE plpgsql;
 
 drop function gentime_f()
 
+
+-- fix error
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series (
+                date_trunc (
+                    'DAY', TO_TIMESTAMP (
+                        '2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc (
+                    'DAY', TO_TIMESTAMP (
+                        '2025-02-25 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 DAY'
+            ) uplinkTS
+    )
+SELECT DISTINCT
+    uplinkTS,
+    avg(ammonia_level) as ammonia_level
+FROM (
+        SELECT
+            date_trunc ('DAY', timestamp) AS uplinkTS, ammonia_level
+        FROM ammonia_data
+        WHERE
+            device_token = '113'
+        GROUP BY
+            uplinkTS, ammonia_level
+    ) Q1 GROUP BY uplinkTS

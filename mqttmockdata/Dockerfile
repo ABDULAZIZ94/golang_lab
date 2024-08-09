@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM --platform=amd64 golang:alpine
 
 LABEL version = "1.0"
 

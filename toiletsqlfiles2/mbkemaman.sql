@@ -2,6 +2,8 @@
 
 select * from tenants
 
+select * from locations
+
 select * from devices where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' and device_name like '%*%'
 
 select *
