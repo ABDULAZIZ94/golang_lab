@@ -117,9 +117,9 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2023-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '15 seconds'
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
         ) AS uplinkTS
     LOOP
         al := rand_ammonia();  -- Variable assignment with :=
@@ -194,9 +194,9 @@ DECLARE
 BEGIN
     FOR rec IN
         SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '15 seconds'
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '5 hour'
         ) AS uplinkTS
     LOOP
         env_id := uuid_generate_v4();
@@ -230,4 +230,95 @@ select uuid_generate_v4()
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-select * from enviroment_data
+select * from enviroment_data where device_token = '105' and device_token = '115'
+
+-- 36f74ec4-cdb0-4271-6c2d-2baa48d6e583 
+SELECT DEVICES.DEVICE_NAME, DEVICES.DEVICE_ID, DEVICES.DEVICE_TOKEN, TOILET_INFOS.TOILET_NAME AS Identifier, DEVICE_TYPES.DEVICE_TYPE_NAME as Namespace
+FROM
+    DEVICE_PAIRS
+    JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+    JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+    JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+WHERE
+    DEVICE_PAIRS.TOILET_INFO_ID = '9388096c-784d-49c8-784c-1868b1233165'
+
+
+WITH
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-07-22 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-07-24 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 HOUR'
+            ) uplinkTS
+    )
+SELECT
+    uplinkTS::text,
+    COALESCE(TOTAL_TIME_MALE, 0) AS TOTAL_TIME_MALE,
+    COALESCE(TOTAL_TIME_FEMALE, 0) AS TOTAL_TIME_FEMALE,
+    COALESCE(TOTAL_TIME, 0) AS TOTAL_TIME
+FROM GENTIME
+    LEFT JOIN (
+        SELECT
+            date_trunc('HOUR', CHECK_IN_TS) AS uplinkTS, AVG(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 1 THEN duration
+                END
+            ) TOTAL_TIME_MALE, AVG(
+                CASE
+                    WHEN CLEANER_REPORTS.TOILET_TYPE_ID = 2 THEN duration
+                END
+            ) TOTAL_TIME_FEMALE, AVG(DURATION) TOTAL_TIME
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.LOCATION_ID = (
+                SELECT location_id
+                from toilet_infos
+                where
+                    toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+            )
+        GROUP BY
+            uplinkTS
+    ) second_query USING (uplinkTS)
+ORDER BY uplinkTS ASC
+
+
+
+-- panic btn data
+select * from panic_btn_data
+
+select * from panic_btn_data where device_token = '111'
+
+CREATE SEQUENCE panic_btn_seq;
+SELECT setval(
+        'panic_btn_seq', (
+            SELECT MAX(id)
+            FROM ammonia_data
+        )
+    );
+-- generate mock panic btn data
+DO $$
+DECLARE
+    rec RECORD; 
+    al BOOLEAN;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        al := rand_b();  -- Variable assignment with :=
+        INSERT INTO panic_btn_data ("device_token", "panic_button", "timestamp")
+        VALUES ('111', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 111, panic_button: %, timestamp: %', al, rec.uplinkTS;
+    END LOOP;
+END $$;
