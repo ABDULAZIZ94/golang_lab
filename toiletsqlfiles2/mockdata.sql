@@ -365,3 +365,39 @@ BEGIN
         RAISE NOTICE 'device: %, violation_type: %, timestamp: %',deviceid, al, rec.uplinkTS;
     END LOOP;
 END $$;
+
+
+
+--
+select * from smoke_data
+
+CREATE SEQUENCE smoke_data_seq;
+
+nextval('smoke_data_seq'::regclass)
+
+SELECT setval(
+        'smoke_data_seq', (
+            SELECT MAX(id)
+            FROM ammonia_data
+        )
+    );
+-- generate mock smoke data
+DO $$
+DECLARE
+    rec RECORD; 
+    al BOOLEAN;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        al := rand_b();  -- Variable assignment with :=
+        INSERT INTO smoke_data ("device_token", "smoke_sensor", "timestamp")
+        VALUES ('110', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 110, smoke: %, timestamp: %', al, rec.uplinkTS;
+    END LOOP;
+END $$;
