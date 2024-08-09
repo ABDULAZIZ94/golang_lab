@@ -57,6 +57,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION rand_12() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (2))+1::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+drop Function rand_12()
+
 CREATE OR REPLACE FUNCTION rand_ammonia() RETURNS INT AS $$
 BEGIN
    RETURN floor(random() * 255)::INT;
@@ -90,6 +99,7 @@ $$ LANGUAGE plpgsql;
 
 SELECT rand_b();
 SELECT rand_10();
+SELECT rand_12 ();
 
 select rand_humidity()
 
@@ -320,5 +330,38 @@ BEGIN
         INSERT INTO panic_btn_data ("device_token", "panic_button", "timestamp")
         VALUES ('111', al, rec.uplinkTS);
         RAISE NOTICE 'device: 111, panic_button: %, timestamp: %', al, rec.uplinkTS;
+    END LOOP;
+END $$;
+
+
+
+CREATE SEQUENCE violation_id_seq;
+
+SELECT setval(
+        'violation_id_seq', (
+            SELECT MAX(id)
+            FROM ammonia_data
+        )
+    );
+
+-- generate mock violation data
+DO $$
+DECLARE
+    rec RECORD; 
+    al int;
+    deviceid text;
+BEGIN
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        al := rand_12();
+        deviceid = 'd06ce291-d7de-46de-68c0-560e10f69dc2';  -- Variable assignment with :=
+        INSERT INTO violation_data("created_at", "updated_at","deleted_at", "violation_type_id", "video_url", "device_id")
+        VALUES (current_timestamp, current_timestamp, current_timestamp, al, md5(random()::text), deviceid);
+        RAISE NOTICE 'device: %, violation_type: %, timestamp: %',deviceid, al, rec.uplinkTS;
     END LOOP;
 END $$;
