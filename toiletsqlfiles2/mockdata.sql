@@ -1,4 +1,4 @@
--- Active: 1723227376949@@157.230.253.116@5432@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 -- functions
@@ -474,3 +474,44 @@ CREATE SEQUENCE occupancy_data_seq;
 nextval('occupancy_data_seq'::regclass)
 
 SELECT * FROM public.occupancy_data ORDER BY id ASC
+
+
+-- generate mock occupancy data
+select * from occupancy_data
+
+DO $$
+DECLARE
+    rec RECORD; 
+    occupied BOOLEAN;
+    -- outd int;
+    -- ind2 int;
+    -- outd2 int;
+    device_t text;
+    -- device_t2 text;
+    -- uuid1 text;
+    -- uuid2 text;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        occupied := rand_b();
+        -- outd := rand_10 ();
+        -- ind2:= rand_10 ();
+        -- outd2 := rand_10 ();
+        -- uuid1 := uuid_generate_v4 ();
+        -- uuid2 := uuid_generate_v4 ();
+        device_t = '118';
+        -- device_t2 = '104';
+        
+        INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
+        VALUES (device_t, occupied, rec.uplinkTS);
+        RAISE NOTICE 'device: %, occupied: %, timestamp: %', device_t, occupied, rec.uplinkTS;
+        
+
+    END LOOP;
+END $$;
