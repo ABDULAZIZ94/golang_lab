@@ -1,8 +1,17 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
-
+COMMIT;
 select * from tenants
 
 select * from locations
+
+select * from devices ORDER BY device_token desc
+
+select * from devices where device_type_id = 12
+
+select * from devices where device_id = 'bd8f2ba1-53e9-475b-7b92-78f127da9efb'
+
+select * from devices where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 
 select * from devices where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' and device_name like '%*%'
 
@@ -11,6 +20,11 @@ from devices
 where
     tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
  
+
+
+update devices set device_name = 'OCCUPANCY_MALE_M3' where device_token = '121'
+
+update devices set tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' where device_token in ('120','121','122','123','124','125')
 
  update devices
  set device_name = 'FEEDBACK_PANEL_FEMALE'
@@ -167,3 +181,7 @@ WHERE
 update device_pairs
 set toilet_info_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
 where device_pair_id = '9d733a91-e717-459c-5e99-74e50a007868'
+
+
+-- pairing
+-- SELECT device_token ,  device_type_id FROM "devices"  WHERE "devices"."deleted_at" IS NULL AND ((device_id = '55009f31-2114-4bff-5946-4aaa378f791a' AND tenant_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'))  

@@ -505,7 +505,7 @@ BEGIN
         -- outd2 := rand_10 ();
         -- uuid1 := uuid_generate_v4 ();
         -- uuid2 := uuid_generate_v4 ();
-        device_t = '118';
+        device_t = '124';
         -- device_t2 = '104';
         
         INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
