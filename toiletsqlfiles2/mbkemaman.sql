@@ -3,6 +3,7 @@
 COMMIT;
 select * from tenants
 
+-- kemaman 964cd0a5-8620-4a24-67af-578da8c3b6df 
 select * from locations
 
 select * from devices ORDER BY device_token desc

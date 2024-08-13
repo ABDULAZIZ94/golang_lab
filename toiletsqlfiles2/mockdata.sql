@@ -66,6 +66,14 @@ $$ LANGUAGE plpgsql;
 
 drop Function rand_12()
 
+CREATE OR REPLACE FUNCTION rand_fp() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (12-1))+1::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+drop Function rand_fp ()
+
 CREATE OR REPLACE FUNCTION rand_ammonia() RETURNS INT AS $$
 BEGIN
    RETURN floor(random() * 255)::INT;
@@ -515,3 +523,78 @@ BEGIN
 
     END LOOP;
 END $$;
+
+
+-- mock data auto clean data
+DO $$
+DECLARE
+    rec RECORD; 
+    occupied BOOLEAN;
+    crid text;
+    tenant_id text;
+    loc_id text;
+    toilet_tid int;
+    autoclean int;
+    cubical_id text;
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '6 hour'
+        ) AS uplinkTS
+    LOOP
+        occupied := rand_b();
+        crid := uuid_generate_v4 ();
+        cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89';
+        tenant_id := '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'; --mbkemaman
+        loc_id := '964cd0a5-8620-4a24-67af-578da8c3b6df'; -- kemaman
+        toilet_tid := 1;
+        autoclean := rand_10();
+
+        INSERT INTO cleaner_reports ("cleaner_report_id", "tenant_id", "location_id", "toilet_type_id", "check_in_ts","check_out_ts","duration","auto_clean_state","created_at","updated_at", "cubical_id")
+        VALUES (crid, tenant_id, loc_id, toilet_tid, rec.uplinkTS, rec.uplinkTS, 1.0, autoclean, rec.uplinkTS, rec.uplinkTS, cubical_id);
+        RAISE NOTICE '% % % % % % % % % % ',
+        crid, tenant_id, loc_id, toilet_tid, rec.uplinkTS, rec.uplinkTS, 1.0, autoclean, rec.uplinkTS, rec.uplinkTS;
+        
+
+    END LOOP;
+END $$;
+
+
+
+-- mock feedback panel data
+DO $$
+DECLARE
+    rec RECORD; 
+    fbdataid text;
+    fp_token text; --107
+BEGIN
+    -- Note: Assume rand_ammonia() is a valid function that returns an integer
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('second', TO_TIMESTAMP('2024-08-13 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-08-13 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '45 second'
+        ) AS uplinkTS
+    LOOP
+
+        fbdataid := uuid_generate_v4 ();
+        fp_token := '108'; --108 , 117
+
+        INSERT INTO feedback_panel_data("fp_data_id","device_token","button_id","timestamp", "toilet_type_id")
+        VALUES (fbdataid, fp_token, rand_fp(), rec.uplinkTS, rand_12());
+        RAISE NOTICE '% % % % % ',
+        fbdataid, fp_token, rand_fp (), rec.uplinkTS, rand_12 ();
+        
+
+    END LOOP;
+END $$;
+
+
+select * from devices where device_type_id = 7
+
+select * from device_types
+
+select * from feedback_panels

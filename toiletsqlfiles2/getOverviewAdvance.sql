@@ -1,4 +1,4 @@
--- Active: 1720683458566@@127.0.0.1@5432@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 -- getoverview advance data 
 WITH
@@ -626,7 +626,9 @@ from
 order by timestamp desc
 limit 4
 
-
+select DISTINCT ts , count(oc) from
+(select date_trunc('HOUR', timestamp) as ts, CASE WHEN occupied = TRUE THEN 1 END as oc from occupancy_data where device_token = '113')Q1
+group by ts
 
 -- fail query
 WITH
