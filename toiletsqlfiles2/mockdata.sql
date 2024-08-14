@@ -72,6 +72,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+select rand_fp()
+
 drop Function rand_fp ()
 
 CREATE OR REPLACE FUNCTION rand_ammonia() RETURNS INT AS $$
@@ -575,7 +577,7 @@ BEGIN
     FOR rec IN
         SELECT generate_series(
             date_trunc('second', TO_TIMESTAMP('2024-08-13 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2024-08-13 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-08-23 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '45 second'
         ) AS uplinkTS
     LOOP
