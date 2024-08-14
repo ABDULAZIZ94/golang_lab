@@ -46,5 +46,6 @@ count(case when complaint = '2' then 1 end) as satisfied,
 count(case when complaint = '3' then 1 end) as notsatisfied,
 count(case when complaint = '4' then 1 end) as nothappy
 from user_reactions where timestamp between TO_TIMESTAMP( '2024-08-14 07:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and 
-TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) )Q1
+TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583',
+'9388096c-784d-49c8-784c-1868b1233165','a97891e5-14df-4f95-7d1e-4ee601581df2'))Q1
 group by Q1.happy, Q1.satisfied, Q1.notsatisfied, Q1.nothappy 
