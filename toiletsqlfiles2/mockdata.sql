@@ -39,6 +39,7 @@ SELECT generate_series(
         INTERVAL '15 second'
 ) AS uplinkTS
 
+-- create random functions 
 CREATE OR REPLACE FUNCTION rand_b() RETURNS BOOLEAN AS $$
 BEGIN
    RETURN random() > 0.5;
@@ -65,6 +66,27 @@ END;
 $$ LANGUAGE plpgsql;
 
 drop Function rand_12()
+
+CREATE OR REPLACE FUNCTION rand_14() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (5-1)+1)::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_14()
+
+drop Function rand_14 ()
+
+-- rand 1 - 5
+CREATE OR REPLACE FUNCTION rand_15() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (6-1)+1)::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_15 ()
+
+drop Function rand_15 ()
 
 CREATE OR REPLACE FUNCTION rand_fp() RETURNS INT AS $$
 BEGIN
@@ -412,6 +434,8 @@ SELECT setval(
             FROM ammonia_data
         )
     );
+
+
 -- generate mock smoke data
 DO $$
 DECLARE
@@ -600,3 +624,39 @@ select * from devices where device_type_id = 7
 select * from device_types
 
 select * from feedback_panels
+
+
+
+-- mock user reaction data
+DO $$
+DECLARE
+    rec RECORD; 
+    reid UUID;
+    tt INT;
+    r INT;
+    co INT;
+    ti TEXT[] := ARRAY['36f74ec4-cdb0-4271-6c2d-2baa48d6e583','9388096c-784d-49c8-784c-1868b1233165','a97891e5-14df-4f95-7d1e-4ee601581df2'];
+    tir INT;
+    s INT;
+BEGIN
+    -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('second', TO_TIMESTAMP('2024-08-13 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-08-23 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '45 seconds'
+        ) AS uplinkTS
+    LOOP
+        reid := uuid_generate_v4();  -- Ensure uuid-ossp extension is enabled
+        tt := rand_12();            -- Assuming rand_12() returns an integer
+        r := rand_14();            -- Assuming rand_14() returns an integer
+        co := rand_14();           -- Assuming rand_14() returns an integer
+        tir := rand_12();          -- Assuming rand_12() returns an integer
+        s := rand_15();           -- Assuming rand_15() returns an integer
+
+        INSERT INTO user_reactions(reaction_id, toilet_type, reaction, complaint, timestamp, toilet_id, score)
+        VALUES (reid, tt, r, co, rec.uplinkTS, ti[tir], s);
+
+        RAISE NOTICE '% % % % % % %', reid, tt, r, co, rec.uplinkTS, ti[tir], s;
+    END LOOP;
+END $$;
