@@ -87,3 +87,11 @@ from user_reactions
 where (timestamp) between to_timestamp('2024-01-01 07:00:00','YYYY-MM-DD HH24:MI:SS') 
 and to_timestamp('2024-12-30 18:00:00','YYYY-MM-DD HH24:MI:SS') and toilet_id IN ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583')
 group by ts
+
+
+-- user complaints graph
+select count(reaction_id) as TOTAL_COMPLAINT, date_trunc('HOUR',timestamp) as uplinkts from user_reactions 
+where EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18 and
+(timestamp) between to_timestamp('2024-08-01 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+and to_timestamp('2024-08-30 18:00:00','YYYY-MM-DD HH24:MI:SS') and 
+toilet_id IN ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583') group by ts

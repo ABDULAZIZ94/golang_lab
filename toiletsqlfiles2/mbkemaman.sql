@@ -1,4 +1,4 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1723732721360@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 COMMIT;
 select * from tenants

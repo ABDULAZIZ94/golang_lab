@@ -1,4 +1,4 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1723732721360@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 -- functions
@@ -488,7 +488,7 @@ BEGIN
         outd2 := rand_10 ();
         uuid1 := uuid_generate_v4 ();
         uuid2 := uuid_generate_v4 ();
-        device_t = '103';
+        device_t = '118';
         device_t2 = '104';
         
         INSERT INTO counter_data ("counter_data_id", "device_token", "people_in","people_out", "timestamp")
@@ -528,9 +528,9 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '6 hour'
+            date_trunc('minute', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '3 minute'
         ) AS uplinkTS
     LOOP
         occupied := rand_b();
@@ -539,7 +539,7 @@ BEGIN
         -- outd2 := rand_10 ();
         -- uuid1 := uuid_generate_v4 ();
         -- uuid2 := uuid_generate_v4 ();
-        device_t = '124';
+        device_t = '118';
         -- device_t2 = '104';
         
         INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
@@ -642,8 +642,8 @@ BEGIN
     -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
     FOR rec IN
         SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2024-08-13 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2024-12-30 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-08-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-08-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '45 seconds'
         ) AS uplinkTS
     LOOP
@@ -658,5 +658,34 @@ BEGIN
         VALUES (reid, tt, r, co, rec.uplinkTS, ti[tir], s);
 
         RAISE NOTICE '% % % % % % %', reid, tt, r, co, rec.uplinkTS, ti[tir], s;
+    END LOOP;
+END $$;
+
+
+-- mock fragrance data
+DO $$
+DECLARE
+    rec RECORD; 
+    dtoken text;
+    fg_on boolean;
+    fg_dur int;
+
+BEGIN
+    -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('second', TO_TIMESTAMP('2024-08-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-09-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '45 seconds'
+        ) AS uplinkTS
+    LOOP
+        dtoken = '116';
+        fg_on = rand_b();
+        fg_dur = rand_14();
+
+        INSERT INTO fragrance_data("device_token", "fragrance_on", "fragrance_duration", "timestamp")
+        VALUES (dtoken, fg_on, fg_dur, rec.uplinkTS);
+
+        RAISE NOTICE '% % % %',dtoken, fg_on, fg_dur, rec.uplinkTS;
     END LOOP;
 END $$;
