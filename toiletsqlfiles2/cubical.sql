@@ -235,3 +235,8 @@ from occupancy_data where EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FRO
 
 -- autocleanactivated trend
 select traffic, uplinkts
+
+select count(cleaner_report_id)as traffic ,date_trunc('HOUR', created_at)as uplinkts from cleaner_reports where EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND auto_clean_state ='1' AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3'
+    group by uplinkts
