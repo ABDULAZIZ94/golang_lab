@@ -566,14 +566,15 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '6 hour'
+            date_trunc('minutes', TO_TIMESTAMP('2024-08-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minutes', TO_TIMESTAMP('2024-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '15 minutes'
         ) AS uplinkTS
     LOOP
         occupied := rand_b();
         crid := uuid_generate_v4 ();
-        cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89';
+        -- m1 3c64d02c-abfb-4b57-5dfe-116d163ecee3 
+        cubical_id = '3c64d02c-abfb-4b57-5dfe-116d163ecee3'; 
         tenant_id := '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'; --mbkemaman
         loc_id := '964cd0a5-8620-4a24-67af-578da8c3b6df'; -- kemaman
         toilet_tid := 1;

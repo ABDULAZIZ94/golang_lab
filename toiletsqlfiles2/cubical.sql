@@ -113,7 +113,7 @@ LAST_AUTO_CLEAN_ACTIVATED, TOTAL_CLEAN_TODAY, LAST_CLEAN
 
 
 
--- Q1
+-- 
 select occupied ,
 LAG(occupied, 1) OVER (
     ORDER BY id
@@ -139,7 +139,7 @@ EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
     and TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS')
 -- group by occupied,id, uplinkts
 
-
+-- Q1
 select count(case when occupied=true and prev_occupied =false then 1 end ) as TRAFIC_COUNT_TODAY from
 (select occupied ,
 LAG(occupied, 1) OVER (ORDER BY id) AS prev_occupied,
@@ -148,3 +148,90 @@ where device_token in ('118') and
 EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
     AND timestamp between TO_TIMESTAMP('2024-08-14 07:00:00','YYYY-MM-DD HH24:MI:SS') 
     and TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS'))S1
+
+
+select occupied as OCCUPIED,timestamp  from occupancy_data where device_token ='118' order by timestamp limit 1
+
+-- Q4
+select created_at as last_autoclean  from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1
+
+--Q6
+select created_at as last_clean  from cleaner_reports where auto_clean_state = '0' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1
+
+select * from cleaner_reports
+
+-- current_timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'GMT+8'
+-- current_timestamp , gmt
+
+select 
+CASE
+    WHEN AGE (now() + INTERVAL '8 hours') >= INTERVAL '0 second'
+    AND AGE (now() + INTERVAL '8 hours') <= INTERVAL '15 second' THEN TRUE
+    ELSE FALSE
+END AS autocleaning, 
+now() + INTERVAL '8 hours' , 
+created_at
+from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1
+
+
+-- Q2 occupied, not occupied, autoclean
+select (case when autocleaning = true then true else false end) as autocleaning,
+( case when OCCUPIED = true and autocleaning = false then true else false end ) as occupancy,
+( case when OCCUPIED = false and autocleaning = false then true else false end ) as notoccupied
+-- OCCUPIED,
+-- autocleaning
+from
+(select occupied as OCCUPIED,timestamp  from occupancy_data where device_token ='118' order by timestamp limit 1)Q1
+-- (select false as occupied)Q1
+left join
+(select 
+CASE
+    WHEN AGE (now() + INTERVAL '8 hours') >= INTERVAL '0 second'
+    AND AGE (now() + INTERVAL '8 hours') <= INTERVAL '15 second' THEN TRUE
+    ELSE FALSE
+END AS autocleaning, 
+now() + INTERVAL '8 hours' , 
+created_at
+from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1)Q2 ON 1=1
+
+
+
+--Q3  total autoclean today
+select count(cleaner_report_id) as total_autoclean_activated_today
+from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS')
+
+-- Q5 total clean today, manual clean
+select count(cleaner_report_id) as total_autoclean_activated_today
+from cleaner_reports where auto_clean_state = '0' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS')
+
+
+
+-- traffic today
+select user, uplinks
+
+select count(case when occupied = true and prev_occupied = false then 1 end) as user,uplinkts from
+(select occupied, LAG(occupied, 1) OVER ( ORDER BY id ) AS prev_occupied, date_trunc('HOUR',timestamp) as uplinkts
+from occupancy_data where EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
+    AND timestamp between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') and device_token ='118')S1 group by S1.uplinkts
+
+-- autocleanactivated trend
+select traffic, uplinkts
