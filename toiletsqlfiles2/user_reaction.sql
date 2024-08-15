@@ -63,3 +63,27 @@ TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in 
 group by Q1.SMELLY_TOILET, Q1.OUTOF_SUPPLY, Q1.WET_FLOOR, Q1.PLUMBING_ISSUES 
 
 
+
+
+-- user reactions X months for a year
+
+select count(case when complaint = '1' then 1 end) as SMELLY_TOILET,
+count(case when complaint = '2' then 1 end) as OUTOF_SUPPLY,
+count(case when complaint = '3' then 1 end) as WET_FLOOR,
+count(case when complaint = '4' then 1 end) as PLUMBING_ISSUES,
+date_trunc('MONTH', timestamp) as ts
+from user_reactions
+where (timestamp) between to_timestamp('2024-01-01 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+and to_timestamp('2024-12-30 18:00:00','YYYY-MM-DD HH24:MI:SS') and toilet_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+group by ts
+
+
+select count(case when complaint = '1' then 1 end) as SMELLY_TOILET,
+count(case when complaint = '2' then 1 end) as OUTOF_SUPPLY,
+count(case when complaint = '3' then 1 end) as WET_FLOOR,
+count(case when complaint = '4' then 1 end) as PLUMBING_ISSUES,
+date_trunc('MONTH', timestamp) as ts
+from user_reactions
+where (timestamp) between to_timestamp('2024-01-01 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+and to_timestamp('2024-12-30 18:00:00','YYYY-MM-DD HH24:MI:SS') and toilet_id IN ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583')
+group by ts

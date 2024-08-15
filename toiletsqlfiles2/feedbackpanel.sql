@@ -57,7 +57,7 @@ group by S1.ts
 
 
 -- make date tuncate and numerical, combine c
-
+-- old complainttypemonthly
 select ts, SUM(OUT_TISSUE + OUT_SOAP) AS OUTOFSUPPLY,
     SLIPPERY,
     SMELLY,
@@ -353,6 +353,7 @@ group by
 
 
 -- each complaint for every month for a year
+-- graph complain yang salah
 select distinct
     ts, COUNT(REFRESH_TOILET) AS REFRESH_TOILET, COUNT(OUT_TISSUE) AS OUT_TISSUE, COUNT(BIN_FULL) AS BIN_FULL, COUNT(OUT_SOAP) AS OUT_SOAP, COUNT(BUSUK) AS SMELLY, COUNT(CLOGGED_TOILET) AS CLOGGED_TOILET, COUNT(URINAL_CLOG) AS URINAL_CLOG, COUNT(SLIPPERY) AS WET_FLOOR, COUNT(SANITARY_BIN_FULL) AS SANITARY_BIN_FULL, COUNT(PIPE_LEAK) AS PLUMBING_ISSUES
 FROM (

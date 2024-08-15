@@ -643,7 +643,7 @@ BEGIN
     FOR rec IN
         SELECT generate_series(
             date_trunc('second', TO_TIMESTAMP('2024-08-13 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2024-08-23 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('second', TO_TIMESTAMP('2024-12-30 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '45 seconds'
         ) AS uplinkTS
     LOOP
