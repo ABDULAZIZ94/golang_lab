@@ -353,9 +353,9 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '6 hour'
+            date_trunc('hour', TO_TIMESTAMP('2024-08-14 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '1 hour'
         ) AS uplinkTS
     LOOP
         al := rand_b();  -- Variable assignment with :=
@@ -477,9 +477,9 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '6 hour'
+            date_trunc('minute', TO_TIMESTAMP('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '1 minute'
         ) AS uplinkTS
     LOOP
         ind := rand_10();

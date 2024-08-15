@@ -40,12 +40,26 @@ group by Q1.happy, Q1.satisfied, Q1.notsatisfied, Q1.nothappy
 
 TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS')
 
+-- user reactions
 select sum(happy+satisfied+notsatisfied+nothappy) as total_reactions, happy, satisfied, notsatisfied,nothappy from
-(select count(case when complaint = '1' then 1 end) as happy,
-count(case when complaint = '2' then 1 end) as satisfied,
-count(case when complaint = '3' then 1 end) as notsatisfied,
-count(case when complaint = '4' then 1 end) as nothappy
+(select count(case when reaction = '1' then 1 end) as happy,
+count(case when reaction = '2' then 1 end) as satisfied,
+count(case when reaction = '3' then 1 end) as notsatisfied,
+count(case when reaction = '4' then 1 end) as nothappy
 from user_reactions where timestamp between TO_TIMESTAMP( '2024-08-14 07:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and 
 TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583',
 '9388096c-784d-49c8-784c-1868b1233165','a97891e5-14df-4f95-7d1e-4ee601581df2'))Q1
 group by Q1.happy, Q1.satisfied, Q1.notsatisfied, Q1.nothappy 
+
+-- user complaints
+select sum(SMELLY_TOILET+OUTOF_SUPPLY+WET_FLOOR+PLUMBING_ISSUES) as TOTAL, SMELLY_TOILET, OUTOF_SUPPLY, WET_FLOOR, PLUMBING_ISSUES from
+(select count(case when complaint = '1' then 1 end) as SMELLY_TOILET,
+count(case when complaint = '2' then 1 end) as OUTOF_SUPPLY,
+count(case when complaint = '3' then 1 end) as WET_FLOOR,
+count(case when complaint = '4' then 1 end) as PLUMBING_ISSUES
+from user_reactions where timestamp between TO_TIMESTAMP( '2024-08-14 07:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and 
+TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583',
+'9388096c-784d-49c8-784c-1868b1233165','a97891e5-14df-4f95-7d1e-4ee601581df2'))Q1
+group by Q1.SMELLY_TOILET, Q1.OUTOF_SUPPLY, Q1.WET_FLOOR, Q1.PLUMBING_ISSUES 
+
+
