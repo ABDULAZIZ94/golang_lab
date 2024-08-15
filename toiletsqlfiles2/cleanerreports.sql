@@ -31,6 +31,8 @@ select * from users where user_id ='7a1c3658-d58b-46ca-6935-6a0835477b69 '
 select * from users
 
 
+select * from cleaner_reports where auto_clean_state = '1' order by created_at asc
+
 -- count how may auto cleans
 select distinct tenant_id, count(tenant_id) from
 (select *

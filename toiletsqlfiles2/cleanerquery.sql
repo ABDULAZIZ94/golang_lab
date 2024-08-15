@@ -89,3 +89,35 @@ join toilet_infos ti on ti.location_id = loc.location_id
 where ti.toilet_info_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583' and cr.created_at between 
 TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP('2024-07-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
 GROUP BY uplinkTS
+
+select * from cleaner_reports
+
+-- toilet autoclean status
+SELECT CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTO_CLEAN_STATUS
+FROM CLEANER_REPORTS  cr
+join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id 
+where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and dcp.device_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP('2024-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
+order by cr.created_at limit 1
+
+
+
+SELECT
+    CASE
+        WHEN cr.cleaner_report_id IS NOT NULL THEN true
+        WHEN cr.cleaner_report_id = '' THEN false
+        ELSE false -- Covers the case where cleaner_report_id is neither NULL nor an empty string
+    END as AUTO_CLEAN_STATUS
+FROM CLEANER_REPORTS cr
+WHERE
+    cr.cubical_id = '3c64d02c-abfb-4b57-5dfe-116d163ecee3'
+    AND cr.created_at BETWEEN TO_TIMESTAMP(
+        '2024-07-01 07:00:00',
+        'YYYY-MM-DD HH24:MI:SS'
+    ) AND TO_TIMESTAMP(
+        '2024-07-30 18:00:00',
+        'YYYY-MM-DD HH24:MI:SS'
+    )
+    AND cr.auto_clean_state = '1'
+ORDER BY cr.created_at
+LIMIT 1;

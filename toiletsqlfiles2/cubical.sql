@@ -75,6 +75,7 @@ e4ebb57f-7321-4d53-696f-bd30ffbe67be
 -- 7b53a36c-a016-4ddb-766c-177e0f9b7d9a
 
 
+-- guna ini
 -- cubical m
 881ac292-f7ba-42ed-61be-7ea9e5368d89 --1
 e34a8f65-9524-4a6a-55d5-153217239201 --2
@@ -108,9 +109,44 @@ join devices d on d.device_id =  dcp.device_id
 
 -- SELECT * from devices where device_id = '4cd91fb8-54ef-46e8-4472-4c1b9a3a42bc'
 
-SELECT TRAFIC_COUNT_TODAY, UNOCCUPIED, TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
-LAST_AUTO_CLEAN_ACTIVATED, TOTAL_CLEAN_TODAY, LAST_CLEAN
-
+-- combine all
+SELECT 
+COALESCE(TRAFIC_COUNT_TODAY, 0) AS TRAFIC_COUNT_TODAY,
+COALESCE(TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,0) AS TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+LAST_AUTO_CLEAN_ACTIVATED, 
+COALESCE(TOTAL_CLEAN_TODAY,0) AS TOTAL_CLEAN_TODAY, 
+LAST_CLEAN
+FROM 
+(select count(case when occupied=true and prev_occupied =false then 1 end ) as TRAFIC_COUNT_TODAY from
+(select occupied ,
+LAG(occupied, 1) OVER (ORDER BY id) AS prev_occupied,
+ date_trunc('HOUR', timestamp) as uplinkts from occupancy_data
+where device_token in ('118') and 
+EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
+    AND timestamp between TO_TIMESTAMP('2024-08-14 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS'))S1)Q1
+LEFT JOIN
+(select count(cleaner_report_id) as TOTAL_AUTO_CLEAN_ACTIVATED_TODAY
+from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS'))Q3 ON 1=1
+LEFT JOIN
+(select created_at as LAST_AUTO_CLEAN_ACTIVATED from cleaner_reports where auto_clean_state = '1' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1)Q4 ON 1=1
+LEFT JOIN
+(select count(cleaner_report_id) as TOTAL_CLEAN_TODAY
+from cleaner_reports where auto_clean_state = '0' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS'))Q5 ON 1=1
+LEFT JOIN
+(select created_at as LAST_CLEAN  from cleaner_reports where auto_clean_state = '0' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
+EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
+    AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') order by created_at desc limit 1)Q6 ON 1=1
 
 
 -- 
@@ -216,7 +252,7 @@ EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
     and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS')
 
 -- Q5 total clean today, manual clean
-select count(cleaner_report_id) as total_autoclean_activated_today
+select count(cleaner_report_id) as total_clean_today
 from cleaner_reports where auto_clean_state = '0' and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and
 EXTRACT(HOUR FROM created_at) >= 7 AND EXTRACT(HOUR FROM created_at) <= 18
     AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
@@ -240,3 +276,166 @@ select count(cleaner_report_id)as traffic ,date_trunc('HOUR', created_at)as upli
     AND auto_clean_state ='1' AND created_at between TO_TIMESTAMP('2024-08-16 07:00:00','YYYY-MM-DD HH24:MI:SS') 
     and TO_TIMESTAMP('2024-08-16 18:00:00','YYYY-MM-DD HH24:MI:SS') and cubical_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3'
     group by uplinkts
+
+
+
+    -- fail query
+select d.device_token
+from
+    device_cubical_pairs dcp
+    join devices d on d.device_id = dcp.device_id
+where
+    dcp.cubical_id = '3c64d02c-abfb-4b57-5dfe-116d163ecee3'
+
+select * from device_cubical_pairs
+
+
+
+-- lumsum fail
+WITH
+    DEVICE_LIST AS (
+        select d.device_token, d.device_type_id
+        from
+            device_cubical_pairs dcp
+            join devices d on d.device_id = dcp.device_id
+        where
+            dcp.cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+    )
+SELECT
+    COALESCE(TRAFIC_COUNT_TODAY, 0) AS TRAFIC_COUNT_TODAY,
+    COALESCE(
+        TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+        0
+    ) AS TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+    LAST_AUTO_CLEAN_ACTIVATED,
+    COALESCE(TOTAL_CLEAN_TODAY, 0) AS TOTAL_CLEAN_TODAY,
+    LAST_CLEAN
+FROM (
+        select count(
+                case
+                    when occupied = true
+                    and prev_occupied = false then 1
+                end
+            ) as TRAFIC_COUNT_TODAY
+        from (
+                select
+                    occupied, LAG(occupied, 1) OVER (
+                        ORDER BY id
+                    ) AS prev_occupied, date_trunc('HOUR', timestamp) as uplinkts
+                from occupancy_data
+                where
+                    device_token in (
+                        select device_token
+                        from device_list
+                        where
+                            device_type_id = 12
+                    )
+                    and EXTRACT(
+                        HOUR
+                        FROM timestamp
+                    ) >= 7
+                    AND EXTRACT(
+                        HOUR
+                        FROM timestamp
+                    ) <= 18
+                    AND timestamp between TO_TIMESTAMP(
+                        '2024-08-16 07:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    ) and TO_TIMESTAMP(
+                        '2024-08-16 18:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+            ) S1
+    ) Q1
+    LEFT JOIN (
+        select
+            count(cleaner_report_id) as TOTAL_AUTO_CLEAN_ACTIVATED_TODAY
+        from cleaner_reports
+        where
+            auto_clean_state = '1'
+            and cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+            and EXTRACT(
+                HOUR
+                FROM created_at
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM created_at
+            ) <= 18
+            AND created_at between TO_TIMESTAMP(
+                '2024-08-16 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-16 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q3 ON 1 = 1
+    LEFT JOIN (
+        select
+            created_at as LAST_AUTO_CLEAN_ACTIVATED
+        from cleaner_reports
+        where
+            auto_clean_state = '1'
+            and cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+            and EXTRACT(
+                HOUR
+                FROM created_at
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM created_at
+            ) <= 18
+            AND created_at between TO_TIMESTAMP(
+                '2024-08-16 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-16 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at desc
+        limit 1
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        select count(cleaner_report_id) as TOTAL_CLEAN_TODAY
+        from cleaner_reports
+        where
+            auto_clean_state = '0'
+            and cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+            and EXTRACT(
+                HOUR
+                FROM created_at
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM created_at
+            ) <= 18
+            AND created_at between TO_TIMESTAMP(
+                '2024-08-16 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-16 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select created_at as LAST_CLEAN
+        from cleaner_reports
+        where
+            auto_clean_state = '0'
+            and cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+            and EXTRACT(
+                HOUR
+                FROM created_at
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM created_at
+            ) <= 18
+            AND created_at between TO_TIMESTAMP(
+                '2024-08-16 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-16 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at desc
+        limit 1
+    ) Q6 ON 1 = 1
