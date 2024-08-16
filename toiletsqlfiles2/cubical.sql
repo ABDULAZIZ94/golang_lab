@@ -464,7 +464,8 @@ left join
         (select * , lag(occupied, 1) over( order by id )prev_occupied 
         from occupancy_data) SQ1  
     where timestamp BETWEEN to_timestamp('2024-08-16 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-    AND to_timestamp('2024-08-16 23:59:59', 'YYYY-MM-DD HH24:MI:SS')  
+    AND to_timestamp('2024-08-16 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+    and device_token ='118'  
     group by device_token ) 
     Q1 on Q1.device_token = dl.device_token  
     -- order by timestamp desc limit 4 
@@ -577,9 +578,89 @@ using(device_id)
 
 
 -- query to get cubical pairs
-select cp.cubical_pair_id, cp.cubical_id, cp.toilet_info_id, d.device_token, d.device_id, ci.cubical_name
+select cp.cubical_pair_id, cp.cubical_id, cp.toilet_info_id, d.device_token, d.device_id, ci.cubical_name, d.device_name
 from cubical_pairs cp
 join cubical_infos ci on ci.cubical_id = cp.cubical_id
 join device_cubical_pairs dcp on dcp.cubical_id = cp.cubical_id
 join devices d on d.device_id = dcp.device_id
 where cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+
+
+
+select cubical_counter, 
+occupied
+from
+(select COALESCE(sum(CASE WHEN occupied = TRUE AND prev_occupied = FALSE THEN 1 ELSE 0 END),0) as cubical_counter, 
+device_token  from 
+    (select * , lag(occupied, 1) over( order by id )prev_occupied 
+    from occupancy_data) SQ1  
+where timestamp BETWEEN to_timestamp('2024-08-16 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+AND to_timestamp('2024-08-16 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+and device_token = '118'  
+group by device_token) Q1 
+left join 
+(select occupied, device_token from occupancy_data where device_token = '118' order by timestamp limit 1)Q2 USING(device_token)
+
+
+
+SELECT CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTOCLEANINGPROCESS
+-- ci.cubical_name,
+-- dcp.device_id,
+-- cr.created_at
+FROM CLEANER_REPORTS  cr 
+join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+-- join cubical_infos ci on ci.cubical_id = dcp.cubical_id
+where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and 
+dcp.device_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and  
+cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and 
+TO_TIMESTAMP('2025-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')  
+order by cr.created_at desc limit 1
+
+
+
+
+-- try combine
+select cubical_counter, 
+occupied,
+AUTOCLEANINGPROCESS
+from
+devices d
+left join
+(select COALESCE(sum(CASE WHEN occupied = TRUE AND prev_occupied = FALSE THEN 1 ELSE 0 END),0) as cubical_counter, 
+device_token  from 
+    (select * , lag(occupied, 1) over( order by id )prev_occupied 
+    from occupancy_data) SQ1  
+where timestamp BETWEEN to_timestamp('2024-08-16 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+AND to_timestamp('2024-08-16 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+and device_token = '118'  
+group by device_token) Q1 using(device_token)
+left join 
+(select occupied, device_token from occupancy_data where device_token = '118' order by timestamp limit 1)Q2 USING(device_token)
+left join
+(SELECT CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTOCLEANINGPROCESS, dcp.device_id
+FROM CLEANER_REPORTS  cr 
+join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and 
+dcp.device_id ='3c64d02c-abfb-4b57-5dfe-116d163ecee3' and  
+cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and 
+TO_TIMESTAMP('2025-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')  
+order by cr.created_at desc limit 1) Q3 using(device_id)
+where d.device_token = '118'
+
+
+
+
+--
+elect cp.cubical_pair_id as CUBICAL_PAIR_ID,
+cp.cubical_id as CUBICAL_ID,
+cp.toilet_info_id as TOILET_INFO_ID,
+d.device_token as DEVICE_TOKE,
+d.device_id as DEVICE_ID,
+ci.cubical_name as CUBICAL_NAME,
+d.device_name as DEVICE_NAMEfrom cubical_pairs cp
+join cubical_infos ci on ci.cubical_id = cp.cubical_id
+join device_cubical_pairs dcp on dcp.cubical_id = cp.cubical_id
+join devices d on d.device_id = dcp.device_id
+where
+    cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+
