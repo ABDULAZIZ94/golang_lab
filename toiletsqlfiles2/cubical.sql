@@ -576,7 +576,7 @@ using(device_id)
 -- group by device_id
 
 
-
+-- query to get cubical pairs
 select cp.cubical_pair_id, cp.cubical_id, cp.toilet_info_id, d.device_token, d.device_id, ci.cubical_name
 from cubical_pairs cp
 join cubical_infos ci on ci.cubical_id = cp.cubical_id
