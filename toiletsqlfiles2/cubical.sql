@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 select * from device_pairs
@@ -36,11 +37,11 @@ where cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165' --kemaman male
 select * from device_cubical_pairs
 
 -- ini menjadi aka ok
-INSERT INTO DEVICE_CUBICAL_PAIRS ("device_cubical_pair_id", "cubical_id", "device_id")
+INSERT INTO DEVICE_CUBICAL_PAIRS (device_cubical_pair_id, cubical_id, device_id)
 VALUES (uuid_generate_v4 (), '881ac292-f7ba-42ed-61be-7ea9e5368d89','3c64d02c-abfb-4b57-5dfe-116d163ecee3')
 
 -- mcm fail
-INSERT INTO DEVICE_CUBICAL_PAIRS ("device_cubical_pair_id", "cubical_id", "device_id") VALUES
+INSERT INTO DEVICE_CUBICAL_PAIRS (device_cubical_pair_id, cubical_id, device_id) VALUES
     (uuid_generate_v4 (), 'e34a8f65-9524-4a6a-55d5-153217239201','4cd91fb8-54ef-46e8-4472-4c1b9a3a42bc'),
     (uuid_generate_v4 (), 'f064a7ee-6568-41fe-4110-19c3d7ea6718','d861a427-4aa2-46ce-5fa7-92961c81b61d'),
     (uuid_generate_v4 (), 'a26a1af6-3ffa-4cbd-5185-125cc2b94e31','c1297d5a-243a-4c4a-5839-e60d93718132'),
@@ -439,3 +440,146 @@ FROM (
         order by created_at desc
         limit 1
     ) Q6 ON 1 = 1
+
+
+-- test query male_01
+WITH DEVICE_LIST AS ( select 
+    -- dp.device_pair_id, d.device_name, 
+    d.device_token, d.device_id 
+    from device_pairs as dp  
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id 
+    join devices as d on dp.device_id = d.device_id  
+    where dp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'  
+    and d.device_type_id = 12)
+select od.occupied as occupancy, 
+right(dl.device_name, 2) as cubical_name, 
+Q1.cubical_counter, 
+dl.device_name,
+AUTOCLEANINGPROCESS
+from occupancy_data od  
+join device_list dl on dl.device_token = od.device_token 
+left join
+    (select COALESCE(sum(CASE WHEN occupied = TRUE AND prev_occupied = FALSE THEN 1 ELSE 0 END),0) as cubical_counter, 
+    device_token  from 
+        (select * , lag(occupied, 1) over( order by id )prev_occupied 
+        from occupancy_data) SQ1  
+    where timestamp BETWEEN to_timestamp('2024-08-16 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+    AND to_timestamp('2024-08-16 23:59:59', 'YYYY-MM-DD HH24:MI:SS')  
+    group by device_token ) 
+    Q1 on Q1.device_token = dl.device_token  
+    -- order by timestamp desc limit 4 
+LEFT JOIN 
+    (SELECT CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTOCLEANINGPROCESS, dcp.device_id
+    FROM CLEANER_REPORTS  cr join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id  
+    where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and 
+    dcp.device_id IN (select device_id from device_list) and  
+    cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and 
+    TO_TIMESTAMP('2024-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')  
+    order by cr.created_at limit 1)Q2 ON TRUE
+
+
+
+
+
+
+-- test query
+WITH DEVICE_LIST AS ( select 
+    -- dp.device_pair_id, d.device_name, 
+    d.device_token, d.device_id 
+    from device_pairs as dp  
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id 
+    join devices as d on dp.device_id = d.device_id  
+    where dp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'  
+    and d.device_type_id = 12)
+select 
+    AUTOCLEANINGPROCESS,
+    cubical_name,
+    device_id
+from device_list
+    -- select od.occupied as occupancy, Q1.cubical_counter, dl.device_name
+left join
+    (SELECT 
+    CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTOCLEANINGPROCESS, 
+    ci.cubical_name,
+    dcp.device_id
+    FROM CLEANER_REPORTS  cr 
+    join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+    join cubical_infos ci on ci.cubical_id = dcp.cubical_id
+    where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and 
+    dcp.device_id IN (select device_id from device_list) and  
+    cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and 
+    TO_TIMESTAMP('2024-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')  
+    order by cr.created_at )Q2 using (device_id)
+
+
+--device_id
+55009f31-2114-4bff-5946-4aaa378f791a --121
+daea6ed6-bd21-48a1-4012-be978ed24009 --120
+745447eb-05b3-4bfe-4a04-451343e4e655 --125
+3c64d02c-abfb-4b57-5dfe-116d163ecee3 --118 -- true
+
+select * from cleaner_reports 
+
+select * from device_cubical_pairs dcp
+join cubical_infos ci on ci.cubical_id = dcp.cubical_id
+
+select dcp.device_id, cr.cleaner_report_id, cr.created_at
+from cleaner_reports cr
+join device_cubical_pairs dcp on dcp.cubical_id = cr.cubical_id
+
+-- check how many cubical already has auto clean data
+select distinct dcp.device_id, count(cr.cleaner_report_id)
+from
+cleaner_reports cr
+join device_cubical_pairs dcp on dcp.cubical_id = cr.cubical_id
+group by dcp.device_id
+
+
+select distinct cr.cubical_id
+FROM
+CLEANER_REPORTS cr
+join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+join cubical_infos ci on ci.cubical_id = dcp.cubical_id
+
+
+
+WITH
+    DEVICE_LIST AS (
+        select
+            -- dp.device_pair_id, d.device_name, 
+            d.device_token, d.device_id
+        from
+            device_pairs as dp
+            join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+            join devices as d on dp.device_id = d.device_id
+        where
+            dp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+            and d.device_type_id = 12
+    )
+select device_id, AUTOCLEANINGPROCESS
+FROM
+device_list
+left join
+(SELECT  
+CASE WHEN cr.auto_clean_state = '1' THEN true else false end as AUTOCLEANINGPROCESS, 
+ci.cubical_name,
+dcp.device_id
+FROM CLEANER_REPORTS  cr 
+join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+join cubical_infos ci on ci.cubical_id = dcp.cubical_id
+where EXTRACT(HOUR FROM cr.created_at) >= 7 AND EXTRACT(HOUR FROM cr.created_at) <= 18 and 
+dcp.device_id IN (select device_id from device_list) and  
+cr.created_at between TO_TIMESTAMP('2024-07-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS') and 
+TO_TIMESTAMP('2025-09-30 18:00:00', 'YYYY-MM-DD HH24:MI:SS')  
+order by cr.created_at)Q1 
+using(device_id)
+-- group by device_id
+
+
+
+select cp.cubical_pair_id, cp.cubical_id, cp.toilet_info_id, d.device_token, d.device_id, ci.cubical_name
+from cubical_pairs cp
+join cubical_infos ci on ci.cubical_id = cp.cubical_id
+join device_cubical_pairs dcp on dcp.cubical_id = cp.cubical_id
+join devices d on d.device_id = dcp.device_id
+where cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
