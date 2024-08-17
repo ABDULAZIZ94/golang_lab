@@ -1,3 +1,4 @@
+-- Active: 1723732721360@@alpha.vectolabs.com@9998
 WITH
     DEVICE_LIST AS (
         SELECT
