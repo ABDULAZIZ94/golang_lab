@@ -276,3 +276,37 @@ order by timestamp
 limit 4
 
 -- order by timestamp desc limit 4
+
+
+-- query failed
+select
+    cp.cubical_pair_id as CUBICAL_PAIR_ID,
+    cp.cubical_id as CUBICAL_ID,
+    cp.toilet_info_id as TOILET_INFO_ID,
+    d.device_token as DEVICE_TOKE,
+    d.device_id as DEVICE_ID,
+    ci.cubical_name as CUBICAL_NAME,
+    d.device_name as DEVICE_NAME
+from
+    cubical_pairs cp
+    join cubical_infos ci on ci.cubical_id = cp.cubical_id
+    join device_cubical_pairs dcp on dcp.cubical_id = cp.cubical_id
+    join devices d on d.device_id = dcp.device_id
+where
+    cp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+
+-- cubical pair
+select cp.cubical_pair_id as CUBICAL_PAIR_ID,
+cp.cubical_id as CUBICAL_ID,
+cp.toilet_info_id as TOILET_INFO_ID,
+d.device_token as DEVICE_TOKE,
+d.device_id as DEVICE_ID,
+ci.cubical_name as CUBICAL_NAME,
+d.device_name as DEVICE_NAME
+from
+    cubical_pairs cp
+    join cubical_infos ci on ci.cubical_id = cp.cubical_id
+    join device_cubical_pairs dcp on dcp.cubical_id = cp.cubical_id
+    join devices d on d.device_id = dcp.device_id
+where
+    cp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'

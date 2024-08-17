@@ -1,4 +1,4 @@
--- Active: 1723732721360@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 -- functions
@@ -552,6 +552,18 @@ END $$;
 
 
 -- mock data auto clean data
+
+-- m4-m1, f4-f1
+a26a1af6-3ffa-4cbd-5185-125cc2b94e31
+f064a7ee-6568-41fe-4110-19c3d7ea6718
+e34a8f65-9524-4a6a-55d5-153217239201
+881ac292-f7ba-42ed-61be-7ea9e5368d89
+
+057ba462-c2e6-4d12-69e5-7f2ffac5927f
+214a2dcf-7b6e-4e98-5f77-2103dcecf0e7
+2512c06f-bf57-45e1-7a7b-5e0935dbbe8d
+6a9237e9-9933-4fa2-7f8a-a53978d7271c
+
 DO $$
 DECLARE
     rec RECORD; 
@@ -567,14 +579,14 @@ BEGIN
     FOR rec IN
         SELECT generate_series(
             date_trunc('minutes', TO_TIMESTAMP('2024-08-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('minutes', TO_TIMESTAMP('2024-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minutes', TO_TIMESTAMP('2025-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '15 minutes'
         ) AS uplinkTS
     LOOP
         occupied := rand_b();
         crid := uuid_generate_v4 ();
-        -- m1 3c64d02c-abfb-4b57-5dfe-116d163ecee3 
-        cubical_id = '3c64d02c-abfb-4b57-5dfe-116d163ecee3'; 
+        -- m1 3c64d02c-abfb-4b57-5dfe-116d163ecee3 device id, salah
+        cubical_id = '6a9237e9-9933-4fa2-7f8a-a53978d7271c'; --pastikan cubical id bukan device id 
         tenant_id := '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'; --mbkemaman
         loc_id := '964cd0a5-8620-4a24-67af-578da8c3b6df'; -- kemaman
         toilet_tid := 1;

@@ -1,0 +1,6 @@
+CubicalpairInfo{controllers.CubicalpairInfo{CubicalPairId: "bbabea8e-dc0f-4299-46de-38c36d004e97", CubicalId: "881ac292-f7ba-42ed-61be-7ea9e5368d89", CubicalName: "M1", DeviceId: "3c64d02c-abfb-4b57-5dfe-116d163ecee3", DeviceToken: "", DeviceName: "OCCUPANCY_MALE_M1", ToiletInfoId: "9388096c-784d-49c8-784c-1868b1233165"
+    }, controllers.CubicalpairInfo{CubicalPairId: "9b1c9516-6ea2-4031-624f-08b25b4d4afd", CubicalId: "f064a7ee-6568-41fe-4110-19c3d7ea6718", CubicalName: "M3", DeviceId: "daea6ed6-bd21-48a1-4012-be978ed24009", DeviceToken: "", DeviceName: "OCCUPANCY_MALE_M2", ToiletInfoId: "9388096c-784d-49c8-784c-1868b1233165"
+    }, controllers.CubicalpairInfo{CubicalPairId: "11c3812f-91d5-4b06-4a21-e43647fd5eb2", CubicalId: "e34a8f65-9524-4a6a-55d5-153217239201", CubicalName: "M2", DeviceId: "745447eb-05b3-4bfe-4a04-451343e4e655", DeviceToken: "", DeviceName: "OCCUPANCY_MALE_M4", ToiletInfoId: "9388096c-784d-49c8-784c-1868b1233165"
+    }, controllers.CubicalpairInfo{CubicalPairId: "dc4f255a-c28c-458d-5349-718f150d4fec", CubicalId: "a26a1af6-3ffa-4cbd-5185-125cc2b94e31", CubicalName: "M4", DeviceId: "55009f31-2114-4bff-5946-4aaa378f791a", DeviceToken: "", DeviceName: "OCCUPANCY_MALE_M3", ToiletInfoId: "9388096c-784d-49c8-784c-1868b1233165"
+    }
+}
