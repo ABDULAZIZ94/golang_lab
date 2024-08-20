@@ -664,3 +664,73 @@ join devices d on d.device_id = dcp.device_id
 where
     cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
 
+
+
+
+
+
+select d.device_id, dcp.device_cubical_pair_id, d.device_token,
+from
+    device_cubical_pairs dcp
+    join devices d on d.device_id = dcp.device_id
+where
+    dcp.cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+
+
+select * from cleaner_reports 
+
+select *
+from cleaner_reports where cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89' order by created_at desc limit 1
+
+select 
+    (case when auto_clean_state = '1' then true  else false end) as auto_clean_state,
+    (case when freshen_up_state = '1' then true  else false end) as freshen_up_state
+from cleaner_reports where cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89' order by created_at desc limit 1
+
+
+-- activate autoclean
+insert into manual_device_activations ("cubical_id", "duration", "start_active_time", "end_active_time") values
+('881ac292-f7ba-42ed-61be-7ea9e5368d89', 3, NOW(), NOW()+ interval '3 secs')
+
+
+select * from manual_device_activations
+
+-- insert 
+insert into cleaner_reports("tenant_id","location_id","toilet_type_id","check_in_ts","check_out_ts",
+"duration","auto_clean_state","created_at", "updated_at", "cubical_id") VALUES
+
+
+insert into
+    cleaner_reports (
+        "cleaner_report_id",
+        "tenant_id",
+        -- "location_id",
+        -- "toilet_type_id",
+        "check_in_ts",
+        "check_out_ts",
+        "duration",
+        "auto_clean_state",
+        "created_at",
+        "updated_at",
+        "cubical_id"
+    )
+VALUES
+(
+    uuid_generate_v4 (),
+    '589ee2f0-75e1-4cd0-5c74-78a4df1288fd',
+    NOW(),
+    NOW()+interval '15 secs',
+    15,
+    '1',
+    NOW(),
+    NOW() + interval '15 secs',
+    '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+)
+
+
+
+select toilet_type_id, location_id
+from cubical_infos ci
+join cubical_pairs cp on ci.cubical_id = cp.cubical_id
+join toilet_infos ti on ti.toilet_info_id = cp.toilet_info_id
+where ci.cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'

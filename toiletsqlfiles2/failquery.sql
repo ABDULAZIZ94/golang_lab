@@ -309,3 +309,232 @@ from
     join devices d on d.device_id = dcp.device_id
 where
     cp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+
+
+
+
+
+-- each cubical
+select
+    COALESCE(cubical_counter, 0) as CUBICAL_COUNTER,
+    COALESCE(occupied, false) as OCCUPANCY,
+    COALESCE(AUTOCLEANINGPROCESS, false) as AUTOCLEANING
+from devices d
+    left join (
+        select COALESCE(
+                sum(
+                    CASE
+                        WHEN occupied = TRUE
+                        AND prev_occupied = FALSE THEN 1
+                        ELSE 0
+                    END
+                ), 0
+            ) as cubical_counter, device_token
+        from (
+                select occupied, lag(occupied, 1) over (
+                        order by id
+                    ) prev_occupied,
+                    device_token
+                from occupancy_data
+                where
+                    timestamp BETWEEN to_timestamp(
+                        '2024-08-19 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    ) AND to_timestamp(
+                        '2024-08-19 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                    and device_token = '118'
+            ) S1
+        group by device_token
+    ) Q1 using (device_token)
+    left join (
+        select occupied, device_token
+        from occupancy_data
+        where
+            device_token = '118'
+        order by timestamp
+        limit 1
+    ) Q2 USING (device_token)
+    left join (
+        SELECT
+            CASE
+                WHEN cr.auto_clean_state = '1' THEN true
+                else false
+            end as AUTOCLEANINGPROCESS, dcp.device_id
+        FROM
+            CLEANER_REPORTS cr
+            join device_cubical_pairs dcp on cr.cubical_id = dcp.cubical_id
+        where
+            EXTRACT(
+                HOUR
+                FROM cr.created_at
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM cr.created_at
+            ) <= 18
+            and dcp.device_id = '3c64d02c-abfb-4b57-5dfe-116d163ecee3'
+            and cr.created_at between TO_TIMESTAMP(
+                '2024-08-19 07:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-19 18:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by cr.created_at desc
+        limit 1
+    ) Q3 using (device_id)
+where
+    d.device_token = '118'
+
+
+
+
+--
+select
+    occupied,
+    lag(occupied, 1) over (
+        order by id
+    ) prev_occupied,
+    device_token
+from occupancy_data
+where
+    timestamp BETWEEN to_timestamp(
+        '2024-08-19 00:00:00',
+        'YYYY-MM-DD HH24:MI:SS'
+    ) AND to_timestamp(
+        '2024-08-19 23:59:59',
+        'YYYY-MM-DD HH24:MI:SS'
+    )
+    and device_token = '118'
+group by
+    device_token,
+    id
+
+
+
+select * from occupancy_data
+
+
+
+-- 
+WITH
+    DEVICE_LIST AS (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+            TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+            DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_TYPES.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+            JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+        WHERE
+            DEVICES.TENANT_ID = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+    ),
+    TOILET_LIST as (
+        SELECT ti.toilet_info_id
+        FROM toilet_infos ti
+        where
+            tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+    )
+SELECT
+    COALESCE(TOTAL_VIOLATION, 0) AS TOTAL_VIOLATION,
+    COALESCE(CURRENT_AMMONIA_LEVEL, 0.0) AS CURRENT_AMMONIALEVEL,
+    AMMONIA_HIGHLOW,
+    COALESCE(PANICBTN_PUSHED, 0) AS TOTAL_PANICBTNPUSHED,
+    AVG_CLEANER_RESPONSE_TIME,
+    LAST_CLEAN_TIMESTAMP,
+    LAST_AUTOCLEAN_ACTIVE_TIMESTAMP,
+    TOTAL_COLLECTIONS
+FROM (
+        SELECT
+            CHECK_OUT_TS AS LAST_CLEAN_TIMESTAMP
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.TENANT_ID = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+        ORDER BY CHECK_OUT_TS DESC
+        LIMIT 1
+    ) Q1
+    CROSS JOIN (
+        SELECT AVG(DURATION) AS AVG_CLEANER_RESPONSE_TIME
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.TENANT_ID = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+    ) Q2
+    CROSS JOIN (
+        SELECT
+            CHECK_OUT_TS AS LAST_AUTOCLEAN_ACTIVE_TIMESTAMP
+        FROM CLEANER_REPORTS
+        WHERE
+            CLEANER_REPORTS.TENANT_ID = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+            AND AUTO_CLEAN_STATE = '1'
+        ORDER BY CHECK_OUT_TS DESC
+        LIMIT 1
+    ) Q3
+    LEFT JOIN (
+        SELECT
+            AVG(ammonia_level) AS CURRENT_AMMONIA_LEVEL, (
+                CASE
+                    WHEN ammonia_level > 1 then 'HIGH'
+                    ELSE 'LOW'
+                END
+            ) as AMMONIA_HIGHLOW
+        FROM ammonia_data
+            JOIN DEVICE_LIST ON DEVICE_LIST.DEVICE_TOKEN = ammonia_data.DEVICE_TOKEN
+        GROUP BY
+            ammonia_data.device_token,
+            ammonia_data.timestamp
+        ORDER BY timestamp DESC
+        LIMIT 1
+    ) Q10 ON 1 = 1
+    LEFT JOIN (
+        SELECT COUNT(id) AS TOTAL_VIOLATION
+        FROM violation_data
+            JOIN device_list ON device_list.device_id = violation_data.device_id
+        WHERE
+            created_at BETWEEN TO_TIMESTAMP(
+                '2024-08-14 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) AND TO_TIMESTAMP(
+                '2024-08-14 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        SELECT COUNT(
+                CASE
+                    WHEN panic_button = TRUE
+                    AND prev_state = FALSE THEN 1
+                END
+            ) AS PANICBTN_PUSHED
+        FROM (
+                SELECT panic_button, timestamp, LAG(panic_button, 1) OVER (
+                        ORDER BY id
+                    ) AS prev_state
+                FROM panic_btn_data
+            ) S1
+        WHERE
+            timestamp BETWEEN TO_TIMESTAMP(
+                '2024-08-14 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) AND TO_TIMESTAMP(
+                '2024-08-14 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select sum(ammount) as TOTAL_COLLECTIONS
+        from money_data
+        where
+            created_at BETWEEN TO_TIMESTAMP(
+                '2024-08-14 07:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) AND TO_TIMESTAMP(
+                '2024-08-14 18:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q6 ON 1 = 1

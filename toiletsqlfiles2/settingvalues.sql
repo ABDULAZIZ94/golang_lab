@@ -1,9 +1,10 @@
--- Active: 1722401907309@@157.230.253.116@5432@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 select * from users
 
 select * from setting_values where entity_id = 'f8be7a6d-679c-4319-6906-d172ebf7c17e'
 
+select * from setting_values
 
 -- update
 UPDATE "setting_values"
@@ -39,3 +40,7 @@ WHERE
         )
     )
 
+
+-- tenant id is entity id
+select entity_id, tenant_id from setting_values sv
+join tenants t on t.tenant_id = sv.entity_id
