@@ -103,3 +103,7 @@ BEGIN
     my_query := 'SELECT * FROM event_logs WHERE title = $1';
     EXECUTE my_query USING my_variable;
 END $$;
+
+
+
+--
