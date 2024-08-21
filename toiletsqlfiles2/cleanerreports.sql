@@ -26,7 +26,7 @@ select * from cleaner_reports where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1
 select * from cleaner_reports where auto_clean_state = '1' order by created_at asc
 
 --cleaner user id 7a1c3658-d58b-46ca-6935-6a0835477b69 
-select * from users where user_id ='7a1c3658-d58b-46ca-6935-6a0835477b69 '
+select * from users where user_id ='4b079dad-b330-44ff-78e2-be8fa66c8f3f'
 
 select * from users
 
