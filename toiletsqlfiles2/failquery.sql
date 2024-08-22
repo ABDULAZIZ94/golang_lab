@@ -1,4 +1,4 @@
--- Active: 1723732721360@@alpha.vectolabs.com@9998
+
 WITH
     DEVICE_LIST AS (
         SELECT
@@ -539,3 +539,154 @@ FROM (
                 'YYYY-MM-DD HH24:MI:SS'
             )
     ) Q6 ON 1 = 1
+
+
+    -- test
+GENTIME as (
+SELECT uplinkTS
+FROM generate_series (
+        date_trunc (
+            'HOUR', TO_TIMESTAMP (
+                '2024-01-01 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+        ), date_trunc (
+            'HOUR', TO_TIMESTAMP (
+                '2024-12-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+        ), interval '1' HOUR
+    ) as uplinkTS
+where
+    EXTRACT(
+        HOUR
+        FROM uplinkTS
+    ) >= 0
+    AND EXTRACT(
+        HOUR
+        FROM uplinkTS
+    ) <= 10
+    OR
+    EXTRACT(
+    HOUR
+    FROM uplinkTS
+    ) >= 23
+    AND EXTRACT(
+        HOUR
+        FROM uplinkTS
+    ) <= 0
+)
+
+
+-- fail test
+select
+    sum(
+        SMELLY_TOILET + OUTOF_SUPPLY + WET_FLOOR + PLUMBING_ISSUES
+    ) as TOTAL,
+    SMELLY_TOILET,
+    OUTOF_SUPPLY,
+    WET_FLOOR,
+    PLUMBING_ISSUES
+from (
+        select
+            count(
+                case
+                    when complaint = '1' then 1
+                end
+            ) as SMELLY_TOILET, count(
+                case
+                    when complaint = '2' then 1
+                end
+            ) as OUTOF_SUPPLY, count(
+                case
+                    when complaint = '3' then 1
+                end
+            ) as WET_FLOOR, count(
+                case
+                    when complaint = '4' then 1
+                end
+            ) as PLUMBING_ISSUES
+        from user_reactions
+        where
+            EXTRACT(
+                HOUR
+                FROM timestamp
+            ) >= 23
+            AND EXTRACT(
+                HOUR
+                FROM timestamp
+            ) <= 10
+            and timestamp between TO_TIMESTAMP(
+                '2024-01-01 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-08-10 10:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id = '9388096c-784d-49c8-784c-1868b1233165'
+    ) Q1
+group by
+    Q1.SMELLY_TOILET,
+    Q1.OUTOF_SUPPLY,
+    Q1.WET_FLOOR,
+    Q1.PLUMBING_ISSUES
+
+
+-- fixing
+WITH
+    TOILET_LIST as (
+        SELECT ti.toilet_info_id
+        FROM toilet_infos ti
+        where
+            tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-08-21 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-08-22 10:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1' HOUR
+            ) uplinkTS
+    )
+select
+    SMELLY_TOILET,
+    OUTOF_SUPPLY,
+    WET_FLOOR,
+    PLUMBING_ISSUES,
+    uplinkts
+from GENTIME
+    left join (
+        select
+            count(
+                case
+                    when complaint = '1' then 1
+                end
+            ) as SMELLY_TOILET, count(
+                case
+                    when complaint = '2' then 1
+                end
+            ) as OUTOF_SUPPLY, count(
+                case
+                    when complaint = '3' then 1
+                end
+            ) as WET_FLOOR, count(
+                case
+                    when complaint = '4' then 1
+                end
+            ) as PLUMBING_ISSUES, date_trunc('HOUR', timestamp) as uplinkts
+        from user_reactions
+        where (timestamp) between to_timestamp(
+                '2024-08-21 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and to_timestamp(
+                '2024-08-22 10:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id IN (
+                select toilet_info_id
+                from toilet_list
+            )
+        group by
+            uplinkts
+    ) Q1 using (uplinkts)
+order by uplinkts

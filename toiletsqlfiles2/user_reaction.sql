@@ -95,3 +95,11 @@ where EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18 a
 (timestamp) between to_timestamp('2024-08-01 07:00:00','YYYY-MM-DD HH24:MI:SS') 
 and to_timestamp('2024-08-30 18:00:00','YYYY-MM-DD HH24:MI:SS') and 
 toilet_id IN ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583') group by ts
+
+
+
+-- 
+SELECT * FROM public.user_reactions 
+where toilet_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+ORDER BY timestamp DESC
+limit 10

@@ -734,3 +734,14 @@ from cubical_infos ci
 join cubical_pairs cp on ci.cubical_id = cp.cubical_id
 join toilet_infos ti on ti.toilet_info_id = cp.toilet_info_id
 where ci.cubical_id = '881ac292-f7ba-42ed-61be-7ea9e5368d89'
+
+
+
+
+--
+select ci.cubical_id, ci.cubical_name, ci.cubical_nick_name
+from
+    cubical_infos ci
+    join cubical_pairs cp on ci.cubical_id = cp.cubical_id
+where
+    cp.toilet_info_id = '2a9fbea0-4dca-4af6-457b-348bf682cb54'

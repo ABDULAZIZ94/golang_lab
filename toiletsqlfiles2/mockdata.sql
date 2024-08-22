@@ -59,6 +59,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION rand_13() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (4-1))+1::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_13 ()
+
+drop Function rand_13 ()
+
 CREATE OR REPLACE FUNCTION rand_12() RETURNS INT AS $$
 BEGIN
    RETURN floor(random() * (2))+1::INT;
@@ -657,7 +667,7 @@ BEGIN
     -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
     FOR rec IN
         SELECT generate_series(
-            date_trunc('minute', TO_TIMESTAMP('2024-06-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-01-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
             date_trunc('minute', TO_TIMESTAMP('2025-08-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '45 minute'
         ) AS uplinkTS
@@ -666,7 +676,7 @@ BEGIN
         tt := rand_12();            -- Assuming rand_12() returns an integer
         r := rand_14();            -- Assuming rand_14() returns an integer
         co := rand_14();           -- Assuming rand_14() returns an integer
-        tir := rand_12();          -- Assuming rand_12() returns an integer
+        tir := rand_13();          -- Assuming rand_12() returns an integer
         s := rand_15();           -- Assuming rand_15() returns an integer
 
         INSERT INTO user_reactions(reaction_id, toilet_type, reaction, complaint, timestamp, toilet_id, score)
