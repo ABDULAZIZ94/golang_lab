@@ -1,4 +1,4 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1723732721360@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 -- functions
@@ -236,13 +236,13 @@ DECLARE
 BEGIN
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '5 hour'
+            date_trunc('minute', TO_TIMESTAMP('2024-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '5 minute'
         ) AS uplinkTS
     LOOP
         env_id := uuid_generate_v4();
-        device_token := '105';
+        device_token := '127';
         iaq := rand_iaq();
         temperature := rand_temp();
         humidity := rand_humidity();
@@ -251,16 +251,16 @@ BEGIN
         VALUES (env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS);
         RAISE NOTICE 'env_id: %, device: %, iaq: %, temp: %, humidity: %, lux:%, timestamp: %',
          env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS;
-        env_id := uuid_generate_v4();
-        device_token := '115';
-        iaq := rand_iaq();
-        temperature := rand_temp();
-        humidity := rand_humidity();
-        lux := rand_lux();
-        INSERT INTO enviroment_data ("env_data_id", "device_token", "iaq", "temperature", "humidity", "lux", "timestamp")
-        VALUES (env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS);
-        RAISE NOTICE 'env_id: %, device: %, iaq: %, temp: %, humidity: %, lux:%, timestamp: %',
-         env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS;
+        -- env_id := uuid_generate_v4();
+        -- device_token := '115';
+        -- iaq := rand_iaq();
+        -- temperature := rand_temp();
+        -- humidity := rand_humidity();
+        -- lux := rand_lux();
+        -- INSERT INTO enviroment_data ("env_data_id", "device_token", "iaq", "temperature", "humidity", "lux", "timestamp")
+        -- VALUES (env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS);
+        -- RAISE NOTICE 'env_id: %, device: %, iaq: %, temp: %, humidity: %, lux:%, timestamp: %',
+        --  env_id, device_token, iaq, temperature, humidity, lux, rec.uplinkTS;
     END LOOP;
 END $$;
 
@@ -344,6 +344,9 @@ SELECT setval(
             FROM ammonia_data
         )
     );
+
+
+
 -- generate mock panic btn data
 DO $$
 DECLARE
@@ -353,15 +356,15 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2024-08-14 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2024-01-14 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2024-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '1 hour'
         ) AS uplinkTS
     LOOP
         al := rand_b();  -- Variable assignment with :=
         INSERT INTO panic_btn_data ("device_token", "panic_button", "timestamp")
-        VALUES ('111', al, rec.uplinkTS);
-        RAISE NOTICE 'device: 111, panic_button: %, timestamp: %', al, rec.uplinkTS;
+        VALUES ('130', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 130, panic_button: %, timestamp: %', al, rec.uplinkTS;
     END LOOP;
 END $$;
 
@@ -445,15 +448,15 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('hour', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('hour', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '6 hour'
+            date_trunc('minute', TO_TIMESTAMP('2024-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '5 minute'
         ) AS uplinkTS
     LOOP
         al := rand_b();  -- Variable assignment with :=
         INSERT INTO smoke_data ("device_token", "smoke_sensor", "timestamp")
-        VALUES ('110', al, rec.uplinkTS);
-        RAISE NOTICE 'device: 110, smoke: %, timestamp: %', al, rec.uplinkTS;
+        VALUES ('128', al, rec.uplinkTS);
+        RAISE NOTICE 'device: 128, smoke: %, timestamp: %', al, rec.uplinkTS;
     END LOOP;
 END $$;
 
@@ -528,8 +531,8 @@ BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('minute', TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('minute', TO_TIMESTAMP('2025-01-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '3 minute'
         ) AS uplinkTS
     LOOP
@@ -539,7 +542,7 @@ BEGIN
         -- outd2 := rand_10 ();
         -- uuid1 := uuid_generate_v4 ();
         -- uuid2 := uuid_generate_v4 ();
-        device_t = '118';
+        device_t = '126';
         -- device_t2 = '104';
         
         INSERT INTO occupancy_data ("device_token", "occupied", "timestamp")
@@ -687,12 +690,12 @@ BEGIN
     -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
     FOR rec IN
         SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2024-08-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2024-09-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '45 seconds'
+            date_trunc('minute', TO_TIMESTAMP('2024-08-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-12-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '45 minute'
         ) AS uplinkTS
     LOOP
-        dtoken = '116';
+        dtoken = '131';
         fg_on = rand_b();
         fg_dur = rand_14();
 
@@ -702,3 +705,9 @@ BEGIN
         RAISE NOTICE '% % % %',dtoken, fg_on, fg_dur, rec.uplinkTS;
     END LOOP;
 END $$;
+
+
+
+--
+
+select * fragrance_data

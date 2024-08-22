@@ -8,9 +8,10 @@ SELECT device_token
 FROM devices
 where device_token = '13'
 
-select * from devices
+select * from public.devices
 
 select * from device_pairs
 
 select * from device_types
 
+alter table devices add primary key (device_id)
