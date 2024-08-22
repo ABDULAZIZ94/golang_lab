@@ -67,6 +67,15 @@ from
 where
     dp.toilet_info_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
 
+-- list devices belongs to oku kemaman a97891e5-14df-4f95-7d1e-4ee601581df2 
+select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
+from
+    device_pairs as dp
+    join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
+    join devices as d on dp.device_id = d.device_id
+where
+    dp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+
 -- list devices belongs to mbkemaman
 select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
 from

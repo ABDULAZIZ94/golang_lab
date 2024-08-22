@@ -1,4 +1,4 @@
--- Active: 1722410128237@@alpha.vectolabs.com@9998@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 -- get list of devivices based on device_pairs table that paired to a toilet id
 SELECT
@@ -1005,3 +1005,5 @@ from
     ) Q2 using (device_id)
 order by timestamp desc
 limit 4
+
+

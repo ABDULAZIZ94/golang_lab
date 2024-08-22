@@ -59,6 +59,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION rand_13() RETURNS INT AS $$
+BEGIN
+   RETURN floor(random() * (4-1))+1::INT;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_13 ()
+
+drop Function rand_13 ()
+
 CREATE OR REPLACE FUNCTION rand_12() RETURNS INT AS $$
 BEGIN
    RETURN floor(random() * (2))+1::INT;
@@ -236,8 +246,8 @@ DECLARE
 BEGIN
     FOR rec IN
         SELECT generate_series(
-            date_trunc('minute', TO_TIMESTAMP('2024-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('minute', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2024-08-20 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2025-03-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '5 minute'
         ) AS uplinkTS
     LOOP
@@ -577,13 +587,14 @@ DECLARE
     toilet_tid int;
     autoclean int;
     cubical_id text;
+    cleanerid text;
 BEGIN
     -- Note: Assume rand_ammonia() is a valid function that returns an integer
     FOR rec IN
         SELECT generate_series(
-            date_trunc('minutes', TO_TIMESTAMP('2024-08-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('minutes', TO_TIMESTAMP('2025-08-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '15 minutes'
+            date_trunc('hour', TO_TIMESTAMP('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2024-09-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '4 hour'
         ) AS uplinkTS
     LOOP
         occupied := rand_b();
@@ -594,9 +605,10 @@ BEGIN
         loc_id := '964cd0a5-8620-4a24-67af-578da8c3b6df'; -- kemaman
         toilet_tid := 1;
         autoclean := rand_10();
+        cleanerid := '4b079dad-b330-44ff-78e2-be8fa66c8f3f';
 
-        INSERT INTO cleaner_reports ("cleaner_report_id", "tenant_id", "location_id", "toilet_type_id", "check_in_ts","check_out_ts","duration","auto_clean_state","created_at","updated_at", "cubical_id")
-        VALUES (crid, tenant_id, loc_id, toilet_tid, rec.uplinkTS, rec.uplinkTS, 1.0, autoclean, rec.uplinkTS, rec.uplinkTS, cubical_id);
+        INSERT INTO cleaner_reports ("cleaner_report_id", "tenant_id", "cleaner_user_id", "location_id", "toilet_type_id", "check_in_ts","check_out_ts","duration","auto_clean_state","created_at","updated_at", "cubical_id")
+        VALUES (crid, tenant_id, cleanerid, loc_id, toilet_tid, rec.uplinkTS, rec.uplinkTS, 1.0, autoclean, rec.uplinkTS, rec.uplinkTS, cubical_id);
         RAISE NOTICE '% % % % % % % % % % ',
         crid, tenant_id, loc_id, toilet_tid, rec.uplinkTS, rec.uplinkTS, 1.0, autoclean, rec.uplinkTS, rec.uplinkTS;
         
@@ -658,16 +670,16 @@ BEGIN
     -- Note: Assume rand_12(), rand_14(), and rand_15() are valid functions that return integers
     FOR rec IN
         SELECT generate_series(
-            date_trunc('second', TO_TIMESTAMP('2024-08-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
-            date_trunc('second', TO_TIMESTAMP('2024-08-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
-            INTERVAL '45 seconds'
+            date_trunc('minute', TO_TIMESTAMP('2024-01-01 07:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('minute', TO_TIMESTAMP('2025-08-15 17:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '45 minute'
         ) AS uplinkTS
     LOOP
         reid := uuid_generate_v4();  -- Ensure uuid-ossp extension is enabled
         tt := rand_12();            -- Assuming rand_12() returns an integer
         r := rand_14();            -- Assuming rand_14() returns an integer
         co := rand_14();           -- Assuming rand_14() returns an integer
-        tir := rand_12();          -- Assuming rand_12() returns an integer
+        tir := rand_13();          -- Assuming rand_12() returns an integer
         s := rand_15();           -- Assuming rand_15() returns an integer
 
         INSERT INTO user_reactions(reaction_id, toilet_type, reaction, complaint, timestamp, toilet_id, score)

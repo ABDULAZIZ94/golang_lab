@@ -4,6 +4,10 @@ from violation_data
 limit 10
 offset 130
 
+SELECT * FROM violation_data order by id asc limit 3
+
+update violation_data set video_url = '1' where true
+
 select * from device_pairs
 
 select * from locations
