@@ -8,6 +8,16 @@ SELECT * FROM violation_data order by id asc limit 3
 
 update violation_data set video_url = '1' where true
 
+update violation_data 
+set video_url = 'https://smart-toilet.s3.ap-southeast-1.amazonaws.com/violation-video/'||video_url 
+where true
+
+update violation_data 
+set video_url = video_url||'.mp4' 
+where true
+
+update violation_data set video_url = video_url || '.mp4' where true
+
 select * from device_pairs
 
 select * from locations

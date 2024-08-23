@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 -- alter table
 alter table cleaner_reports add column cubical_alias_id int
 
@@ -21,6 +22,7 @@ select * from device_types
 
 select * from cleaner_reports order by created_at desc limit 10
 
+-- kemaman tenant 589ee2f0-75e1-4cd0-5c74-78a4df1288fd 
 select * from cleaner_reports where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' order by created_at desc limit 10
 
 select * from cleaner_reports where auto_clean_state = '1' order by created_at asc
@@ -105,3 +107,24 @@ VALUES (
 
     --
     WITH GENTIME as (SELECT uplinkTS FROM generate_series(date_trunc('DAY', TO_TIMESTAMP('2024-08-20 07:00:00', 'YYYY-MM-DD HH24:MI:SS')), date_trunc('DAY', TO_TIMESTAMP('2024-08-20 18:00:00', 'YYYY-MM-DD HH24:MI:SS')), interval '1 DAY') uplinkTS)  SELECT uplinkTS::text, COALESCE(TOTAL,0) AS TOTAL FROM GENTIME LEFT JOIN (SELECT date_trunc('DAY', CHECK_IN_TS) AS uplinkTS, COUNT(CLEANER_REPORT_ID) AS TOTAL FROM CLEANER_REPORTS WHERE CLEANER_REPORTS.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' ANd created_at between to_timestamp('2024-08-20 07:00:00', YYYY-MM-DD HH24:MI:SS') and to_timestamp('2024-08-20 18:00:00', YYYY-MM-DD HH24:MI:SS') GROUP BY uplinkTS) second_query USING (uplinkTS) order by uplinkTS 
+
+-- update cleaner records
+
+select * from cleaner_reports limit 1
+
+-- update cleaner_reports
+-- set task_completed = ["clean toilet", "refill soap", "wipe toilet mirror"],
+-- remarks = "smart-toilet santai bersih dan selesa. "
+-- where
+--     tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+
+UPDATE cleaner_reports
+SET
+    task_completed = ARRAY[
+        'clean toilet',
+        'refill soap',
+        'wipe toilet mirror'
+    ],
+    remarks = 'smart-toilet santai bersih dan selesa.'
+WHERE
+    tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd';

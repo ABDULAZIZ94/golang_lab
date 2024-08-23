@@ -44,3 +44,7 @@ WHERE
 -- tenant id is entity id
 select entity_id, tenant_id from setting_values sv
 join tenants t on t.tenant_id = sv.entity_id
+
+
+
+update setting_values set music_url = 'https://smart-toilet.s3.ap-southeast-1.amazonaws.com/toilet-music/'||music_url || '.mp3' where true
