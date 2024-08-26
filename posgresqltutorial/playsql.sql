@@ -1,4 +1,4 @@
--- Active: 1722401907309@@157.230.253.116@5432@smarttoilet
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@energy-staging
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -1235,3 +1235,11 @@ SELECT * FROM generate_series(
     '1 day'::interval
 )
 RETURNING *;
+
+
+-- imformation schema
+SELECT *
+FROM information_schema.columns
+WHERE
+    table_schema = 'public'
+    AND table_name = 'buildings';

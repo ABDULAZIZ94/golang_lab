@@ -106,4 +106,30 @@ END $$;
 
 
 
---
+-- mock data buildings
+-- test
+DO $$
+DECLARE
+    -- rid TEXT ;
+    building_name TEXT;
+    latitute NUMERIC;
+    longitute NUMERIC;
+    tarifid INT;
+    area NUMERIC;
+    count_lim INT;
+BEGIN
+    
+        -- rid := uuid_generate_v4();
+        building_name := rand_str();
+        latitute := rand_14();
+        longitute := rand_14 ();
+        tarifid := rand_14 ();
+        area := rand_14 ();
+        count_lim := 100;
+    while count_lim > 0 loop
+        INSERT INTO buildings("building_name", "latitute", "longitute", "tarif_id", "area") VALUES
+        (building_name, latitute, longitute, tarifid, area);
+        RAISE NOTICE '% % % % % ', building_name, latitute, longitute, tarifid, area;
+        count_lim := count_lim - 1 ;
+    end loop;
+END $$;
