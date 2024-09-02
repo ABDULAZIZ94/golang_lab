@@ -39,11 +39,11 @@ func main() {
 	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
 
 	for {
-		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01",
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
 			0, false, generatePayloadData("RED"))
-		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01",
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
 			0, false, generatePayloadData("YELLOW"))
-		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01",
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
 			0, false, generatePayloadData("BLUE"))
 		time.Sleep(3 * time.Second)
 	}
@@ -53,7 +53,7 @@ func main() {
 func generatePayloadData(cs string) (s string) {
 
 	data := &Datapayload{
-		Namespace:     "NOTIFY",
+		Namespace:     cs,
 		Color:         cs,
 		Current:       rrfloat(1000, 2000),
 		ActivePower:   rrfloat(1000, 2000),
