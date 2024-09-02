@@ -18,6 +18,7 @@ type (
 		Current       float32
 		ActivePower   float32
 		ReactivePower float32
+		ApparentPower float32
 		Frequency     float32
 		PowerFactor   float32
 		PhaseAngle    float32
@@ -46,8 +47,13 @@ func main() {
 func generatePayloadData() (s string) {
 
 	data := &Datapayload{
-		Namespace: "NOTIFY",
-		Current:   rrfloat(1000, 2000),
+		Namespace:     "NOTIFY",
+		Current:       rrfloat(1000, 2000),
+		ActivePower:   rrfloat(1000, 2000),
+		ReactivePower: rrfloat(1000, 2000),
+		ApparentPower: rrfloat(1000, 2000),
+		Frequency:     rrfloat(50, 60),
+
 		Timestamp: time.Now().Unix(),
 	}
 
@@ -56,6 +62,6 @@ func generatePayloadData() (s string) {
 }
 
 func rrfloat(fl int, ce int) (r_float32 float32) {
-	int_gen := fl + ce
-	return float32(rand.Intn(int_gen)-fl) + rand.Float32()
+
+	return float32(rand.Intn(ce-fl)+fl) + rand.Float32()
 }
