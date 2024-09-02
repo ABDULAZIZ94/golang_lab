@@ -32,6 +32,8 @@ update devices set tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' where devi
  where device_id ='f6e0e3eb-7b83-4024-63c8-9debd870fa1f'
 
 
+select * from toilet_infos where location_id='964cd0a5-8620-4a24-67af-578da8c3b6df'
+
  -- list kemaman toilets
 SELECT *
 FROM public.toilet_infos
