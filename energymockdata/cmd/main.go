@@ -44,7 +44,7 @@ func main() {
 			0, false, generatePayloadData("YELLOW"))
 		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/33f0d10e-a8f3-4765-7fa2-c35dcbed04e7",
 			0, false, generatePayloadData("BLUE"))
-		time.Sleep(1 * time.Second)
+		time.Sleep(15 * time.Second)
 	}
 
 }
