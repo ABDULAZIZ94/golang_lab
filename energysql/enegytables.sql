@@ -59,6 +59,12 @@ UPDATE meter_distributed_board_pairs SET created_at = CURRENT_TIMESTAMP WHERE cr
 
 -- cehck tables
 
+select * from public.addresses
+
+select * from public.users
+
+select * from public.tenants
+
 select * from tariffs
 
 select * from public.meters

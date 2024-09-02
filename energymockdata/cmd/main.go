@@ -38,23 +38,31 @@ func main() {
 	mqtt.NewMQTTClient(os.Getenv("MQ_HOST2"))
 
 	for {
-		mqtt.GetMqttClient().Publish("vl/staging/t2/110/uplink", 0, false, generatePayloadData())
+		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/33f0d10e-a8f3-4765-7fa2-c35dcbed04e7",
+			0, false, generatePayloadData("RED"))
+		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/33f0d10e-a8f3-4765-7fa2-c35dcbed04e7",
+			0, false, generatePayloadData("YELLOW"))
+		mqtt.GetMqttClient().Publish("vl/staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/33f0d10e-a8f3-4765-7fa2-c35dcbed04e7",
+			0, false, generatePayloadData("BLUE"))
 		time.Sleep(1 * time.Second)
 	}
 
 }
 
-func generatePayloadData() (s string) {
+func generatePayloadData(ns string) (s string) {
 
 	data := &Datapayload{
-		Namespace:     "NOTIFY",
+		Namespace:     ns,
 		Current:       rrfloat(1000, 2000),
 		ActivePower:   rrfloat(1000, 2000),
 		ReactivePower: rrfloat(1000, 2000),
 		ApparentPower: rrfloat(1000, 2000),
 		Frequency:     rrfloat(50, 60),
-
-		Timestamp: time.Now().Unix(),
+		PowerFactor:   rrfloat(1000, 100000),
+		PhaseAngle:    rrfloat(1, 359),
+		VTHD:          rrfloat(1, 1000),
+		ATHD:          rrfloat(1, 1000),
+		Timestamp:     time.Now().Unix(),
 	}
 
 	text_data, _ := json.Marshal(data)
