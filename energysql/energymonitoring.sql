@@ -28,3 +28,5 @@ from public.event_logs
 delete from public.event_logs where timestamp=NULL
 
 delete from public.event_logs where date_time < to_timestamp('2024-08-30 00:00:00','YYYY-MM-DD HH24:MI:SS')
+
+delete from public.event_logs where metertoken IS NULL

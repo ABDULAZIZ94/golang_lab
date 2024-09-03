@@ -10,3 +10,4 @@ references meters(id);
 alter table building_meter_pairs
 add constraint building_meter_pairs_buildings_constraint 
 foreign key (building_id) references buildings(id);
+
