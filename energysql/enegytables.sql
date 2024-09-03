@@ -74,3 +74,5 @@ select * from public.buildings
 select * from public.distributed_boards
 
 select * from public.meter_pairs
+
+select * from public.event_logs
