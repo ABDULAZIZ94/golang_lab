@@ -27,6 +27,10 @@ type (
 		ATHD          float32
 		Timestamp     int64 `json:"timestamp"`
 	}
+	KeepAlive struct {
+		Namespace string
+		Timestamp int64 `json:"timestamp"`
+	}
 )
 
 func main() {
@@ -45,9 +49,31 @@ func main() {
 			0, false, generatePayloadData("YELLOW"))
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
 			0, false, generatePayloadData("BLUE"))
-		time.Sleep(3 * time.Second)
+		mqtt.GetMqttClient().Publish("vl/em-staging/health/m01",
+			0, false, generateHealthData("m01"))
+		time.Sleep(15 * time.Second)
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
+			0, false, generatePayloadData("RED"))
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
+			0, false, generatePayloadData("YELLOW"))
+		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
+			0, false, generatePayloadData("BLUE"))
+		mqtt.GetMqttClient().Publish("vl/em-staging/health/m02",
+			0, false, generateHealthData("m02"))
+		time.Sleep(15 * time.Second)
 	}
 
+}
+
+func generateHealthData(cs string) (s string) {
+
+	data := &KeepAlive{
+		Namespace: cs,
+		Timestamp: time.Now().Unix(),
+	}
+
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
 }
 
 func generatePayloadData(cs string) (s string) {
