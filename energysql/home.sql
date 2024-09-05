@@ -76,7 +76,7 @@ left join
 (
     select
     meter_token,
-    color,
+    -- color,
     avg(current) as avg_current,
     avg(active_power) as avg_active_power,
     avg(reactive_power) as avg_reactive_power,
@@ -90,7 +90,7 @@ left join
     from public.data_payloads
     where
         meter_token = 'm01'
-        and color = 'RED'
+        -- and color = 'RED'
         and timestamp between TO_TIMESTAMP(
             '2024-09-04 00:00:00',
             'YYYY-MM-DD HH24:MI:SS'
