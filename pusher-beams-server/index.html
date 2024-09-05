@@ -15,12 +15,13 @@
                     console.log('Service Worker registered with scope:', registration.scope);
 
                     const beamsClient = new PusherPushNotifications.Client({
-                        instanceId: 'adb2017d-2ae7-4778-9839-cbf0303212c7',
+                        // instanceId: 'adb2017d-2ae7-4778-9839-cbf0303212c7',//6b3e7227-f5ae-443b-8cda-2dd472df292d
+                        instanceId: '6b3e7227-f5ae-443b-8cda-2dd472df292d',
                         serviceWorkerRegistration: registration,
                     });
 
                     beamsClient.start()
-                        .then(() => beamsClient.addDeviceInterest('debug-hello'))
+                        .then(() => beamsClient.addDeviceInterest('freshener_activation'))
                         .then(() => console.log('Successfully registered and subscribed!'))
                         .catch(console.error);
                 })
