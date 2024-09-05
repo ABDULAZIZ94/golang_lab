@@ -1,6 +1,8 @@
 
 
 select * from meters
+
+select * from meters
 left join datapayloads on datapayloads.metertoken = meters.meter_token
 where meters.id = '33f0d10e-a8f3-4765-7fa2-c35dcbed04e7'
 
@@ -61,7 +63,7 @@ WITH GENTIME as (
 SELECT uplinkTS FROM GENTIME;
 
 
--- home query
+-- home graph query
 WITH GENTIME as (
     SELECT uplinkTS  
     FROM generate_series(
@@ -104,3 +106,27 @@ left join
         uplinkts
 )Q1 using(uplinkTS)
 order by uplinkTS
+
+-- home data
+select 
+    meter_token, voltage, current, power_factor, frequency, 
+    is_online
+from
+(select 
+meter_token,
+vthd as voltage,
+current,
+power_factor,
+frequency 
+from data_payloads
+where meter_token = 'm02'
+order by timestamp limit 1)Q1
+left join
+    (
+        select
+            meter_token, 
+            is_online 
+        from meters 
+        where meter_token = 'm02' 
+        order by created_at desc limit 1
+    )Q2 using (meter_token)
