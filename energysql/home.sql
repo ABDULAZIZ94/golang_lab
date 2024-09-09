@@ -300,7 +300,62 @@ update data_payloads set voltage = 1000.0 where voltage IS NULL
 
 update data_payloads set power_consumption = 1000.0 where power_consumption IS NULL
 
-select * from data_payloads
+
+select * from data_payloads 
+where meter_token = 'm01'
+order by timestamp desc limit 1
 
 
 select * from data_payloads where voltage is null
+
+-- add energy consumption to home hourly res
+select
+    meter_token,
+    voltage,
+    current,
+    power_factor,
+    frequency,
+    is_online,
+    power_consumption as energy_consumption
+from (
+        select
+            meter_token, vthd as voltage, current, power_factor, power_consumption, frequency
+        from data_payloads
+        where
+            meter_token = 'm01'
+        order by timestamp desc
+        limit 1
+    ) Q1
+    left join (
+        select meter_token, is_online
+        from meters
+        where
+            meter_token = 'm01'
+        order by created_at desc
+        limit 1
+    ) Q2 using (meter_token)
+
+-- calculate current energy bill
+
+select tariff_id from buildings where buildings.id = '7ab33a3f-0fb4-4d2c-a098-8dc877963664'
+
+select * from rm_per_kilowatts where tariff_id = 'bb464c97-eb17-4d9b-52d4-eaf8733fe895' order by sequence
+
+select meter_token from meters where tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
+
+select power_consumption from data_payloads order by timestamp desc limit 1
+
+
+select rm, sequence 
+from buildings
+left join tariffs on tariffs.id = buildings.tariff_id
+left join 
+
+WITH BUILDING_LISTS AS(
+    select id from buildings where tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
+)
+select current_energy_bills
+from
+(
+    select 
+)Q1
