@@ -108,7 +108,7 @@ group by device_id
 
 
 --
-select * from devices
+select * from public.devices
 
 select * from device_pairs
 
