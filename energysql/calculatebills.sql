@@ -66,7 +66,7 @@ cross join
      and is_online = true)Q2
 
 
--- total energy consumed by load
+-- top 5 energy consumed by load
 
 select * from meters
 
@@ -107,3 +107,33 @@ select meter_id from meter_pairs where building_id in (select id from building_l
 select sum(power_consumption),meter_token from data_payloads
 where timestamp between date_trunc('month', current_timestamp) and current_timestamp
 group by meter_token
+
+
+--
+with
+    meter_lists as (
+        select meter_token
+        from meters
+        where
+            tenant_id = ?
+    )
+select ops_meters_up, ops_meters_total
+from (
+        select count(id) as ops_meters_total
+        from meters
+        where
+            meter_token in (
+                select meter_token
+                from meter_lists
+            )
+    ) Q1
+    cross join (
+        select count(id) as ops_meters_up
+        from meters
+        where
+            meter_token in (
+                select meter_token
+                from meter_lists
+            )
+            and is_online = true
+    ) Q2
