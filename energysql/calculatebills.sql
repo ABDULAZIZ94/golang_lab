@@ -73,11 +73,12 @@ select * from meters
 with meter_lists as (
     select meter_token, meter_name from meters where tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
 )
-select distinct meter_name
+select distinct meter_name, power_consumption
 from  meter_lists
 left join 
-(select meter_token from data_payloads 
+(select sum(power_consumption) as power_consumption, meter_token from data_payloads 
 where timestamp between date_trunc('month', current_timestamp) and current_timestamp
+group by meter_token
 order by power_consumption desc limit 5 )Q1 using(meter_token)
 
 
@@ -87,3 +88,22 @@ order by timestamp desc limit 5
 select current_timestamp
 
 select date_trunc('month', current_timestamp)
+
+-- top 5 energy consumber by building
+
+select building_name, sum(power_consumption) as power_consumption
+from meter_pairs
+join buildings on buildings.id = meter_pairs.building_id
+join meters on meters.id = meter_pairs.meter_id
+join data_payloads on data_payloads.meter_token = meters.meter_token
+where timestamp between date_trunc('month', current_timestamp) and current_timestamp
+group by building_name order by power_consumption limit 5
+
+(select meter_id, building_id from meter_pairs where building_id in (select building_id from building_lists) )Q1 using(building_id) 
+
+select meter_id from meter_pairs where building_id in (select id from building_lists)
+
+
+select sum(power_consumption),meter_token from data_payloads
+where timestamp between date_trunc('month', current_timestamp) and current_timestamp
+group by meter_token
