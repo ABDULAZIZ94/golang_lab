@@ -72,19 +72,27 @@ EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVA
 
 -- missing daily
  -- current month daily
- select EXTRACT( DAY FROM timestamp ) as DAY,
- sum(power_consumption) daily_power_consumption
+ select today, COALESCE(daily_power_consumption_this_month, 0), COALESCE(daily_power_consumption_prev_month, 0)
+ from
+    (SELECT distinct EXTRACT( DAY FROM today ) as today FROM generate_series(
+            date_trunc('DAY', TO_TIMESTAMP('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('DAY', TO_TIMESTAMP('2024-09-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '1 DAY'
+    ) AS TODAY order by today asc)s1
+ left join
+ (select EXTRACT( DAY FROM timestamp ) as today,
+ sum(power_consumption) as daily_power_consumption_this_month
  from data_payloads
  where timestamp between to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
     and to_timestamp( '2024-09-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-group by day
-order by day
-
+group by today
+order by today)Q1 using(today)
  -- prev month daily
-  select EXTRACT( DAY FROM timestamp ) as DAY,
- sum(power_consumption) daily_power_consumption
+ left join 
+(select EXTRACT( DAY FROM timestamp ) as today,
+ sum(power_consumption) as daily_power_consumption_prev_month
  from data_payloads
  where timestamp between to_timestamp('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
     and to_timestamp( '2024-08-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-group by day
-order by day
+group by today
+order by today)Q2 using(today)

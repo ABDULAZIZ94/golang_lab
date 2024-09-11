@@ -21,6 +21,49 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- function rand 0_360
+CREATE OR REPLACE FUNCTION rand_0_360() RETURNS NUMERIC AS $$
+BEGIN
+   RETURN random() * (360-0)+0;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_0_360 ()
+
+drop Function rand_1_1000 ()
+
+-- function rand 50_60
+CREATE OR REPLACE FUNCTION rand_50_60() RETURNS NUMERIC AS $$
+BEGIN
+   RETURN random() * (60-50)+50;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_50_60 ()
+
+drop Function rand_1_1000 ()
+-- function rand 1000_2000
+CREATE OR REPLACE FUNCTION rand_1000_2000() RETURNS NUMERIC AS $$
+BEGIN
+   RETURN random() * (2000-1000)+1000;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_1000_2000 ()
+
+drop Function rand_1000_2000 ()
+
+-- function rand 1_1000
+CREATE OR REPLACE FUNCTION rand_1_1000() RETURNS NUMERIC AS $$
+BEGIN
+   RETURN random() * (1000-1)+1;
+END;
+$$ LANGUAGE plpgsql;
+
+select rand_1_1000 ()
+
+drop Function rand_1_1000 ()
+
 -- function rand 14
 CREATE OR REPLACE FUNCTION rand_14() RETURNS INT AS $$
 BEGIN
@@ -134,3 +177,109 @@ BEGIN
     end loop;
 END $$;
 
+
+-- new mock payloads_data
+DO $$
+DECLARE
+    rec RECORD;
+    id TEXT;
+    metertoken TEXT;
+    color1 TEXT;
+    color2 TEXT;
+    color3 TEXT;
+    current NUMERIC;
+    active_power NUMERIC;
+    reactive_power NUMERIC;
+    apparant_power NUMERIC;
+    frequency NUMERIC;
+    power_factor NUMERIC;
+    phase_angle NUMERIC;
+    vthd NUMERIC;
+    athd NUMERIC;
+    timestamp TIMESTAMP WITH TIME ZONE;
+    voltage NUMERIC;
+    power_consumption NUMERIC;
+BEGIN
+power_consumption := 0;
+    FOR rec IN
+        SELECT generate_series(
+            date_trunc('hour', TO_TIMESTAMP('2024-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+            date_trunc('hour', TO_TIMESTAMP('2024-12-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
+            INTERVAL '1 hour'
+        ) AS uplinkTS
+
+    LOOP
+        --red
+        id := uuid_generate_v4();
+        metertoken := 'm01';
+        color1 := 'RED';
+        color2 := 'YELLOW';
+        color3 := 'BLUE';
+        current := rand_1000_2000();
+        active_power := rand_1000_2000 ();
+        reactive_power := rand_1000_2000 ();
+        apparant_power := rand_1000_2000 ();
+        frequency := rand_50_60();
+        power_factor := rand_1_1000();
+        phase_angle := rand_0_360();
+        vthd := rand_1_1000();
+        athd := rand_1_1000();
+        timestamp := rec.uplinkTS;
+        voltage := 1000;
+
+        insert into data_payloads("id", "meter_token", "color", "current", "active_power", "reactive_power", "frequency", "power_factor", "phase_angle",
+        "vthd", "athd", "timestamp", "apparant_power", "voltage", "power_consumption") values
+        (id, metertoken, color1, current, active_power, reactive_power, frequency, power_factor, phase_angle, vthd,
+        athd, timestamp, apparant_power, voltage, power_consumption);
+
+        --yellow
+        id := uuid_generate_v4();
+        metertoken := 'm01';
+        color1 := 'RED';
+        color2 := 'YELLOW';
+        color3 := 'BLUE';
+        current := rand_1000_2000();
+        active_power := rand_1000_2000 ();
+        reactive_power := rand_1000_2000 ();
+        apparant_power := rand_1000_2000 ();
+        frequency := rand_50_60();
+        power_factor := rand_1_1000();
+        phase_angle := rand_0_360();
+        vthd := rand_1_1000();
+        athd := rand_1_1000();
+        timestamp := rec.uplinkTS;
+        voltage := 1000;
+ 
+        insert into data_payloads("id", "meter_token", "color", "current", "active_power", "reactive_power", "frequency", "power_factor", "phase_angle",
+        "vthd", "athd", "timestamp", "apparant_power", "voltage", "power_consumption") values
+        (id, metertoken, color2, current, active_power, reactive_power, frequency, power_factor, phase_angle, vthd,
+        athd, timestamp, apparant_power, voltage, power_consumption);
+
+        -- blue
+        id := uuid_generate_v4();
+        metertoken := 'm01';
+        color1 := 'RED';
+        color2 := 'YELLOW';
+        color3 := 'BLUE';
+        current := rand_1000_2000();
+        active_power := rand_1000_2000 ();
+        reactive_power := rand_1000_2000 ();
+        apparant_power := rand_1000_2000 ();
+        frequency := rand_50_60();
+        power_factor := rand_1_1000();
+        phase_angle := rand_0_360();
+        vthd := rand_1_1000();
+        athd := rand_1_1000();
+        timestamp := rec.uplinkTS;
+        voltage := 1000;
+    
+        insert into data_payloads("id", "meter_token", "color", "current", "active_power", "reactive_power", "frequency", "power_factor", "phase_angle",
+        "vthd", "athd", "timestamp", "apparant_power", "voltage", "power_consumption") values
+        (id, metertoken, color3, current, active_power, reactive_power, frequency, power_factor, phase_angle, vthd,
+        athd, timestamp, apparant_power, voltage, power_consumption);
+
+        power_consumption := power_consumption + 1.1;
+    END LOOP;
+END $$;
+
+delete from data_payloads where power_consumption = 0
