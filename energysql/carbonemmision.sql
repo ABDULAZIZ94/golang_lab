@@ -72,6 +72,13 @@ EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVA
 
 -- missing daily
  -- current month daily
+ with meter_lists as (
+    select meter_token 
+    from meters
+    join meter_pairs on meter_pairs.meter_id = meters.id
+    join buildings on buildings.id = meter_pairs.building_id
+    where buildings.id = 'ad91d7df-15f2-4b38-7a33-1fbbce2fa482'
+ )
  select today, COALESCE(daily_power_consumption_this_month, 0), COALESCE(daily_power_consumption_prev_month, 0)
  from
     (SELECT distinct EXTRACT( DAY FROM today ) as today FROM generate_series(
@@ -84,7 +91,7 @@ EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVA
  sum(power_consumption) as daily_power_consumption_this_month
  from data_payloads
  where timestamp between to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-    and to_timestamp( '2024-09-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+    and to_timestamp( '2024-09-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and meter_token in (select meter_token from meter_lists)
 group by today
 order by today)Q1 using(today)
  -- prev month daily
@@ -93,6 +100,6 @@ order by today)Q1 using(today)
  sum(power_consumption) as daily_power_consumption_prev_month
  from data_payloads
  where timestamp between to_timestamp('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-    and to_timestamp( '2024-08-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+    and to_timestamp( '2024-08-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and meter_token in ( select meter_token from meter_lists )
 group by today
 order by today)Q2 using(today)
