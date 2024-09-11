@@ -43,4 +43,48 @@ VALUES ('Sweden', 0.013),
     ('Estonia', 0.819);
 
 
-    select * from carbon_emmision
+    select * from public.carbon_emmision
+
+
+    -- calculate carbon emmision perday
+    select * from data_payloads
+
+-- current and prev month
+    select EXTRACT( MONTH FROM current_timestamp - INTERVAL '1 month') AS prev_month,
+    EXTRACT( MONTH FROM current_timestamp ) AS current_month
+
+-- get power consumtion data by day and month
+    select 
+    EXTRACT( DAY FROM timestamp ) AS day,
+    EXTRACT( MONTH FROM timestamp ) AS month,
+    power_consumption
+    from data_payloads
+
+
+--
+select power_consumption,EXTRACT( MONTH FROM timestamp ) as month  from data_payloads
+where EXTRACT( MONTH FROM timestamp ) = EXTRACT( MONTH from current_timestamp ) or
+EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVAL '1 month')
+
+-- power each meter of buldings , taken daily for a month and previous month
+-- then daily sum (each meter of each buldings) times Co2PerKwh
+
+
+-- missing daily
+ -- current month daily
+ select EXTRACT( DAY FROM timestamp ) as DAY,
+ sum(power_consumption) daily_power_consumption
+ from data_payloads
+ where timestamp between to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+    and to_timestamp( '2024-09-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+group by day
+order by day
+
+ -- prev month daily
+  select EXTRACT( DAY FROM timestamp ) as DAY,
+ sum(power_consumption) daily_power_consumption
+ from data_payloads
+ where timestamp between to_timestamp('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+    and to_timestamp( '2024-08-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+group by day
+order by day
