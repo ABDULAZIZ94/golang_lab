@@ -279,3 +279,59 @@ WHERE (
         device_token = '23'
         and tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
     )
+
+-- list gateways
+select d.device_name, d.device_id
+from devices d
+where
+    device_type_id = 1
+
+-- list gateway that not used for pairing
+SELECT * FROM
+-- list gateway
+(select d.device_name, d.device_id from devices d
+where device_type_id = 1)Q0
+left join
+-- paired gateway and total device paired and location name
+(select DISTINCT dp.gateway_id as device_id, d.device_name, count(device_pair_id) as paired_device, loc.location_name
+from device_pairs dp  
+join devices d on d.device_id = dp.gateway_id
+join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+join locations loc on ti.location_id = loc.location_id
+where d.device_type_id = 1
+group by dp.gateway_id, d.device_name, loc.location_name) Q1 using(device_id)
+
+
+-- get tenant devtoken
+select distinct device_token as gateway_token, devices.tenant_id from device_pairs 
+join devices on devices.device_id = device_pairs.gateway_id
+where toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+limit 1
+
+select * from devices
+
+select * from toilet_infos
+
+select * from cubical_pairs
+
+select * from device_pairs
+
+select * from toilet_infos
+
+select devices.tenant_id,device_token from cubical_pairs 
+join toilet_infos on toilet_infos.toilet_info_id = cubical_pairs.toilet_info_id
+join device_pairs on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+join devices on devices.device_id = device_pairs.gateway_id
+where cubical_pairs.cubical_id = '2512c06f-bf57-45e1-7a7b-5e0935dbbe8d' limit 1
+
+
+--
+select devices.tenant_id, device_token as gateway_token
+from
+    cubical_pairs
+    join toilet_infos on toilet_infos.toilet_info_id = cubical_pairs.toilet_info_id
+    join device_pairs on device_pairs.toilet_info_id = toilet_infos.toilet_info_id
+    join devices on devices.device_id = device_pairs.gateway_id
+where
+    cubical_pairs.cubical_id = '214a2dcf-7b6e-4e98-5f77-2103dcecf0e7'
+limit 1

@@ -48,20 +48,20 @@ func main() {
 
 	for {
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
-			0, false, generatePayloadData("RED", &PowerConsumption))
+			0, false, generatePayloadData("RED1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
-			0, false, generatePayloadData("YELLOW", &PowerConsumption))
+			0, false, generatePayloadData("YELLOW1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m01/notify",
-			0, false, generatePayloadData("BLUE", &PowerConsumption))
+			0, false, generatePayloadData("BLUE1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/health/m01",
 			0, false, generateHealthData("m01"))
 		time.Sleep(15 * time.Second)
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
-			0, false, generatePayloadData("RED", &PowerConsumption))
+			0, false, generatePayloadData("RED1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
-			0, false, generatePayloadData("YELLOW", &PowerConsumption))
+			0, false, generatePayloadData("YELLOW1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/m02/notify",
-			0, false, generatePayloadData("BLUE", &PowerConsumption))
+			0, false, generatePayloadData("BLUE1", &PowerConsumption))
 		mqtt.GetMqttClient().Publish("vl/em-staging/health/m02",
 			0, false, generateHealthData("m02"))
 		time.Sleep(15 * time.Second)

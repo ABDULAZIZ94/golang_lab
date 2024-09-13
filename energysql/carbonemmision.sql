@@ -73,20 +73,25 @@ EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVA
 -- missing daily
  -- current month daily
  -- start cte
- with meter_lists as (
+with building_lists as (
+    select id from buildings where tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
+),
+ meter_lists as (
     select meter_token ,co2_kg_per_kwh
     from meters
     join meter_pairs on meter_pairs.meter_id = meters.id
     join buildings on buildings.id = meter_pairs.building_id
     join carbon_emmisions on carbon_emmisions.id = buildings.carbon_emmision_id
-    where buildings.id = 'ad91d7df-15f2-4b38-7a33-1fbbce2fa482'
+    where buildings.id in (select id from building_lists)
  ),
  day_lists as (
-    SELECT distinct EXTRACT( DAY FROM today ) as today FROM generate_series(
+    SELECT distinct EXTRACT( DAY FROM today ) as today, EXTRACT( MONTH FROM today ) as month 
+    FROM generate_series(
             date_trunc('DAY', TO_TIMESTAMP('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
             date_trunc('DAY', TO_TIMESTAMP('2024-09-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS')),
             INTERVAL '1 DAY'
-    ) AS TODAY order by today asc
+    ) AS TODAY 
+    order by today asc
  ),
  this_month_consumption as (
     select EXTRACT( DAY FROM timestamp ) as today,
@@ -129,7 +134,7 @@ EXTRACT( MONTH FROM timestamp) = EXTRACT( MONTH from current_timestamp - INTERVA
     and to_timestamp( '2024-08-30 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
     group by today,co2_kg_per_kwh order by today)
 -- start query
- select today, 
+ select today, month,
  COALESCE(daily_power_consumption_this_month, 0) as daily_power_consumption_this_month, 
  COALESCE(daily_power_consumption_prev_month, 0) as daily_power_consumption_prev_month,
  COALESCE( daily_power_consumption_this_month_e, 0 ) as daily_power_consumption_this_month_e,
@@ -143,6 +148,7 @@ left join
     this_months_emmisions using (today)
 left join 
     prev_months_emmisions using (today)
+order by today, month
 -- left join
 --     (SELECT distinct EXTRACT( DAY FROM today ) as today FROM generate_series(
 --             date_trunc('DAY', TO_TIMESTAMP('2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')),
@@ -169,3 +175,181 @@ left join
 
 --
 ALTER TABLE carbon_emmisions ALTER COLUMN id TYPE TEXT USING id::TEXT;
+
+
+-- fail query
+with
+    building_lists as (
+        select id
+        from buildings
+        where
+            tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
+    ),
+    meter_lists as (
+        select meter_token, co2_kg_per_kwh
+        from
+            meters
+            join meter_pairs on meter_pairs.meter_id = meters.id
+            join buildings on buildings.id = meter_pairs.building_id
+            join carbon_emmisions on carbon_emmisions.id = buildings.carbon_emmision_id
+        where
+            buildings.id in (
+                select id
+                from building_lists
+            )
+    ),
+    day_lists as (
+        SELECT distinct
+            EXTRACT(
+                DAY
+                FROM today
+            ) as today,
+            EXTRACT(
+                MONTH
+                FROM today
+            ) as month
+        FROM generate_series(
+                date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-08-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'DAY', TO_TIMESTAMP(
+                        '2024-09-30 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), INTERVAL '1 DAY'
+            ) AS TODAY
+        order by today asc
+    ),
+    this_month_consumption as (
+        select
+            EXTRACT(
+                DAY
+                FROM timestamp
+            ) as today,
+            sum(power_consumption) as daily_power_consumption_this_month
+        from data_payloads
+        where
+            timestamp between to_timestamp(
+                '2024-09-01 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and to_timestamp(
+                '2024-09-30 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+            and meter_token in (
+                select meter_token
+                from meter_lists
+            )
+        group by
+            today
+        order by today
+    ),
+    prev_month_consumption as (
+        select
+            EXTRACT(
+                DAY
+                FROM timestamp
+            ) as today,
+            sum(power_consumption) as daily_power_consumption_prev_month
+        from data_payloads
+        where
+            timestamp between to_timestamp(
+                '2024-08-01 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and to_timestamp(
+                '2024-08-30 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+            and meter_token in (
+                select meter_token
+                from meter_lists
+            )
+        group by
+            today
+        order by today
+    ),
+    this_months_emmisions as (
+        select
+            EXTRACT(
+                DAY
+                FROM timestamp
+            ) as today,
+            sum(power_consumption) * co2_kg_per_kwh as daily_power_consumption_this_month_e
+        from meter_lists
+            join data_payloads on data_payloads.meter_token = meter_lists.meter_token
+        where
+            timestamp between to_timestamp(
+                '2024-09-01 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and to_timestamp(
+                '2024-09-30 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        group by
+            today,
+            co2_kg_per_kwh
+        order by today
+    ),
+    prev_months_emmisions as (
+        select
+            EXTRACT(
+                DAY
+                FROM timestamp
+            ) as today,
+            sum(power_consumption) * co2_kg_per_kwh as daily_power_consumption_prev_month_e
+        from meter_lists
+            join data_payloads on data_payloads.meter_token = meter_lists.meter_token
+        where
+            timestamp between to_timestamp(
+                '2024-08-01 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and to_timestamp(
+                '2024-08-30 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        group by
+            today,
+            co2_kg_per_kwh
+        order by today
+    )
+select
+    today,
+    month,
+    COALESCE(
+        daily_power_consumption_this_month,
+        0
+    ) as daily_power_consumption_this_month,
+    COALESCE(
+        daily_power_consumption_prev_month,
+        0
+    ) as daily_power_consumption_prev_month,
+    COALESCE(
+        daily_power_consumption_this_month_e,
+        0
+    ) as daily_power_consumption_this_month_e,
+    COALESCE(
+        daily_power_consumption_prev_month_e,
+        0
+    ) as daily_power_consumption_prev_month_e
+from
+    day_lists
+    left join this_month_consumption using (today)
+    left join prev_month_consumption using (today)
+    left join this_months_emmisions using (today)
+    left join prev_months_emmisions using (today)
+order by today, month
+
+--
+select
+    buildings.id as building_id,
+    building_name,
+    tariff_id,
+    carbon_emmisions.co2_kg_per_kwh as carbon_formula_x,
+    carbon_formulas.multiplier as carbon_footprint_x
+from
+    buildings
+    left join carbon_emmisions on carbon_emmisions.id = buildings.carbon_emmision_id
+    left join carbon_formulas on carbon_formulas.id = buildings.carbon_formula_id
+where
+    tenant_id = 'e6daf318-6516-4350-6b56-ae0a44b7e5d7'
