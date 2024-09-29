@@ -4,7 +4,10 @@ COMMIT;
 select * from tenants
 
 -- kemaman 964cd0a5-8620-4a24-67af-578da8c3b6df 
-select * from locations
+
+select * from public.devices
+
+select * from public.locations
 
 select * from devices ORDER BY device_token desc
 
@@ -51,7 +54,7 @@ where
     d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
 
 -- list devices belong to kemaman toilet_male_01
-select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
+select dp.device_pair_id, dp.gateway_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
 from
     device_pairs as dp
     join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
@@ -68,7 +71,7 @@ select * from public.devices where device_token in ('30','32','33','70','608','4
 SELECT * FROM public.devices where device_id = 'bff2b286-a044-4202-5881-ebe42125b2de'
 
 -- list devices belong to kemaman toilet_female_01
-select dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
+select dp.gateway_id, dp.device_pair_id, dp.toilet_info_id, ti.toilet_name, d.device_name, d.device_token, d.device_id
 from
     device_pairs as dp
     join toilet_infos as ti on dp.toilet_info_id = ti.toilet_info_id
@@ -123,13 +126,17 @@ WHERE
     )
 
 -- check devices pairs
-select d.device_id, dp.device_pair_id, d.device_name, d.device_token, dp.toilet_info_id
+select d.device_id, dp.device_pair_id, d.device_name, d.device_token, dp.toilet_info_id, d.tenant_id
 from devices d
     left join device_pairs dp using (device_id)
-where
-    d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+-- where
+--     d.tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+
+delete from public.device_pairs where device_pair_id = '4faedfc3-f013-407a-55f8-b2296e94e258'
+
 -- devices for male 9388096c-784d-49c8-784c-1868b1233165
 -- 36f74ec4-cdb0-4271-6c2d-2baa48d6e583 change to 9388096c-784d-49c8-784c-1868b1233165
+
 select d.device_id, dp.device_pair_id, d.device_name, d.device_token, dp.toilet_info_id
 from devices d
     left join device_pairs dp using (device_id)
@@ -281,10 +288,16 @@ WHERE (
     )
 
 -- list gateways
-select d.device_name, d.device_id
+select d.device_name,d.device_token,  d.device_id
 from devices d
 where
     device_type_id = 1
+
+-- gateway 2 // 93a7c9e9-8864-40e5-4197-0c06e4167d9d 
+
+-- gateway 00 // 6be74626-459d-48db-4528-5c4c3f469a19 
+
+-- gateway feedback panel
 
 -- list gateway that not used for pairing
 SELECT * FROM
@@ -334,4 +347,64 @@ from
     join devices on devices.device_id = device_pairs.gateway_id
 where
     cubical_pairs.cubical_id = '214a2dcf-7b6e-4e98-5f77-2103dcecf0e7'
+limit 1
+
+
+
+-- bulk update gateway pairing for toilet female, chnage gateway to gw2
+update device_pairs set gateway_id = '0e94682a-9647-4e8a-7df4-ca20e0069405'
+where device_pair_id in
+(
+'ae2d09ab-42c8-4683-580c-f1f19267060b',
+'9d733a91-e717-459c-5e99-74e50a007868',
+'f98b297e-3ded-42c0-6dbb-d778a0bca58d',
+'25ad0fed-1b35-4fc6-70e7-eb22c4712a78',
+'54d77890-b471-489d-5dab-f8b57a1f15ef',
+'4234509e-0749-4e04-7342-87ed4cb42e7d',
+'88c5fbc6-8bbc-473a-78f5-4a8a5d070a16',
+'ef4a97a5-cabd-4214-797e-7b050140d818',
+'7b53a36c-a016-4ddb-766c-177e0f9b7d9a',
+'e14df1e4-98ef-467e-50ae-7e2adcf65bba',
+'26f24b8b-c71c-4592-44ad-2cc077d511aa',
+'99671583-84ec-492c-73e8-fd9000aa0470'
+)
+
+
+-- bulk update male to gateway 1
+update device_pairs set gateway_id = ''
+where device_pair_id in
+(
+cd8cb238-ba54-4fce-5e60-e0fc6019f2a6
+4faedfc3-f013-407a-55f8-b2296e94e258
+aba8f8d7-c000-48f3-5c24-7856ba12fc8b
+64e9504e-f2ff-4ecc-6096-b841bc755fc2
+3b8fd903-99f2-4703-6242-c1022bf96c1a
+f203a40e-9383-4a38-5502-f55484a3e06a
+7a70365c-5a04-4f48-4b07-1604399eb2b7
+e24c9b97-e15c-402f-5d6a-bc3db54da4e8
+0c756f5f-b23b-498a-614d-e24eea4000a9
+35a5a7c1-141c-422d-4168-b216c16894af
+f5b7e8f0-37eb-4b58-7b6c-917d44cc5431
+c1297d5a-243a-4c4a-5839-e60d93718132
+4cd91fb8-54ef-46e8-4472-4c1b9a3a42bc
+d861a427-4aa2-46ce-5fa7-92961c81b61d
+f5985585-11dd-4404-425a-43b23a0e60c6
+)
+
+
+-- bulk update oku to gw0
+
+
+select * from devices
+
+select * from toilet_infos
+
+select * from device_pairs
+
+
+select device_token
+from devices d
+left join device_pairs dp on dp.device_id = d.device_id
+left join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
+where dp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2' and d.device_type_id = 11
 limit 1

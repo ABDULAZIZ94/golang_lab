@@ -114,7 +114,7 @@ func main() {
 	// mqtt.GetMqttClient().Publish("vl/staging/t2/77/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
 	//publish smoke data
-	mqtt.GetMqttClient().Publish("vl/staging/t2/110/uplink", 0, false, generateSmokeData())
+	// mqtt.GetMqttClient().Publish("vl/staging/t2/110/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
 	// mqtt.GetMqttClient().Publish("vl/staging/t2/69/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
@@ -152,7 +152,7 @@ func main() {
 	// time.Sleep(1 * time.Second)
 
 	//publish panic data
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/111/uplink", 0, false, generatePanicBtnData())
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/589ee2f0-75e1-4cd0-5c74-78a4df1288fd/1000/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
 	// mqtt.GetMqttClient().Publish("vl/staging/t2/72/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
@@ -167,8 +167,8 @@ func main() {
 	// fragrance_data, total_fragrance_cummulative2 = generateFragranceData(total_fragrance_cummulative2)
 	// mqtt.GetMqttClient().Publish("vl/staging/t2/67/uplink", 0, false, fragrance_data)
 
-	mqtt.GetMqttClient().Publish("vl/staging/command", 0, false, "test")
-	time.Sleep(1 * time.Second)
+	// mqtt.GetMqttClient().Publish("vl/staging/command", 0, false, "test")
+	time.Sleep(10 * time.Second)
 	// }
 
 }

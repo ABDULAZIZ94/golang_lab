@@ -21,7 +21,7 @@
                     });
 
                     beamsClient.start()
-                        .then(() => beamsClient.addDeviceInterest('freshener_activation'))
+                        .then(() => beamsClient.addDeviceInterest('debug-panic_alert'))
                         .then(() => console.log('Successfully registered and subscribed!'))
                         .catch(console.error);
                 })

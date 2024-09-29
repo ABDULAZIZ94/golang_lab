@@ -1,7 +1,9 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@energy-staging
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
-select * from enviroment_data
+select * from enviroment_data 
+
+select * from enviroment_data where device_token ='222'
 
 -- iaq graph
 select iaq, date_trunc('HOUR', timestamp)

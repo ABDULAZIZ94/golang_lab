@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusher Subscription Example</title>
+</head>
+
+<body>
+    <h1>Pusher Channel Subscription</h1>
+
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        // Initialize Pusher
+        const pusher = new Pusher('7b5622ba2c108bda615b', {
+            cluster: 'ap1',
+        });
+
+        // Subscribe to a channel
+        const channel = pusher.subscribe('panic_btn');
+
+        // Bind to an event within that channel
+        channel.bind('activated', function (data) {
+            console.log('Received data:', data);
+            alert(`Received data: ${JSON.stringify(data)}`);
+        });
+
+        // Handle subscription success
+        channel.bind('pusher:subscription_succeeded', function () {
+            console.log('Successfully subscribed to the channel!');
+        });
+
+        // Handle subscription errors
+        pusher.connection.bind('error', function (err) {
+            if (err.error.data.code === 4004) {
+                console.log('Over the connection limit!');
+            } else {
+                console.log('Error:', err);
+            }
+        });
+    </script>
+</body>
+
+</html>

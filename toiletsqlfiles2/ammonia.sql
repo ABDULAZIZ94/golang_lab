@@ -55,7 +55,7 @@ GROUP BY
 
 
 
----
+--- 
 WITH
     DEVICE_LIST AS (
         SELECT

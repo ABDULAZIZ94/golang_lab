@@ -2,6 +2,11 @@
 
 select * from fragrance_data
 
+SELECT COUNT(misc_data_id) AS TOTAL_FRAGRANCE 
+FROM MISC_ACTION_DATA
+
+select * FROM MISC_ACTION_DATA
+
 -- kemaman 107,106
 select * from fragrance_data where device_token = '107'
 and EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
