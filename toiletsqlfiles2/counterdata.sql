@@ -1,5 +1,7 @@
 
+select * from counter_data
 
+delete from counter_data where timestamp > now()
 
 -- kemaman 103, 104
 select * from counter_data where device_token = '103'

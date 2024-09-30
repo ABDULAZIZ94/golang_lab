@@ -28,6 +28,10 @@ select
 from occupancy_data
 limit 10
 
+select * from occupancy_data
+
+DELETE FROM occupancy_data WHERE timestamp > NOW()
+
 -- occupancy trigger function
 CREATE OR REPLACE FUNCTION sum_occupancy_data( dt text)
 RETURNS TRIGGER AS $$

@@ -1,4 +1,7 @@
 
+select * from panic_btn_data order by timestamp DESC
+
+delete from panic_btn_data where timestamp > now()
 
 select * from panic_btn_data where device_token = '1000' order by timestamp desc
 

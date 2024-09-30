@@ -1,6 +1,11 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 select * from fragrance_data
+
+select * from fragrance_data order by timestamp desc
+
+delete from fragrance_data where timestamp > now()
 
 SELECT COUNT(misc_data_id) AS TOTAL_FRAGRANCE 
 FROM MISC_ACTION_DATA

@@ -3,6 +3,8 @@
 
 select * from enviroment_data 
 
+delete from enviroment_data where timestamp > now()
+
 select * from enviroment_data where device_token ='222'
 
 -- iaq graph

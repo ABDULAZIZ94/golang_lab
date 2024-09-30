@@ -9,6 +9,9 @@ ALTER TABLE cleaner_reports RENAME COLUMN device_aliases TO cubical_tag
 ALTER TABLE cleaner_reports RENAME COLUMN cubical_tag TO cubical_id
 
 
+DELETE FROM cleaner_reports WHERE created_at > NOW() 
+
+
 
 ALTER TABLE cleaner_reports
 ALTER COLUMN cubical_tag 
@@ -21,6 +24,8 @@ select * from devices
 select * from device_types
 
 select * from cleaner_reports order by created_at desc limit 10
+
+delete from cleaner_reports where creatd_at > NOW()
 
 -- kemaman tenant 589ee2f0-75e1-4cd0-5c74-78a4df1288fd 
 select * from cleaner_reports where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd' order by created_at desc limit 10

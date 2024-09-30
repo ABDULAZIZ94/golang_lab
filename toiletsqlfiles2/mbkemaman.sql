@@ -300,7 +300,7 @@ where
 -- gateway feedback panel
 
 -- list gateway that not used for pairing
-SELECT * FROM
+EXPLAIN SELECT * FROM
 -- list gateway
 (select d.device_name, d.device_id from devices d
 where device_type_id = 1)Q0

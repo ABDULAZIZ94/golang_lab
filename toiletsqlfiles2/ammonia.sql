@@ -172,3 +172,8 @@ FROM (
                 'YYYY-MM-DD HH24:MI:SS'
             )
     ) Q6 ON 1 = 1
+
+
+select * from ammonia_data
+
+delete from ammonia_data where timestamp > NOW()
