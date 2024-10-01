@@ -257,3 +257,10 @@ LIMIT 1;  -- Adjust the limit as necessary
 
 
 select * from devices
+
+
+
+REINDEX DATABASE smarttoilet-staging
+
+
+REINDEX DATABASE "smarttoilet-staging";

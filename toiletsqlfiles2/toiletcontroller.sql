@@ -6,3 +6,4 @@ JOIN device_types ON device_types.device_type_id = devices.device_type_id
 -- Where device_pairs.toilet_info_id = ''
 Where 1=1
 
+select * from toilet_infos

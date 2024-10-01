@@ -57,8 +57,8 @@ select sum(SMELLY_TOILET+OUTOF_SUPPLY+WET_FLOOR+PLUMBING_ISSUES) as TOTAL, SMELL
 count(case when complaint = '2' then 1 end) as OUTOF_SUPPLY,
 count(case when complaint = '3' then 1 end) as WET_FLOOR,
 count(case when complaint = '4' then 1 end) as PLUMBING_ISSUES
-from user_reactions where timestamp between TO_TIMESTAMP( '2024-08-14 07:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and 
-TO_TIMESTAMP( '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583',
+from user_reactions where timestamp between TO_TIMESTAMP( '2024-09-30 07:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and 
+TO_TIMESTAMP( '2024-10-01 18:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and toilet_id in ('36f74ec4-cdb0-4271-6c2d-2baa48d6e583',
 '9388096c-784d-49c8-784c-1868b1233165','a97891e5-14df-4f95-7d1e-4ee601581df2'))Q1
 group by Q1.SMELLY_TOILET, Q1.OUTOF_SUPPLY, Q1.WET_FLOOR, Q1.PLUMBING_ISSUES 
 

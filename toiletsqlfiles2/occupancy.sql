@@ -60,3 +60,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_sum_latest
 AFTER INSERT ON data_table FOR EACH ROW
 EXECUTE FUNCTION sum_latest_data ();
+
+
+select * from occupancy_data where device_token = '33' limit 1
+
+select * from occupancy_data where device_token = '34' order by timestamp desc limit 1

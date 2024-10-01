@@ -1,6 +1,21 @@
 
 select * from counter_data
 
+CREATE OR REPLACE FUNCTION immutable_date_trunc(text, timestamp with time zone)
+RETURNS timestamp AS $$
+BEGIN
+    RETURN date_trunc($1, $2);
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+CREATE INDEX idx_counter_data_timestamp_hour ON counter_data (
+    immutable_date_trunc('hour'::text, counter_data.timestamp)
+);
+
+CREATE INDEX idx_counter_data_timestamp_hour ON counter_data (
+    date_trunc('hour', timestamp)::timestamp
+);
+
 delete from counter_data where timestamp > now()
 
 -- kemaman 103, 104
@@ -89,3 +104,57 @@ where dp.toilet_info_id in (select toilet_info_id from toilet_infos where tenant
 
 --
 select toilet_info_id from toilet_infos where tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'  and toilet_type_id =1
+
+
+--
+WITH
+    TOILET_LIST AS (
+        SELECT ti.toilet_info_id
+        FROM toilet_infos ti
+        WHERE
+            tenant_id = '589ee2f0-75e1-4cd0-5c74-78a4df1288fd'
+    )
+select
+    sum(
+        HAPPY + SATISFIED + NOT_SATISFIED + NOT_HAPPY
+    ) as TOTAL,
+    HAPPY,
+    SATISFIED,
+    NOT_SATISFIED,
+    NOT_HAPPY
+from (
+        select
+            count(
+                case
+                    when reaction = '1' then 1
+                end
+            ) as HAPPY, count(
+                case
+                    when reaction = '2' then 1
+                end
+            ) as SATISFIED, count(
+                case
+                    when reaction = '3' then 1
+                end
+            ) as NOT_SATISFIED, count(
+                case
+                    when reaction = '4' then 1
+                end
+            ) as NOT_HAPPY
+        from user_reactions
+        where
+            timestamp between TO_TIMESTAMP(
+                '2024-09-30 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-01 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+    ) Q1
+group by
+    Q1.HAPPY,
+    Q1.SATISFIED,
+    Q1.NOT_SATISFIED,
+    Q1.NOT_HAPPY
