@@ -8,10 +8,7 @@ with
     meter_lists as (
         select meter_token, co2_kg_per_kwh
         from
-            meters
-            join meter_pairs on meter_pairs.meter_id = meters.id
-            join buildings on buildings.id = meter_pairs.building_id
-            join carbon_emmisions on carbon_emmisions.id = buildings.carbon_emmision_id
+            meters_co2
         where
             buildings.id in (
                 select id
@@ -43,12 +40,9 @@ with
     ),
     this_month_consumption as (
         select
-            EXTRACT(
-                DAY
-                FROM timestamp
-            ) as today,
-            sum(power_consumption) as daily_power_consumption_this_month
-        from data_payloads
+            timestamp,
+            daily_power_consumption
+        from data_payloads_monthly
         where
             timestamp between to_timestamp(
                 '2024-09-01 00:00:00',
@@ -67,20 +61,11 @@ with
     ),
     prev_month_consumption as (
         select
-            EXTRACT(
-                DAY
-                FROM timestamp
-            ) as today,
-            sum(power_consumption) as daily_power_consumption_prev_month
-        from data_payloads
+            timestamp,
+            daily_power_consumption
+        from data_payloads_monthly
         where
-            timestamp between to_timestamp(
-                '2024-08-01 00:00:00',
-                'YYYY-MM-DD HH24:MI:SS'
-            ) and to_timestamp(
-                '2024-08-30 00:00:00',
-                'YYYY-MM-DD HH24:MI:SS'
-            )
+            timestamp between to_timestamp('2024-08-01 00:00:00','YYYY-MM-DD HH24:MI:SS') and to_timestamp('2024-08-30 00:00:00','YYYY-MM-DD HH24:MI:SS')
             and meter_token in (
                 select meter_token
                 from meter_lists
@@ -91,11 +76,8 @@ with
     ),
     this_months_emmisions as (
         select
-            EXTRACT(
-                DAY
-                FROM timestamp
-            ) as today,
-            sum(power_consumption) * co2_kg_per_kwh as daily_power_consumption_this_month_e
+            timestamp,
+            daily_power_consumption_this_month_e
         from meter_lists
             join data_payloads on data_payloads.meter_token = meter_lists.meter_token
         where
@@ -190,12 +172,16 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY data_payloads_monthly
 
 -- data 
 CREATE MATERIALIZED VIEW IF NOT EXISTS meter_co2 AS
-select meter_token, co2_kg_per_kwh
+select meter_token, co2_kg_per_kwh, buildings.id as building_id
 from
     meters
     join meter_pairs on meter_pairs.meter_id = meters.id
     join buildings on buildings.id = meter_pairs.building_id
     join carbon_emmisions on carbon_emmisions.id = buildings.carbon_emmision_id
 WITH DATA
+
+DROP MATERIALIZED VIEW meter_co2
+
+REFRESH MATERIALIZED VIEW meter_co2
 
 select * from meter_co2
