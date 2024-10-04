@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@energy-staging
 with
     building_lists as (
         select id
@@ -165,6 +166,8 @@ select date_trunc('DAY', timestamp) as timestamp, power_consumption, meter_token
 REFRESH MATERIALIZED VIEW data_payloads_monthly
 
 select * from  data_payloads_monthly
+
+CREATE UNIQUE INDEX data_payloads_monthly_idx ON data_payloads_monthly (timestamp, power_consumption, daily_power_consumption_this_month_e, meter_token);
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY data_payloads_monthly
 

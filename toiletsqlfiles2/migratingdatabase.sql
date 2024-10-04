@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 
 CREATE EXTENSION dblink;
@@ -63,3 +64,100 @@ FROM tenants lt
     ) rt ON lt.tenant_id = rt.tenant_id
 WHERE
     lt.tenant_id IS NULL;
+
+
+-- migrate users
+SELECT rt.*
+FROM users lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from users'
+            ) AS remote_table (
+                user_id text, tenant_id text, user_name text, password text, phone_no text, email text, user_type_id integer, access_level_id integer,
+                all_access text, get_notify text, created_at timestamptz, updated_at timestamptz, deleted_at timestamptz
+            )
+    ) rt ON lt.tenant_id = rt.tenant_id
+WHERE
+    lt.user_id IS NULL;
+
+
+SELECT version();
+
+-- migrate user reactions
+INSERT INTO
+    user_reactions (
+        reaction_id,
+        toilet_type,
+        reaction,
+        complaint,
+        timestamp,
+        toilet_id,
+        score
+    )
+
+
+SELECT rt.*
+FROM user_reactions lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from user_reactions'
+            ) AS remote_table (
+                reaction_id text, toilet_type text, reaction text, complaint text, timestamp timestamptz, toilet_id text, score integer
+            )
+    ) rt ON lt.reaction_id = rt.reaction_id
+WHERE
+    lt.reaction_id IS NULL;
+
+
+-- migrate misc action data
+INSERT INTO
+    misc_action_data (
+        misc_data_id,
+        device_token,
+        toilet_info_id,
+        namespace,
+        status,
+        timestamp
+    )
+SELECT rt.*
+FROM misc_action_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from misc_action_data'
+            ) AS remote_table (
+                misc_data_id text, device_token text, toilet_info_id text, namespace text, status text, timestamp timestamptz
+            )
+    ) rt ON lt.misc_data_id = rt.misc_data_id
+WHERE
+    lt.misc_data_id IS NULL;
+
+
+-- migrate fp sensor data
+INSERT INTO
+    fp_sensor_data (
+        fpr_sensor_data_id,
+        device_token,
+        temperature,
+        humidity,
+        created_at,
+        updated_at,
+        deleted_at,
+        rssi,
+        cpu_temp
+    )
+SELECT rt.*
+FROM fp_sensor_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from fp_sensor_data'
+            ) AS remote_table (
+                fpr_sensor_data_id text, device_token text, temperature numeric, humidity numeric, created_at timestamptz, updated_at timestamptz, deleted_at timestamptz,
+                rssi numeric, cpu_temp numeric
+            )
+    ) rt ON lt.fpr_sensor_data_id = rt.fpr_sensor_data_id
+WHERE
+    lt.fpr_sensor_data_id IS NULL;

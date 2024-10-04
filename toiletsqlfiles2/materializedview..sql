@@ -1,7 +1,8 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
 select * from occupancy_data
 
-CREATE VIEW env_agg as
+CREATE MATERIALIZED VIEW env_agg as
     select 
     avg(iaq)::int as iaq,
     avg(temperature)::int as temperature,
@@ -10,7 +11,13 @@ CREATE VIEW env_agg as
     date_trunc('HOUR', timestamp) as uplinkts, device_token
     from enviroment_data
     group by uplinkts, device_token
+WITH DATA
 
+DROP INDEX env_agg_idx
+
+CREATE UNIQUE INDEX env_agg_idx ON env_agg (uplinkts, device_token);
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY env_agg
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS env_agg as
 select
