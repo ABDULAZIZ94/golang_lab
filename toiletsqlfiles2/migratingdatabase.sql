@@ -161,3 +161,66 @@ FROM fp_sensor_data lt
     ) rt ON lt.fpr_sensor_data_id = rt.fpr_sensor_data_id
 WHERE
     lt.fpr_sensor_data_id IS NULL;
+
+
+-- migrate feedback panel data
+INSERT INTO
+    feedback_panel_data (
+        fp_data_id,
+        device_token,
+        button_id,
+        timestamp,
+        toilet_type_id
+    )
+SELECT rt.*
+FROM feedback_panel_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from feedback_panel_data'
+            ) AS remote_table (
+                fp_data_id text, device_token text, button_id numeric, timestamp timestamptz, toilet_type_id integer
+            )
+    ) rt ON lt.fp_data_id = rt.fp_data_id
+WHERE
+    lt.fp_data_id IS NULL;
+
+
+-- migrate feedback panel settings
+SELECT rt.*
+FROM feedback_panel_settings lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from feedback_panel_settings'
+            ) AS remote_table (
+                fp_entry_set_id text, fp_set_id text, button_id integer, notify_user_state text, activate_on_feed_state text, notify_user_cnt text
+            )
+    ) rt ON lt.fp_entry_set_id = rt.fp_entry_set_id
+WHERE
+    lt.fp_entry_set_id IS NULL;
+
+-- migrate enviroment data
+INSERT INTO
+    enviroment_data (
+        env_data_id,
+        device_token,
+        iaq,
+        temperature,
+        humidity,
+        lux,
+        timestamp
+    )
+SELECT rt.*
+FROM
+    enviroment_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from enviroment_data'
+            ) AS remote_table (
+                env_data_id text, device_token text, iaq numeric, temperature numeric, humidity numeric, lux numeric, timestamp timestamptz
+            )
+    ) rt ON lt.env_data_id = rt.env_data_id
+WHERE
+    lt.env_data_id IS NULL;

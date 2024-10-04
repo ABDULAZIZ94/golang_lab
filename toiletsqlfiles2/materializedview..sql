@@ -17,6 +17,8 @@ DROP INDEX env_agg_idx
 
 CREATE UNIQUE INDEX env_agg_idx ON env_agg (uplinkts, device_token);
 
+REFRESH MATERIALIZED VIEW env_agg
+
 REFRESH MATERIALIZED VIEW CONCURRENTLY env_agg
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS env_agg as
