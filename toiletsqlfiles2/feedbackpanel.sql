@@ -517,15 +517,16 @@ select fp_data_id, date_trunc('HOUR', timestamp)as ts  from feedback_panel_data
 
 select count(fp_data_id)as total_complaint  from feedback_panel_data where device_token = '1'
 
-select count(fp_data_id) as total_complaint, ts
+select count(case when complaint = 0 then 0 else 1 end) as total_complaint, ts
 from (
-        select fp_data_id, date_trunc('HOUR', timestamp) as ts
+        select complaint, date_trunc('HOUR', timestamp) as ts
         from feedback_panel_data
         where
+            device_token = '7' and
             timestamp between to_timestamp(
-                '2024-08-14 07:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                '2024-10-01 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
             ) and to_timestamp(
-                '2024-08-14 18:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                '2024-10-02 09:00:00', 'YYYY-MM-DD HH24:MI:SS'
             )
     ) Q1
 group by ts

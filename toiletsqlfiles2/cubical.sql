@@ -170,10 +170,10 @@ LAG(occupied, 1) OVER (
 ) AS prev_occupied,
  date_trunc('HOUR', timestamp) as uplinkts 
  from occupancy_data
-where device_token in ('118') and 
-EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
-    AND timestamp between TO_TIMESTAMP('2024-08-14 07:00:00','YYYY-MM-DD HH24:MI:SS') 
-    and TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS')
+where device_token in ('30')  
+-- AND EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
+    AND timestamp between TO_TIMESTAMP('2024-10-01 23:00:00','YYYY-MM-DD HH24:MI:SS') 
+    and TO_TIMESTAMP('2024-10-02 16:00:00','YYYY-MM-DD HH24:MI:SS')
 -- group by occupied,id, uplinkts
 
 -- Q1
@@ -181,10 +181,15 @@ select count(case when occupied=true and prev_occupied =false then 1 end ) as TR
 (select occupied ,
 LAG(occupied, 1) OVER (ORDER BY id) AS prev_occupied,
  date_trunc('HOUR', timestamp) as uplinkts from occupancy_data
-where device_token in ('118') and 
-EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
-    AND timestamp between TO_TIMESTAMP('2024-08-14 07:00:00','YYYY-MM-DD HH24:MI:SS') 
-    and TO_TIMESTAMP('2024-08-14 18:00:00','YYYY-MM-DD HH24:MI:SS'))S1
+where device_token in ('37') 
+-- AND EXTRACT(HOUR FROM timestamp) >= 7 AND EXTRACT(HOUR FROM timestamp) <= 18
+    AND timestamp between TO_TIMESTAMP(
+    '2024-10-01 23:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+) and TO_TIMESTAMP(
+    '2024-10-02 16:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+))S1
 
 
 select occupied as OCCUPIED,timestamp  from occupancy_data where device_token ='118' order by timestamp limit 1

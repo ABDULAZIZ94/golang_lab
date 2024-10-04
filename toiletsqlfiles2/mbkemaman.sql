@@ -7,6 +7,11 @@ select * from tenants
 
 select * from public.devices
 
+select * from public.tenants
+
+-- tenant putrajaya 59944171-3a4a-460d-5897-8bb38c524d54 
+select * from public.toilet_infos where toilet_info_id in ('1e4a1133-d081-4479-702e-78b0684570cf', '7a48f840-db75-41f2-69a5-69339074f504','6de1c976-57c5-4cfb-4dd1-c65f1fb39029')
+
 select * from public.locations
 
 select * from devices ORDER BY device_token desc

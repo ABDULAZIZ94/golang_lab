@@ -62,6 +62,45 @@ AFTER INSERT ON data_table FOR EACH ROW
 EXECUTE FUNCTION sum_latest_data ();
 
 
-select * from occupancy_data where device_token = '33' limit 1
+SELECT *
+FROM occupancy_data
+WHERE
+    device_token = '37'
+    AND timestamp > DATE_TRUNC(
+        'hour',
+        TO_TIMESTAMP(
+            '2024-10-01 07:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ) AT TIME ZONE 'UTC'
+    )
+and occupied=true 
 
-select * from occupancy_data where device_token = '34' order by timestamp desc limit 1
+select * from occupancy_data where device_token = '30' order by timestamp desc limit 10
+
+select * from occupancy_data limit 10
+
+-- time zone in malaysia to utc
+select DATE_TRUNC('hour',TO_TIMESTAMP('2024-10-03 07:00:00','YYYY-MM-DD HH24:MI:SS') AT TIME ZONE 'UTC+8' AT TIME ZONE 'UTC')
+
+
+
+--
+with occupied_now_prev as(select
+    occupied,
+    lag(occupied, 1) over (
+        order by id
+    ) prev_occupied,
+    device_token, timestamp
+    from occupancy_data
+    where
+    timestamp > DATE_TRUNC(
+        'hour',
+        TO_TIMESTAMP(
+            '2024-10-03 07:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ) AT TIME ZONE 'UTC+8' AT TIME ZONE 'UTC'
+    )
+    and device_token = '37'
+    )
+
+

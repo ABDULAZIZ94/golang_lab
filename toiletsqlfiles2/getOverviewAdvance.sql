@@ -679,3 +679,101 @@ from
 order by timestamp desc
 limit 4
 
+
+--
+select
+    sum(
+        HAPPY + SATISFIED + NOT_SATISFIED + NOT_HAPPY
+    ) as TOTAL,
+    HAPPY,
+    SATISFIED,
+    NOT_SATISFIED,
+    NOT_HAPPY
+from (
+        select
+            count(
+                case
+                    when reaction = '1' then 1
+                end
+            ) as HAPPY, count(
+                case
+                    when reaction = '2' then 1
+                end
+            ) as SATISFIED, count(
+                case
+                    when reaction = '3' then 1
+                end
+            ) as NOT_SATISFIED, count(
+                case
+                    when reaction = '4' then 1
+                end
+            ) as NOT_HAPPY
+        from user_reactions
+        where
+            timestamp between TO_TIMESTAMP(
+                '2024-10-02 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-03 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            -- and toilet_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+    ) Q1
+group by
+    Q1.HAPPY,
+    Q1.SATISFIED,
+    Q1.NOT_SATISFIED,
+    Q1.NOT_HAPPY
+
+
+
+--
+WITH
+    TOILET_LIST AS (
+        SELECT ti.toilet_info_id
+        FROM toilet_infos ti
+        WHERE
+            tenant_id = '59944171-3a4a-460d-5897-8bb38c524d54'
+    )
+select
+    sum(
+        HAPPY + SATISFIED + NOT_SATISFIED + NOT_HAPPY
+    ) as TOTAL,
+    HAPPY,
+    SATISFIED,
+    NOT_SATISFIED,
+    NOT_HAPPY
+from (
+        select
+            count(
+                case
+                    when reaction = '1' then 1
+                end
+            ) as HAPPY, count(
+                case
+                    when reaction = '2' then 1
+                end
+            ) as SATISFIED, count(
+                case
+                    when reaction = '3' then 1
+                end
+            ) as NOT_SATISFIED, count(
+                case
+                    when reaction = '4' then 1
+                end
+            ) as NOT_HAPPY
+        from user_reactions
+        where
+            timestamp between TO_TIMESTAMP(
+                '2024-10-02 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-03 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+    ) Q1
+group by
+    Q1.HAPPY,
+    Q1.SATISFIED,
+    Q1.NOT_SATISFIED,
+    Q1.NOT_HAPPY
