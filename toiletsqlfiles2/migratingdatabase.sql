@@ -224,3 +224,107 @@ FROM
     ) rt ON lt.env_data_id = rt.env_data_id
 WHERE
     lt.env_data_id IS NULL;
+
+
+-- migrate counter data
+INSERT INTO
+    counter_data (
+        counter_data_id,
+        device_token,
+        people_in,
+        people_out,
+        timestamp
+    )
+SELECT rt.*
+FROM counter_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from counter_data'
+            ) AS remote_table (
+                counter_data_id text, device_token text, people_in numeric, people_out numeric, timestamp timestamptz
+            )
+    ) rt ON lt.counter_data_id = rt.counter_data_id
+WHERE
+    lt.counter_data_id IS NULL;
+
+
+-- migrate cleaner reports
+INSERT INTO
+    cleaner_reports (
+        cleaner_report_id,
+        tenant_id,
+        cleaner_user_id,
+        location_id,
+        toilet_type_id,
+        task_completed,
+        notify_id,
+        check_in_ts,
+        check_out_ts,
+        duration,
+        auto_clean_state,
+        freshen_up_state,
+        door_lock_state,
+        remarks,
+        created_at,
+        updated_at,
+        deleted_at,
+        feedback_panel_id
+    )
+SELECT rt.*
+FROM cleaner_reports lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from cleaner_reports'
+            ) AS remote_table (
+                cleaner_report_id text, tenant_id text, cleaner_user_id text, location_id text, toilet_type_id integer, task_completed text[],
+                notify_id text[], check_in_ts timestamptz, check_out_ts timestamptz, duration numeric, auto_clean_state text, freshen_up_state text,
+                door_lock_state text, remarks text, created_at timestamptz, updated_at timestamptz, deleted_at timestamptz, feedback_panel_id text
+            )
+    ) rt ON lt.cleaner_report_id = rt.cleaner_report_id
+WHERE
+    lt.cleaner_report_id IS NULL;
+
+
+-- migrate mqtt users
+INSERT INTO
+    mqtt_users (
+        id,
+        username,
+        password_hash,
+        salt,
+        is_superuser,
+        created,
+        plaintext,
+        tenant_id
+    )
+SELECT rt.*
+FROM mqtt_users lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from mqtt_users'
+            ) AS remote_table (
+                id integer, username text, password_hash text, salt text, is_superuser boolean, created timestamptz, 
+                plaintext text , tenant_id text
+            )
+    ) rt ON lt.id = rt.id OR lt.username = rt.username 
+WHERE
+    lt.id IS NULL;
+
+
+-- migrate mqtt acl
+SELECT rt.*
+FROM mqtt_acls lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from mqtt_acls'
+            ) AS remote_table (
+                id integer, ipaddress varchar, username varchar, clientid varchar, action action, permission permission, topic varchar, tenant_id text
+            )
+    ) rt ON lt.id = rt.id
+    OR lt.username = rt.username
+WHERE
+    lt.id IS NULL;
