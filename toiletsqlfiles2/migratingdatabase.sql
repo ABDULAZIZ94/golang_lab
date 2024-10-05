@@ -1,6 +1,6 @@
 -- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
-
+-- enable extension
 CREATE EXTENSION dblink;
 
 
@@ -17,7 +17,6 @@ INSERT INTO devices (
     updated_at ,
     deleted_at 
 )
-
 -- check devices differences
 SELECT rt.*
 FROM devices lt
