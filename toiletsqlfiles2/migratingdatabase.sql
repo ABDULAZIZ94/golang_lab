@@ -513,3 +513,50 @@ FROM setting_values lt
     ) rt ON lt.setting_id = rt.setting_id
 WHERE
     lt.setting_id IS NULL;
+
+
+-- sso providers
+SELECT rt.*
+FROM sso_providers lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from sso_providers'
+            ) AS remote_table (
+                provider_id text, client_endpoint text, client_id text, client_secrect text, tenant_id text, created_at timestamptz,
+                updated_at timestamptz, deleted_at timestamptz, provider text, scopes text, application_id text, 
+                redirect_url text, destination_url text
+            )
+    ) rt ON lt.provider_id = rt.provider_id
+WHERE
+    lt.provider_id IS NULL;
+
+
+-- toilet_types
+SELECT rt.*
+FROM toilet_types lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from toilet_types'
+            ) AS remote_table (
+                toilet_type_id integer, toilet_type_name text
+            )
+    ) rt ON lt.toilet_type_id = rt.toilet_type_id
+WHERE
+    lt.toilet_type_id IS NULL;
+
+
+-- user types
+SELECT rt.*
+FROM user_types lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from user_types'
+            ) AS remote_table (
+                user_type_id integer, user_type_name text, created_at timestamptz, updated_at timestamptz, deleted_at timestamptz
+            )
+    ) rt ON lt.user_type_id = rt.user_type_id
+WHERE
+    lt.user_type_id IS NULL;
