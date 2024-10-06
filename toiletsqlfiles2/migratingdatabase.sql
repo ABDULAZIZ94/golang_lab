@@ -327,3 +327,86 @@ FROM mqtt_acls lt
     OR lt.username = rt.username
 WHERE
     lt.id IS NULL;
+
+
+-- migrate cleaner_and_tenants
+INSERT INTO
+    contractor_and_tenants (
+        pair_id,
+        tenant_id,
+        contractor_id
+    )
+SELECT rt.*
+FROM contractor_and_tenants lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from contractor_and_tenants'
+            ) AS remote_table (
+                pair_id text, tenant_id text, contractor_id text
+            )
+    ) rt ON lt.pair_id = rt.pair_id
+WHERE
+    lt.pair_id IS NULL;
+
+
+-- migrate contractors
+INSERT INTO
+    contractors (
+        contractor_id,
+        contractor_name
+    )
+SELECT rt.*
+FROM
+    contractors lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from contractors'
+            ) AS remote_table (
+                contractor_id text, contractor_name text
+            )
+    ) rt ON lt.contractor_id = rt.contractor_id
+WHERE
+    lt.contractor_id IS NULL;
+
+
+-- migrate cubical infos -- not exists
+SELECT rt.*
+FROM cubical_infos lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from cubical_infos'
+            ) AS remote_table (
+                cubical_id text, cubical_name text, cubical_nick_name text, cubicle_id text, cubicle_name text, cubicle_nick_name text
+            )
+    ) rt ON lt.cubical_id = rt.cubical_id
+WHERE
+    lt.cubical_id IS NULL;
+
+
+-- migrate device_pairs
+INSERT INTO
+    device_pairs (
+        device_pair_id,
+        gateway_id,
+        device_id,
+        toilet_info_id,
+        created_at,
+        updated_at,
+        deleted_at
+    )
+SELECT rt.*
+FROM device_pairs lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from device_pairs'
+            ) AS remote_table (
+                device_pair_id text, gateway_id text, device_id text, toilet_info_id text, created_at timestamptz,
+                 updated_at timestamptz, deleted_at timestamptz
+            )
+    ) rt ON lt.device_pair_id = rt.device_pair_id
+WHERE
+    lt.device_pair_id IS NULL;
