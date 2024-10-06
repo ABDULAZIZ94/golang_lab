@@ -490,3 +490,26 @@ FROM notification_data lt
     ) rt ON lt.notify_id = rt.notify_id
 WHERE
     lt.notify_id IS NULL;
+
+
+-- setting values
+SELECT rt.*
+FROM setting_values lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from setting_values'
+            ) AS remote_table (
+                setting_id text, entity_id text, context text, active_freg_stat text, active_freg_on_cnt text, active_freg_odour_level text, 
+                notify_cleaner_total_user text, notify_start_ts text, notify_stop_ts text, notify_freg_spray_cnt text, cleaner_response_ts text,
+                notify_on_lux_thres text, notify_on_lux_state text, notify_on_odour_thres text, notify_on_odour_state text,
+                fp_set_id text, created_at timestamptz, updated_at timestamptz,deleted_at timestamptz, active_actuator_on_cnt_state text, 
+                active_actuator_cnt text, active_actuator_on_odour_state text,
+                active_actuator_on_odour_lvl text, notify_on_freg_level text, notify_on_freg_level_state text, activate_actuator_run_time text,
+                activate_waterjet_run_time text, activate_waterjet_state text,
+                active_door_lock_run_time text,active_door_lock_time text, notify_cleaner_total_user_state text, cleaner_response_ts_notify_state text, 
+                refresh_interval_in_sec text, offline_interval_in_in_sec text
+            )
+    ) rt ON lt.setting_id = rt.setting_id
+WHERE
+    lt.setting_id IS NULL;
