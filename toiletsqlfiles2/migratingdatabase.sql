@@ -410,3 +410,83 @@ FROM device_pairs lt
     ) rt ON lt.device_pair_id = rt.device_pair_id
 WHERE
     lt.device_pair_id IS NULL;
+
+
+-- migrate device types
+INSERT INTO
+    device_types (
+        device_type_id,
+        device_type_name
+    )
+SELECT rt.*
+FROM device_types lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from device_types'
+            ) AS remote_table (
+                device_type_id integer, device_type_name text
+            )
+    ) rt ON lt.device_type_id = rt.device_type_id
+WHERE
+    lt.device_type_id IS NULL;
+
+
+-- migrate feedback_panels
+SELECT rt.*
+FROM feedback_panels lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from feedback_panels'
+            ) AS remote_table (
+                button_id integer, button_name text
+            )
+    ) rt ON lt.button_id = rt.button_id
+WHERE
+    lt.button_id IS NULL;
+
+
+-- migrate locations
+SELECT rt.*
+FROM locations lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from locations'
+            ) AS remote_table (
+                location_id text, location_name text, latitude numeric, longitude numeric, tenant_id text, created_at timestamptz, updated_at timestamptz,
+                deleted_at timestamptz, fp_type text, dev_mode text
+            )
+    ) rt ON lt.location_id = rt.location_id
+WHERE
+    lt.location_id IS NULL;
+
+-- notification data
+INSERT INTO
+    notification_data (
+        notify_id,
+        device_token,
+        frequency,
+        toilet_type_id,
+        button_id,
+        message,
+        action_status,
+        timestamp,
+        namespace,
+        lux,
+        iaq
+    )
+SELECT rt.*
+FROM notification_data lt
+    RIGHT JOIN (
+        SELECT *
+        FROM dblink (
+                'host=alpha.vectolabs.com port=9998 dbname=smarttoilet user=postgres password=VectoLabs)1', 'SELECT * from notification_data'
+            ) AS remote_table (
+                notify_id text, device_token text, frequency integer, toilet_type_id integer, button_id integer, message text, action_status text, 
+                timestamp timestamptz, namespace text, lux numeric, iaq numeric
+            )
+    ) rt ON lt.notify_id = rt.notify_id
+WHERE
+    lt.notify_id IS NULL;
