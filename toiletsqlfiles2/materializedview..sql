@@ -49,8 +49,7 @@ CREATE INDEX env_agg_idx ON env_agg (uplinkts DESC);
 -- occupanct data agg
 
 -- occupancy lag
-CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_lag2 AS
-
+CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_agg AS
 with 
     occ_lag as (SELECT
         id,
@@ -59,39 +58,57 @@ with
         occupied,
         lag (occupied, 1) over (order by id) as prev_occupied
         FROM occupancy_data
-        where timestamp > to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS')
+        -- where 
+        -- timestamp between to_timestamp('2024-05-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS') 
+        -- and to_timestamp( '2024-09-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and
+        -- device_token = '113'
+        order by timestamp desc
     ),
     occ_entrance as (
         SELECT
             id,
             timestamp,
+            date_trunc('hour', timestamp) as timestamp_hourly,
+            date_trunc('day', timestamp) as timestamp_daily,
+            date_trunc('month', timestamp) as timestamp_monthly,
+            date_trunc('year', timestamp) as timestamp_yearly,
             device_token,
             occupied,
             prev_occupied,
-            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('hour', timestamp) ) as sum_hourly
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('hour', timestamp), device_token ) as sum_hourly,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('day', timestamp) , device_token) as sum_daily,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('month', timestamp), device_token) as sum_monthly,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('year', timestamp), device_token) as sum_yearly
             FROM occ_lag
     )
 select * from occ_entrance
-
 WITH
     DATA;
 
 select * from occupancy_data
 
-select * from occupancy_lag
+select * from occupancy_agg
 
-REFRESH MATERIALIZED VIEW CONCURRENTLY occupancy_lag;
+REFRESH MATERIALIZED VIEW CONCURRENTLY occupancy_agg;
 
 DROP MATERIALIZED VIEW IF EXISTS occupancy_lag
 
 DROP INDEX IF EXISTS occupancy_lag_idx3;
 
-CREATE UNIQUE INDEX occupancy_lag_idx3 ON occupancy_lag(
+CREATE UNIQUE INDEX occupancy_agg_idx3 ON occupancy_agg(
     id,
     timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
     device_token,
     occupied,
-    prev_occupied
+    prev_occupied,
+    sum_hourly,
+    sum_daily,
+    sum_monthly,
+    sum_yearly
 );    
 
 --  standard view device
@@ -188,15 +205,30 @@ select * from occupancy_data
 select * from counter_data limit 10
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
-select distinct
-    timestamp,
-    device_token,
-    sum(case when people_in = '1' then 1 else 0 end)as total_enter
-from
-    (select date_trunc('hour', counter_data.timestamp) as timestamp, device_token, people_in from counter_data
-    where timestamp > current_timestamp - INTERVAL '2 DAY'
-    )S1
-group by device_token, timestamp
+with 
+    counter_lag as (
+        timestamp, device_token, people_in
+        from counter_data
+        where
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+    ),
+    counter_agg(
+        select
+            timestamp,
+            date_trunc('hour',timestamp) as timestamp_hourly,
+            date_trunc('day', timestamp) as timestamp_day,
+            date_trunc('month', timestamp) as timestamp_monthly,
+            date_trunc('year', timestamp) as timestamp_year,
+            device_token,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by timestamp, device_token) as enter,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('hour', timestamp), device_token) as enter_hourly,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('day', timestamp), device_token) as enter_day,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('month', timestamp), device_token) as enter_month,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp), device_token) as enter_year,
+        from
+            counter_lag
+    )
+select * from counter_agg
 WITH
     DATA;
 
@@ -204,8 +236,16 @@ select * from overview_counter_data_agg
 
 CREATE UNIQUE INDEX overview_counter_data_agg_idx3 ON overview_counter_data_agg (
     timestamp,
+    timestamp_hourly,
+    timestamp_day,
+    timestamp_monthly,
+    timestamp_year,
     device_token,
-    total_enter
+    enter,
+    enter_hourly,
+    enter_day,
+    enter_month,
+    enter_year
 );
 
 DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
@@ -214,15 +254,27 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
 
 DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
 
--- cleaner report agg
+-- panic_btn data
+select * from panic_btn_data
 
+-- freshener data
+select * from freshener_data
+
+-- ammonia data
+select * from ammonia_data
+
+-- cleaner report agg
 select * from cleaner_reports limit 10
 
 -- feedback panel agg
 
+select * from feedback_panel_data
+
 -- fp sensor agg
+select * from fp_sensor_data
 
 -- misc acion data agg
+select * from misc_action_data
 
 -- user reactions agg
 select * from user_reactions limit 10
@@ -240,10 +292,10 @@ select
     date_trunc('month', timestamp) timestamp_monthly,
     date_trunc('year', timestamp) timestamp_yearly,
     reaction, 
-count(reaction) over (partition by date_trunc('hour', timestamp) order by reaction) as total_reaction_by_type_hourly,
-count(reaction) over (partition by date_trunc('day', timestamp) order by reaction) as total_reaction_by_type_daily,
-count(reaction) over (partition by date_trunc('month', timestamp) order by reaction) as total_reaction_by_type_monthly,
-count(reaction) over (partition by date_trunc('year', timestamp) order by reaction) as total_reaction_by_type_yearly,
+count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
+count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
+count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
+count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
 count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
 count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
 count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
@@ -255,6 +307,9 @@ order by timestamp desc, reaction
 WITH DATA;
 
 select * from user_reaction_agg
+
+
+DROP MATERIALIZED VIEW IF EXISTS user_reaction_agg
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY user_reaction_agg;
 
