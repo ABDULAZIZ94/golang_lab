@@ -222,6 +222,7 @@ select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, compla
 from user_reactions
 
 -- using windows function to create needed column so a view is suitable for many queries
+CREATE MATERIALIZED VIEW IF NOT EXISTS user_reaction_agg AS
 select 
     timestamp, 
     date_trunc('hour', timestamp) timestamp_hourly, 
@@ -241,5 +242,28 @@ from
     user_reactions
 group by timestamp, reaction
 order by timestamp desc, reaction
+WITH DATA;
+
+select * from user_reaction_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY user_reaction_agg;
+
+CREATE UNIQUE INDEX user_reaction_agg_idx3 ON user_reaction_agg (
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    reaction,
+    total_reaction_by_type_hourly,
+    total_reaction_by_type_daily,
+    total_reaction_by_type_monthly,
+    total_reaction_by_type_yearly,
+    total_reaction_by_type_hourly_all,
+    total_reaction_by_type_daily_all,
+    total_reaction_by_type_monthly_all,
+    total_reaction_by_type_yearly_all
+);
 
 
+select distinct timestamp_hourly, total_reaction_by_type_hourly, reaction from user_reaction_agg order by timestamp_hourly desc
