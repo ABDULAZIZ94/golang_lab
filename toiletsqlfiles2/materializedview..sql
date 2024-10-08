@@ -1,7 +1,6 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 
-select * from occupancy_data
 
+-- env agg
 CREATE MATERIALIZED VIEW env_agg as
     select 
     avg(iaq)::int as iaq,
@@ -47,40 +46,45 @@ select * from env_agg order by uplinkts desc limit 10
 
 CREATE INDEX env_agg_idx ON env_agg (uplinkts DESC);
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_agg AS
-WITH
-    occupancy_cte AS (
-        SELECT
-            date_trunc('hour', timestamp) AS truncated_time,
-            device_token,
-            occupied,
-            LAG(occupied, 1) OVER (
-                ORDER BY id
-            ) AS prev_occupied
-        FROM occupancy_data
-    )
+-- occupanct data agg
+
+-- occupancy lag
+CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_lag AS
 SELECT
-    truncated_time,
+    id,
+    timestamp,
     device_token,
     occupied,
-    prev_occupied,
-    SUM(
-        CASE
-            WHEN occupied = true
-            AND prev_occupied = false THEN 1
-            ELSE 0
-        END
-    ) AS new_person_enter
-FROM occupancy_cte
+    lag (occupied, 1) over (order by id) as prev_occupied
+FROM occupancy_data
+where timestamp > to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS')
 GROUP BY
-    truncated_time,
+    timestamp,
+    device_token,
+    occupied,
+    id
+WITH
+    DATA;
+
+select * from occupancy_data
+
+select * from occupancy_lag
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY occupancy_lag;
+
+DROP MATERIALIZED VIEW IF EXISTS occupancy_lag
+
+DROP INDEX IF EXISTS occupancy_lag_idx3;
+
+CREATE UNIQUE INDEX occupancy_lag_idx3 ON occupancy_lag(
+    id,
+    timestamp,
     device_token,
     occupied,
     prev_occupied
-WITH
-    NO DATA;
+);    
 
-
+--  standard view device
 CREATE MATERIALIZED VIEW IF NOT EXISTS standard_view_devices AS
 select 
     devices.device_id, 
@@ -105,101 +109,121 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY standard_view_devices;
 
 DROP MATERIALIZED VIEW IF EXISTS standard_view_devices
 
-REFRESH MATERIALIZED VIEW occupancy_agg;
 
-SELECT * FROM occupancy_agg;
+-- devices analytic all
+CREATE MATERIALIZED VIEW IF NOT EXISTS analytics_devices AS
+select
+    devices.device_name,
+    devices.device_id, 
+    devices.device_token,
+    toilet_infos.toilet_name as identifier,
+    toilet_infos.toilet_info_id as identifier_id,
+    device_types.device_type_name as namespace,
+    device_types.device_type_id as namespace_id, 
+    device_pairs.toilet_info_id,
+    devices.tenant_id
+from
+    device_pairs
+    join devices on devices.device_id = device_pairs.device_id
+    join device_types on device_types.device_type_id = devices.device_type_id
+    join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
+    join toilet_types on toilet_types.toilet_type_id = toilet_infos.toilet_type_id
+WITH
+    DATA;
 
-EXPLAIN
-SELECT *
-FROM occupancy_agg
-WHERE
-    truncated_time > NOW() - INTERVAL '1 HOUR';
+select * from analytics_devices
 
-SELECT *
-FROM occupancy_agg
-WHERE
-    truncated_time > NOW() - INTERVAL '12 HOUR';
+CREATE UNIQUE INDEX analytics_devices_idx3 ON analytics_devices (
+device_name,
+device_id,
+device_token,
+identifier,
+identifier_id,
+namespace,
+namespace_id,
+toilet_info_id,
+tenant_id
+);
 
-CREATE INDEX occupancy_agg_idx3 ON occupancy_agg (truncated_time, device_token, new_person_enter);
+DROP INDEX IF EXISTS analytics_devices_idx3;
 
-select * from device_lists where toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165' and namespace_id ='10'
+REFRESH MATERIALIZED VIEW CONCURRENTLY analytics_devices;
 
+DROP MATERIALIZED VIEW IF EXISTS analytics_devices
 
-with
-        start_end as (select to_timestamp('2024-10-02 23:00:00', 'YYYY-MM-DD HH24:MI:SS') as start_date, to_timestamp('2024-10-03 16:00:00', 'YYYY-MM-DD HH24:MI:SS') as end_date),
-        device_list as (
-                select
-                        standard_view_devices.device_token,
-                        standard_view_devices.namespace_id,
-                        standard_view_devices.toilet_info_id
-                from standard_view_devices
-                where
-                        standard_view_devices.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
-        ) 
-select sum(people_in) as ttltraffic
-from counter_data
-join device_list using (device_token)
-where device_list.namespace_id = 2
--- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
-and timestamp between (select start_date from start_end) and (select end_date from start_end)
+-- cubical materialize view
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_cubical_devices AS
+    select devices.device_token, 
+        devices.device_type_id,
+        device_cubical_pairs.cubical_id
+    from device_cubical_pairs
+    join devices on devices.device_id = device_cubical_pairs.device_id 
+WITH
+    DATA;
 
 
-select * from counter_data where device_token ='102' order by timestamp desc limit 3
+select * from overview_cubical_devices
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_cubical_devices;
+
+CREATE UNIQUE INDEX overview_cubical_devices_idx ON overview_cubical_devices (device_token, device_type_id, cubical_id);
 
 
-    with
-            start_end as (select to_timestamp('2024-10-02 23:00:00', 'YYYY-MM-DD HH24:MI:SS') as start_date, to_timestamp('2024-10-03 16:00:00', 'YYYY-MM-DD HH24:MI:SS') as end_date),
-            device_list as (
-                    select
-                            standard_view_devices.device_token,
-                            standard_view_devices.namespace_id,
-                            standard_view_devices.toilet_info_id
-                    from standard_view_devices
-                    where
-                            standard_view_devices.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
-            ) 
-    select
-            coalesce(ttltraffic, '0') as total_counter,
-            last_counter_ts as last_counter_cnt_timestamp,
-            iaq as odour_level,
-            total_fragrance
-            from
-                    -- (select device_list.toilet_info_id from device_list limit 1) as Q0
-                    -- cross join
-                    (
-                    select sum(people_in) as ttltraffic
-                    from counter_data
-                    join device_list using (device_token)
-                    where device_list.namespace_id = 2
-                    -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
-                    and timestamp between (select start_date from start_end) and (select end_date from start_end)
-                    ) as Q1
-                    cross join
-                    (
-                    select iaq
-                    from enviroment_data
-                    join device_list using (device_token)
-                    where device_list.namespace_id = 3
-                    -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
-                    and timestamp between (select start_date from start_end) and (select end_date from start_end)
-                    order by timestamp desc limit 1
-                    ) as Q2
-                    cross join
-                    (
-                    select count(misc_data_id) as total_fragrance
-                    from misc_action_data
-                    join device_list using (device_token)
-                    where misc_action_data.namespace = 'FRESHENER'
-                    -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
-                    and timestamp between (select start_date from start_end) and (select end_date from start_end)
-                    ) as Q7
-                    left join
-                    (
-                            select timestamp as last_counter_ts
-                            from counter_data
-                            join device_list using (device_token)
-                            where device_list.namespace_id = 2
-                            -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
-                            and timestamp between (select start_date from start_end) and (select end_date from start_end)
-                            order by timestamp desc limit 1
-                    ) as Q9 ON TRUE
+-- 
+select * from occupancy_data
+
+
+-- counter data agg
+
+select * from counter_data limit 10
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
+select distinct
+    timestamp,
+    device_token,
+    sum(case when people_in = '1' then 1 else 0 end)as total_enter
+from
+    (select date_trunc('hour', counter_data.timestamp) as timestamp, device_token, people_in from counter_data
+    where timestamp > current_timestamp - INTERVAL '2 DAY'
+    )S1
+group by device_token, timestamp
+WITH
+    DATA;
+
+select * from overview_counter_data_agg
+
+CREATE UNIQUE INDEX overview_counter_data_agg_idx3 ON overview_counter_data_agg (
+    timestamp,
+    device_token,
+    total_enter
+);
+
+DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
+
+DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
+
+-- cleaner report agg
+
+select * from cleaner_reports limit 10
+
+-- feedback panel agg
+
+-- fp sensor agg
+
+-- misc acion data agg
+
+-- user reactions agg
+select * from user_reactions limit 10
+
+-- truncate dates
+select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, complaint, toilet_id, score 
+from user_reactions
+
+-- using windows function to create needed column so a view is suitable for many queries
+select timestamp, reaction, count(reaction) over (partition by timestamp order by reaction) as total_reaction_by_type
+from 
+    (select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, complaint, toilet_id, score 
+    from user_reactions order by timestamp desc)Q1
+group by reaction, timestamp
