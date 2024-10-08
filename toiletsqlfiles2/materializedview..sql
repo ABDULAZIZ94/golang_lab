@@ -82,20 +82,28 @@ WITH
 
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS standard_view_devices AS
-select devices.device_token, device_types.device_type_id as namespace_id, device_pairs.toilet_info_id
+select 
+    devices.device_id, 
+    devices.device_token, 
+    device_types.device_type_id as namespace_id, 
+    device_pairs.toilet_info_id
 from
     device_pairs
     join devices on devices.device_id = device_pairs.device_id
     join device_types on device_types.device_type_id = devices.device_type_id
     join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
     join toilet_types on toilet_types.toilet_type_id = toilet_infos.toilet_type_id
-WITH NO DATA;
+WITH DATA;
 
 select * from standard_view_devices
 
-REFRESH MATERIALIZED VIEW standard_view_devices;
+CREATE UNIQUE INDEX standard_view_devices_idx3 ON standard_view_devices (device_id, device_token, namespace_id, toilet_info_id);
 
-DROP MATERIALIZED VIEW IF EXISTS standart_view_devices
+DROP INDEX IF EXISTS standard_view_devices_idx3;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY standard_view_devices;
+
+DROP MATERIALIZED VIEW IF EXISTS standard_view_devices
 
 REFRESH MATERIALIZED VIEW occupancy_agg;
 

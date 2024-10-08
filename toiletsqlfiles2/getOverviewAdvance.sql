@@ -777,3 +777,801 @@ group by
     Q1.SATISFIED,
     Q1.NOT_SATISFIED,
     Q1.NOT_HAPPY
+
+
+
+
+    -- overview
+    select
+    sum(
+        HAPPY + SATISFIED + NOT_SATISFIED + NOT_HAPPY
+    ) as TOTAL,
+    HAPPY,
+    SATISFIED,
+    NOT_SATISFIED,
+    NOT_HAPPY
+from (
+        select
+            count(
+                case
+                    when reaction = '1' then 1
+                end
+            ) as HAPPY, count(
+                case
+                    when reaction = '2' then 1
+                end
+            ) as SATISFIED, count(
+                case
+                    when reaction = '3' then 1
+                end
+            ) as NOT_SATISFIED, count(
+                case
+                    when reaction = '4' then 1
+                end
+            ) as NOT_HAPPY
+        from 
+        timestamp between TO_TIMESTAMP(
+                '2024-10-07 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+    ) Q1
+group by
+    Q1.HAPPY,
+    Q1.SATISFIED,
+    Q1.NOT_SATISFIED,
+    Q1.NOT_HAPPY[
+        0 rows affected
+        or returned
+    ]
+
+
+--
+ WITH DEVICE_LIST AS (SELECT DEVICES.DEVICE_NAME,DEVICES.DEVICE_ID,DEVICES.DEVICE_TOKEN,TOILET_INFOS.TOILET_NAME AS IDENTIFIER,TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,DEVICE_TYPES.DEVICE_TYPE_NAME 
+ AS NAMESPACE,DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID, TOILET_TYPES.TOILET_TYPE_ID FROM DEVICE_PAIRS JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID 
+ = DEVICES.DEVICE_TYPE_ID JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID WHERE 
+ TOILET_INFOS.TOILET_INFO_ID = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'), GENTIME as (SELECT uplinkTS FROM 
+ generate_series(date_trunc('HOUR', TO_TIMESTAMP('2024-10-07 23:00:00', 'YYYY-MM-DD HH24:MI:SS')), date_trunc('HOUR', TO_TIMESTAMP('2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS')), interval '1 HOUR') 
+ uplinkTS select iaq, uplinkts from gentime left join 
+ (select avg(iaq)::int as iaq, date_trunc('HOUR', timestamp) as uplinkts from 
+ enviroment_data where EXTRACT(HOUR FROM timestamp) >= 23  or EXTRACT(HOUR FROM timestamp) >= 0 AND EXTRACT(HOUR FROM timestamp) <= 16 and timestamp between to_timestamp('2024-10-07 23:00:00','YYYY-MM-DD HH24:MI:SS') and 
+ to_timestamp('2024-10-07 16:00:00','YYYY-MM-DD HH24:MI:SS') and device_token IN (select device_token from device_list) group by uplinkts)Q1 using(uplinkts) order by uplinkts
+
+
+-- 7767
+select
+    sum(
+        HAPPY + SATISFIED + NOT_SATISFIED + NOT_HAPPY
+    ) as TOTAL,
+    HAPPY,
+    SATISFIED,
+    NOT_SATISFIED,
+    NOT_HAPPY
+from (
+        select
+            count(
+                case
+                    when reaction = '1' then 1
+                end
+            ) as HAPPY, count(
+                case
+                    when reaction = '2' then 1
+                end
+            ) as SATISFIED, count(
+                case
+                    when reaction = '3' then 1
+                end
+            ) as NOT_SATISFIED, count(
+                case
+                    when reaction = '4' then 1
+                end
+            ) as NOT_HAPPY
+        from user_reactions timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and toilet_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+    ) Q1
+group by
+    Q1.HAPPY,
+    Q1.SATISFIED,
+    Q1.NOT_SATISFIED,
+    Q1.NOT_HAPPY[
+        0 rows affected
+        or returned
+    ]
+
+
+
+    
+    select * from fragrance_data where device_token = '610'
+    AND fragrance_on = true
+
+    AND timestamp between TO_TIMESTAMP(
+    '2024-10-06 23:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+    ) and TO_TIMESTAMP(
+    '2024-10-07 16:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+    )
+
+
+    --
+select count(
+    case
+        when fragrance_on = true then 1
+    end
+) as TOTAL_FRAGRANCE_SPRAY_ACTIVATED
+from fragrance_data
+where
+    device_token in (
+        '610'
+    )
+    and timestamp between TO_TIMESTAMP(
+        '2024-10-06 23:00:00',
+        'YYYY-MM-DD HH24:MI:SS'
+    ) and TO_TIMESTAMP(
+        '2024-10-07 16:00:00',
+        'YYYY-MM-DD HH24:MI:SS'
+    )
+
+
+
+SELECT * FROM MISC_ACTION_DATA  WHERE DEVICE_TOKEN = '610' AND STATUS = '1' 
+AND timestamp between TO_TIMESTAMP(
+    '2024-10-06 23:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+) and TO_TIMESTAMP(
+    '2024-10-07 16:00:00',
+    'YYYY-MM-DD HH24:MI:SS'
+)
+
+
+--
+WITH
+    DEVICE_LIST AS (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+            TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+            DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_TYPES.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+            JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+    )
+SELECT
+    COALESCE(TRAFFIC_COUNT_TODAY, 0) as TRAFFIC_COUNT_TODAY,
+    COALESCE(
+        TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+        0
+    ) as TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+    LAST_FRAGRANCE_SPRAY_ACTIVATED,
+    CURRENT_LUX,
+    COALESCE(CURRENT_IAQ, 0) as CURRENT_IAQ,
+    COALESCE(TOTAL_CLEANED_TODAY, 0) as TOTAL_CLEANED_TODAY,
+    LAST_CLEAN_TIMESTAMP,
+    COALESCE(CURRENT_HUMIDITY, 0) as CURRENT_HUMIDITY,
+    COALESCE(CURRENT_TEMPERATURE, 0) as CURRENT_TEMPERATURE
+FROM (
+        select count(people_in) as TRAFFIC_COUNT_TODAY
+        from counter_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 2
+            )
+            and EXTRACT(
+                HOUR
+                FROM timestamp
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM timestamp
+            ) <= 18
+            and timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q1
+    LEFT JOIN (
+        select
+            timestamp as LAST_FRAGRANCE_SPRAY_ACTIVATED
+        from fragrance_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 5
+            )
+        order by timestamp desc
+        limit 1
+    ) Q2 ON 1 = 1
+    LEFT JOIN (
+        select
+            iaq as CURRENT_IAQ,
+            (
+                CASE
+                    WHEN lux > 1.5 THEN 'BRIGHT'
+                    ELSE 'DARK'
+                END
+            ) as CURRENT_LUX,
+            humidity as CURRENT_HUMIDITY,
+            temperature as CURRENT_TEMPERATURE
+        from enviroment_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 3
+            )
+        order by timestamp desc
+        limit 1
+    ) Q3 ON 1 = 1
+    LEFT JOIN (
+        select count(cleaner_report_id) as TOTAL_CLEANED_TODAY
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        select
+            created_at as LAST_CLEAN_TIMESTAMP
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and auto_clean_state = '0'
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at
+        limit 1
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select
+            count(
+                case
+                    when status = '1' then 1
+                end
+            ) as TOTAL_FRAGRANCE_SPRAY_ACTIVATED
+        from misc_action_data
+        where
+            device_token in (
+                select device_token
+                from device_list
+                where
+                    namespace_id = 6
+            )
+            and status = '1'
+            AND timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q6 ON 1 = 1
+
+
+
+    --
+WITH DEVICE_LIST AS (
+    SELECT
+        DEVICES.DEVICE_NAME,
+        DEVICES.DEVICE_ID,
+        DEVICES.DEVICE_TOKEN,
+        TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+        TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+        DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+        DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+        TOILET_TYPES.TOILET_TYPE_ID
+    FROM
+        DEVICE_PAIRS
+        JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+        JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+        JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+        JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+    WHERE
+        TOILET_INFOS.TOILET_INFO_ID = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+)
+select device_token, NAMESPACE_ID
+from device_list
+
+
+
+--
+with
+    start_end as (
+        select to_timestamp(
+                '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) as start_date, to_timestamp(
+                '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) as end_date
+    ),
+    device_list as (
+        select standard_view_devices.device_token, standard_view_devices.namespace_id, standard_view_devices.toilet_info_id
+        from standard_view_devices
+        where
+            standard_view_devices.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+    )
+select
+    coalesce(ttltraffic, '0') as total_counter,
+    last_counter_ts as last_counter_cnt_timestamp,
+    iaq as odour_level,
+    total_fragrance
+from (
+        select device_list.toilet_info_id
+        from device_list
+        limit 1
+    ) as Q0
+    LEFT join (
+        select sum(people_in) as ttltraffic
+        from counter_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 2
+            -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+    ) as Q1 ON TRUE
+    LEFT join (
+        select iaq
+        from enviroment_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 3
+            -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+        order by timestamp desc
+        limit 1
+    ) as Q2 ON TRUE
+    left join (
+        select count(misc_data_id) / 8 as total_fragrance
+        from misc_action_data
+            join device_list using (device_token)
+        where
+            misc_action_data.namespace = 'FRESHENER'
+            -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+    ) as Q7 ON TRUE
+    left join (
+        select timestamp as last_counter_ts
+        from counter_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 2
+            -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+        order by timestamp desc
+        limit 1
+    ) as Q9 ON TRUE
+
+
+    --
+with  device_list as (
+select standard_view_devices.device_token, standard_view_devices.namespace_id, standard_view_devices.toilet_info_id
+from standard_view_devices
+where
+    standard_view_devices.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165'
+),
+start_end as (
+    select to_timestamp(
+            '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+        ) as start_date, to_timestamp(
+            '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+        ) as end_date
+)
+select sum(people_in) as ttltraffic
+from counter_data
+    join device_list using (device_token)
+where
+    device_list.namespace_id = 2
+    -- and extract(hour from timestamp) >= 7 and extract(hour from timestamp) <= 18
+    and timestamp between (
+        select start_date
+        from start_end
+    ) and (
+        select end_date
+        from start_end
+    )
+
+
+    --7762
+    WITH
+    DEVICE_LIST AS (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+            TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+            DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_TYPES.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+            JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID = 'a97891e5-14df-4f95-7d1e-4ee601581df2'
+    )
+SELECT
+    COALESCE(TRAFFIC_COUNT_TODAY, 0) as TRAFFIC_COUNT_TODAY,
+    COALESCE(
+        TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+        0
+    ) as TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+    LAST_FRAGRANCE_SPRAY_ACTIVATED,
+    CURRENT_LUX,
+    COALESCE(CURRENT_IAQ, 0) as CURRENT_IAQ,
+    COALESCE(TOTAL_CLEANED_TODAY, 0) as TOTAL_CLEANED_TODAY,
+    LAST_CLEAN_TIMESTAMP,
+    COALESCE(CURRENT_HUMIDITY, 0) as CURRENT_HUMIDITY,
+    COALESCE(CURRENT_TEMPERATURE, 0) as CURRENT_TEMPERATURE
+FROM (
+        select count(people_in) as TRAFFIC_COUNT_TODAY
+        from counter_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 2
+            )
+            and EXTRACT(
+                HOUR
+                FROM timestamp
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM timestamp
+            ) <= 18
+            and timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q1
+    LEFT JOIN (
+        select
+            timestamp as LAST_FRAGRANCE_SPRAY_ACTIVATED
+        from fragrance_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 5
+            )
+        order by timestamp desc
+        limit 1
+    ) Q2 ON 1 = 1
+    LEFT JOIN (
+        select
+            iaq as CURRENT_IAQ,
+            (
+                CASE
+                    WHEN lux > 1.5 THEN 'BRIGHT'
+                    ELSE 'DARK'
+                END
+            ) as CURRENT_LUX,
+            humidity as CURRENT_HUMIDITY,
+            temperature as CURRENT_TEMPERATURE
+        from enviroment_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 3
+            )
+        order by timestamp desc
+        limit 1
+    ) Q3 ON 1 = 1
+    LEFT JOIN (
+        select count(cleaner_report_id) as TOTAL_CLEANED_TODAY
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        select
+            created_at as LAST_CLEAN_TIMESTAMP
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and auto_clean_state = '0'
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at
+        limit 1
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select
+            count(
+                case
+                    when status = '1' then 1
+                end
+            ) / 8 as TOTAL_FRAGRANCE_SPRAY_ACTIVATED
+        from misc_action_data
+        where
+            device_token in (
+                select device_token
+                from device_list
+                where
+                    namespace_id = 5
+            )
+            and status = '1'
+            AND timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q6 ON 1 = 1
+
+
+
+    select * from counter_data limit 1
+
+
+
+
+
+WITH
+    DEVICE_LIST AS (
+        SELECT
+            DEVICES.DEVICE_NAME,
+            DEVICES.DEVICE_ID,
+            DEVICES.DEVICE_TOKEN,
+            TOILET_INFOS.TOILET_NAME AS IDENTIFIER,
+            TOILET_INFOS.TOILET_INFO_ID AS IDENTIFIER_ID,
+            DEVICE_TYPES.DEVICE_TYPE_NAME AS NAMESPACE,
+            DEVICE_TYPES.DEVICE_TYPE_ID AS NAMESPACE_ID,
+            TOILET_TYPES.TOILET_TYPE_ID
+        FROM
+            DEVICE_PAIRS
+            JOIN DEVICES ON DEVICES.DEVICE_ID = DEVICE_PAIRS.DEVICE_ID
+            JOIN DEVICE_TYPES ON DEVICE_TYPES.DEVICE_TYPE_ID = DEVICES.DEVICE_TYPE_ID
+            JOIN TOILET_INFOS ON TOILET_INFOS.TOILET_INFO_ID = DEVICE_PAIRS.TOILET_INFO_ID
+            JOIN TOILET_TYPES ON TOILET_TYPES.TOILET_TYPE_ID = TOILET_INFOS.TOILET_TYPE_ID
+        WHERE
+            TOILET_INFOS.TOILET_INFO_ID = '36f74ec4-cdb0-4271-6c2d-2baa48d6e583'
+    )
+SELECT
+    COALESCE(TRAFFIC_COUNT_TODAY, 0) as TRAFFIC_COUNT_TODAY,
+    COALESCE(
+        TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+        0
+    ) as TOTAL_FRAGRANCE_SPRAY_ACTIVATED,
+    LAST_FRAGRANCE_SPRAY_ACTIVATED,
+    CURRENT_LUX,
+    COALESCE(CURRENT_IAQ, 0) as CURRENT_IAQ,
+    COALESCE(TOTAL_CLEANED_TODAY, 0) as TOTAL_CLEANED_TODAY,
+    LAST_CLEAN_TIMESTAMP,
+    COALESCE(CURRENT_HUMIDITY, 0) as CURRENT_HUMIDITY,
+    COALESCE(CURRENT_TEMPERATURE, 0) as CURRENT_TEMPERATURE
+FROM (
+        select count(
+                case
+                    when people_in = 1
+                    and people_in_prev = 0 then 1
+                end
+            ) as TRAFFIC_COUNT_TODAY
+        from (
+                select people_in, lag(people_in, 1) as people_in_prev
+                from counter_data
+                where
+                    device_token in (
+                        select device_token
+                        from DEVICE_LIST
+                        where
+                            namespace_id = 2
+                    ) 
+            )s1
+            and timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q1
+    LEFT JOIN (
+        select
+            timestamp as LAST_FRAGRANCE_SPRAY_ACTIVATED
+        from fragrance_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 5
+            )
+        order by timestamp desc
+        limit 1
+    ) Q2 ON 1 = 1
+    LEFT JOIN (
+        select
+            iaq as CURRENT_IAQ,
+            (
+                CASE
+                    WHEN lux > 1.5 THEN 'BRIGHT'
+                    ELSE 'DARK'
+                END
+            ) as CURRENT_LUX,
+            humidity as CURRENT_HUMIDITY,
+            temperature as CURRENT_TEMPERATURE
+        from enviroment_data
+        where
+            device_token in (
+                select device_token
+                from DEVICE_LIST
+                where
+                    namespace_id = 3
+            )
+        order by timestamp desc
+        limit 1
+    ) Q3 ON 1 = 1
+    LEFT JOIN (
+        select count(cleaner_report_id) as TOTAL_CLEANED_TODAY
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        select
+            created_at as LAST_CLEAN_TIMESTAMP
+        from cleaner_reports
+        where
+            EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) >= 7
+            AND EXTRACT(
+                HOUR
+                FROM check_in_ts
+            ) <= 18
+            and auto_clean_state = '0'
+            and check_in_ts between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at
+        limit 1
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select
+            count(
+                case
+                    when status = '1' then 1
+                end
+            ) / 8 as TOTAL_FRAGRANCE_SPRAY_ACTIVATED
+        from misc_action_data
+        where
+            device_token in (
+                select device_token
+                from device_list
+                where
+                    namespace_id = 5
+            )
+            and status = '1'
+            AND timestamp between TO_TIMESTAMP(
+                '2024-10-06 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-07 16:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q6 ON 1 = 1
