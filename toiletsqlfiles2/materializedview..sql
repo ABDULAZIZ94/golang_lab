@@ -49,20 +49,30 @@ CREATE INDEX env_agg_idx ON env_agg (uplinkts DESC);
 -- occupanct data agg
 
 -- occupancy lag
-CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_lag AS
-SELECT
-    id,
-    timestamp,
-    device_token,
-    occupied,
-    lag (occupied, 1) over (order by id) as prev_occupied
-FROM occupancy_data
-where timestamp > to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS')
-GROUP BY
-    timestamp,
-    device_token,
-    occupied,
-    id
+CREATE MATERIALIZED VIEW IF NOT EXISTS occupancy_lag2 AS
+
+with 
+    occ_lag as (SELECT
+        id,
+        timestamp,
+        device_token,
+        occupied,
+        lag (occupied, 1) over (order by id) as prev_occupied
+        FROM occupancy_data
+        where timestamp > to_timestamp('2024-09-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS')
+    ),
+    occ_entrance as (
+        SELECT
+            id,
+            timestamp,
+            device_token,
+            occupied,
+            prev_occupied,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('hour', timestamp) ) as sum_hourly
+            FROM occ_lag
+    )
+select * from occ_entrance
+
 WITH
     DATA;
 
