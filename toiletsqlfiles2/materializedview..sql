@@ -222,8 +222,28 @@ select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, compla
 from user_reactions
 
 -- using windows function to create needed column so a view is suitable for many queries
-select timestamp, reaction, count(reaction) over (partition by timestamp order by reaction) as total_reaction_by_type
+select 
+    timestamp, 
+    date_trunc('hour', timestamp) timestamp_hourly, 
+    date_trunc('day', timestamp) timestamp_daily,
+    date_trunc('monthly', timestamp) timestamp_monthly,
+    date_trunc('yearly', timestamp) timestamp_yearly,
+    reaction, 
+count(reaction) over (partition by date_trunc('hour', timestamp) order by reaction) as total_reaction_by_type_hourly,
+count(reaction) over (partition by date_trunc('day', timestamp) order by reaction) as total_reaction_by_type_daily,
+count(reaction) over (partition by date_trunc('month', timestamp) order by reaction) as total_reaction_by_type_monthly,
+count(reaction) over (partition by date_trunc('year', timestamp) order by reaction) as total_reaction_by_type_yearly,
+count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
+count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
+count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
+count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all
 from 
-    (select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, complaint, toilet_id, score 
-    from user_reactions order by timestamp desc)Q1
-group by reaction, timestamp
+    user_reactions
+group by timestamp, reaction
+order by timestamp desc, reaction
+
+
+
+  DATE_TRUNC('month', sale_date) AS sale_month,
+    SUM(amount) OVER (PARTITION BY salesperson, DATE_TRUNC('month', timestamp) ORDER BY timestamp) AS monthly_running_total
+FROM 
