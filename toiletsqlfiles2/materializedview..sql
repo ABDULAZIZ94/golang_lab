@@ -1,4 +1,5 @@
 
+-- active connection
 
 -- env agg
 CREATE MATERIALIZED VIEW env_agg as
@@ -199,21 +200,25 @@ CREATE UNIQUE INDEX overview_cubical_devices_idx ON overview_cubical_devices (de
 -- 
 select * from occupancy_data
 
-
 -- counter data agg
 
 select * from counter_data limit 10
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS counter_data_agg AS
 with 
     counter_lag as (
-        timestamp, device_token, people_in
-        from counter_data
-        where
-        timestamp > current_timestamp - INTERVAL '2 DAY'
-    ),
-    counter_agg(
         select
+            counter_data_id,
+            timestamp, 
+            device_token, 
+            people_in
+        from counter_data
+        -- where
+        --     timestamp > current_timestamp - INTERVAL '2 DAY'
+    ),
+    counter_agg as (
+        select
+            counter_data_id,
             timestamp,
             date_trunc('hour',timestamp) as timestamp_hourly,
             date_trunc('day', timestamp) as timestamp_day,
@@ -224,7 +229,69 @@ with
             sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('hour', timestamp), device_token) as enter_hourly,
             sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('day', timestamp), device_token) as enter_day,
             sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('month', timestamp), device_token) as enter_month,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp), device_token) as enter_year,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp), device_token) as enter_year
+        from
+            counter_lag
+    )
+select * from counter_agg
+WITH
+    DATA;
+
+select * from counter_data_agg
+
+select * from counter_data limit 1
+
+CREATE UNIQUE INDEX counter_data_agg_idx4 ON counter_data_agg (
+    counter_data_id,
+    timestamp,
+    timestamp_hourly,
+    timestamp_day,
+    timestamp_monthly,
+    timestamp_year,
+    device_token,
+    enter,
+    enter_hourly,
+    enter_day,
+    enter_month,
+    enter_year
+);
+
+DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
+
+DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
+
+-- overview counter data agg
+
+select * from counter_data limit 10
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
+with 
+    counter_lag as (
+        select
+            counter_data_id,
+            timestamp, 
+            device_token, 
+            people_in
+        from counter_data
+        where
+            timestamp > current_timestamp - INTERVAL '2 DAY'
+    ),
+    counter_agg as (
+        select
+            counter_data_id,
+            timestamp,
+            date_trunc('hour',timestamp) as timestamp_hourly,
+            date_trunc('day', timestamp) as timestamp_day,
+            date_trunc('month', timestamp) as timestamp_monthly,
+            date_trunc('year', timestamp) as timestamp_year,
+            device_token,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by timestamp, device_token) as enter,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('hour', timestamp), device_token) as enter_hourly,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('day', timestamp), device_token) as enter_day,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('month', timestamp), device_token) as enter_month,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp), device_token) as enter_year
         from
             counter_lag
     )
@@ -234,7 +301,10 @@ WITH
 
 select * from overview_counter_data_agg
 
+select * from counter_data limit 1
+
 CREATE UNIQUE INDEX overview_counter_data_agg_idx3 ON overview_counter_data_agg (
+    counter_data_id,
     timestamp,
     timestamp_hourly,
     timestamp_day,
@@ -264,20 +334,258 @@ select * from freshener_data
 select * from ammonia_data
 
 -- cleaner report agg
-select * from cleaner_reports limit 10
+select * from cleaner_reports limit 1
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS cleaner_reports_agg AS
+    SELECT  
+        cleaner_report_id,
+        location_id,
+        toilet_type_id,
+        cubical_id,
+        check_in_ts,
+        date_trunc('minute', created_at) created_at_minutely,
+        date_trunc('hour', created_at) created_at_hourly,
+        date_trunc('day', created_at) created_at_daily,
+        date_trunc('month', created_at) created_at_monthly,
+        date_trunc('year', created_at) created_at_yearly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as total_freshen_minutely,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as total_freshen_hourly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_freshen_daily,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_freshen_monthly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_freshen_yearly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as total_auto_clean_minutely,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as total_auto_clean_hourly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_auto_clean_daily,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_auto_clean_monthly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_auto_clean_yearly,
+        freshen_up_state,
+        auto_clean_state,
+        tenant_id
+    from cleaner_reports
+    where 
+        created_at < current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_cleaner_reports_agg AS
+    SELECT  
+        cleaner_report_id,
+        location_id,
+        toilet_type_id,
+        cubical_id,
+        check_in_ts,
+        date_trunc('minute', created_at) created_at_minutely,
+        date_trunc('hour', created_at) created_at_hourly,
+        date_trunc('day', created_at) created_at_daily,
+        date_trunc('month', created_at) created_at_monthly,
+        date_trunc('year', created_at) created_at_yearly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as total_freshen_minutely,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as total_freshen_hourly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_freshen_daily,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_freshen_monthly,
+        sum (case when freshen_up_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_freshen_yearly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as total_auto_clean_minutely,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as total_auto_clean_hourly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_auto_clean_daily,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_auto_clean_monthly,
+        sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_auto_clean_yearly,
+        freshen_up_state,
+        auto_clean_state,
+        tenant_id
+    from cleaner_reports
+    where 
+        created_at > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+
+DROP MATERIALIZED VIEW IF EXISTS cleaner_reports_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY cleaner_reports_agg;
+
+CREATE UNIQUE INDEX cleaner_reports_agg_idx3 ON cleaner_reports_agg (
+    cleaner_report_id,
+    location_id,
+    toilet_type_id,
+    cubical_id,
+    check_in_ts,
+    created_at_minutely,
+    created_at_hourly,
+    created_at_daily,
+    created_at_monthly,
+    created_at_yearly,
+    total_freshen_minutely,
+    total_freshen_hourly,
+    total_freshen_daily,
+    total_freshen_monthly,
+    total_freshen_yearly,
+    total_auto_clean_minutely,
+    total_auto_clean_hourly,
+    total_auto_clean_daily,
+    total_auto_clean_monthly,
+    total_auto_clean_yearly,
+    freshen_up_state,
+    auto_clean_state,
+    tenant_id
+);
+
+CREATE UNIQUE INDEX overview_cleaner_reports_agg_idx3 ON overview_cleaner_reports_agg (
+    cleaner_report_id,
+    location_id,
+    toilet_type_id,
+    cubical_id,
+    check_in_ts,
+    created_at_minutely,
+    created_at_hourly,
+    created_at_daily,
+    created_at_monthly,
+    created_at_yearly,
+    total_freshen_minutely,
+    total_freshen_hourly,
+    total_freshen_daily,
+    total_freshen_monthly,
+    total_freshen_yearly,
+    total_auto_clean_minutely,
+    total_auto_clean_hourly,
+    total_auto_clean_daily,
+    total_auto_clean_monthly,
+    total_auto_clean_yearly,
+    freshen_up_state,
+    auto_clean_state,
+    tenant_id
+);
+
+select * from cleaner_reports_agg
 
 -- feedback panel agg
 
-select * from feedback_panel_data
+select * from feedback_panel_data limit 1
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS feedback_panel_agg AS
+
+WITH DATA;
 
 -- fp sensor agg
-select * from fp_sensor_data
+select * from fp_sensor_data limit 1
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS fp_sensor_agg AS
+    select
+        fpr_sensor_data_id,
+        created_at,
+        date_trunc('minute', created_at) created_at_minutely,
+        date_trunc('hour', created_at) created_at_hourly,
+        date_trunc('day', created_at) created_at_daily,
+        date_trunc('month', created_at) created_at_monthly,
+        date_trunc('year', created_at) created_at_yearly,
+        avg (temperature) over (PARTITION BY date_trunc('minute', created_at), device_token) as temp_avg_minutely,
+        avg (temperature) over (PARTITION BY date_trunc('hour', created_at), device_token) as temp_avg_hourly,
+        avg (temperature) over (PARTITION BY date_trunc('day', created_at), device_token) as temp_avg_daily,
+        avg (temperature) over (PARTITION BY date_trunc('month', created_at), device_token) as temp_avg_monthly,
+        avg (temperature) over (PARTITION BY date_trunc('year', created_at), device_token) as temp_avg_yearly,
+        avg (humidity) over (PARTITION BY date_trunc('minute', created_at), device_token) as humidity_avg_minutely,
+        avg (humidity) over (PARTITION BY date_trunc('hour', created_at), device_token) as humidity_avg_hourly,
+        avg (humidity) over (PARTITION BY date_trunc('day', created_at), device_token) as humidity_avg_daily,
+        avg (humidity) over (PARTITION BY date_trunc('month', created_at), device_token) as humidity_avg_monthly,
+        avg (humidity) over (PARTITION BY date_trunc('year', created_at), device_token) as humidity_avg_yearly,
+        avg (rssi) over (PARTITION BY date_trunc('minute', created_at), device_token) as rssi_avg_minutely,
+        avg (rssi) over (PARTITION BY date_trunc('hour', created_at), device_token) as rssi_avg_hourly,
+        avg (rssi) over (PARTITION BY date_trunc('day', created_at), device_token) as rssi_avg_daily,
+        avg (rssi) over (PARTITION BY date_trunc('month', created_at), device_token) as rssi_avg_monthly,
+        avg (rssi) over (PARTITION BY date_trunc('year', created_at), device_token) as rssi_avg_yearly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('minute', created_at), device_token) as ct_avg_minutely,
+        avg (cpu_temp) over (PARTITION BY date_trunc('hour', created_at), device_token) as ct_avg_hourly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('day', created_at), device_token) as ct_avg_daily,
+        avg (cpu_temp) over (PARTITION BY date_trunc('month', created_at), device_token) as ct_avg_monthly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('year', created_at), device_token) as ct_avg_yearly,
+        device_token
+    from fp_sensor_data
+    where deleted_at is null
+    order by created_at desc, device_token
+WITH DATA;
+
+select * from fp_sensor_agg
+
+DROP MATERIALIZED VIEW IF EXISTS user_reaction_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY user_reaction_agg;
+
+CREATE UNIQUE INDEX fp_sensor_agg_idx3 ON fp_sensor_agg (
+    fpr_sensor_data_id,
+    created_at,
+    created_at_minutely,
+    created_at_hourly,
+    created_at_daily,
+    created_at_monthly,
+    created_at_yearly,
+    temp_avg_minutely,
+    temp_avg_hourly,
+    temp_avg_daily,
+    temp_avg_monthly,
+    temp_avg_yearly,
+    humidity_avg_minutely,
+    humidity_avg_hourly,
+    humidity_avg_daily,
+    humidity_avg_monthly,
+    humidity_avg_yearly,
+    rssi_avg_minutely,
+    rssi_avg_hourly,
+    rssi_avg_daily,
+    rssi_avg_monthly,
+    rssi_avg_yearly,
+    ct_avg_minutely,
+    ct_avg_hourly,
+    ct_avg_daily,
+    ct_avg_monthly,
+    ct_avg_yearly
+);
 
 -- misc acion data agg
-select * from misc_action_data
+select * from misc_action_data limit 1
 
--- user reactions agg
-select * from user_reactions limit 10
+CREATE MATERIALIZED VIEW IF NOT EXISTS misc_action_agg AS
+    select
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_minutely,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_hourly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_daily,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_monthly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_yearly,
+        misc_data_id,
+        device_token,
+        toilet_info_id,
+        namespace,
+        status
+    from misc_action_data
+WITH DATA;
+
+
+select namespace,* from misc_action_agg where namespace
+
+DROP MATERIALIZED VIEW IF EXISTS misc_action_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY misc_action_agg;
+
+CREATE UNIQUE INDEX misc_action_agg_idx3 ON misc_action_agg (
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_minutely,
+    total_hourly,
+    total_daily,
+    total_monthly,
+    total_yearly,
+    misc_data_id,
+    device_token,
+    toilet_info_id,
+    namespace,
+    status
+);
 
 -- truncate dates
 select date_trunc('hour', timestamp) as timestamp, toilet_type, reaction, complaint, toilet_id, score 
