@@ -226,8 +226,8 @@ select
     timestamp, 
     date_trunc('hour', timestamp) timestamp_hourly, 
     date_trunc('day', timestamp) timestamp_daily,
-    date_trunc('monthly', timestamp) timestamp_monthly,
-    date_trunc('yearly', timestamp) timestamp_yearly,
+    date_trunc('month', timestamp) timestamp_monthly,
+    date_trunc('year', timestamp) timestamp_yearly,
     reaction, 
 count(reaction) over (partition by date_trunc('hour', timestamp) order by reaction) as total_reaction_by_type_hourly,
 count(reaction) over (partition by date_trunc('day', timestamp) order by reaction) as total_reaction_by_type_daily,
@@ -243,7 +243,3 @@ group by timestamp, reaction
 order by timestamp desc, reaction
 
 
-
-  DATE_TRUNC('month', sale_date) AS sale_month,
-    SUM(amount) OVER (PARTITION BY salesperson, DATE_TRUNC('month', timestamp) ORDER BY timestamp) AS monthly_running_total
-FROM 
