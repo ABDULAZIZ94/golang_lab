@@ -1,14 +1,38 @@
 
 -- active connection
 
+select * from locations
+
 -- env agg
 CREATE MATERIALIZED VIEW env_agg as
     select 
-    avg(iaq)::int as iaq,
-    avg(temperature)::int as temperature,
-    avg(humidity)::int as humidity,
-    avg(lux)::int as lux,
-    date_trunc('HOUR', timestamp) as uplinkts, device_token
+        id,
+        timestamp,
+        date_trunc('hour', timestamp) as timestamp_hourly,
+        date_trunc('day', timestamp) as timestamp_daily,
+        date_trunc('month', timestamp) as timestamp_monthly,
+        date_trunc('year', timestamp) as timestamp_yearly,
+        avg (iaq)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_iaq_minutely,
+        avg (iaq)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_iaq_hourly,
+        avg (iaq)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_iaq_daily,
+        avg (iaq)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_iaq_monthly,
+        avg (iaq)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_iaq_yearly,
+        avg (temperature)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_temperature_minutely,
+        avg (temperature)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_temperature_hourly,
+        avg (temperature)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_temperature_daily,
+        avg (temperature)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_temperature_monthly,
+        avg (temperature)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_temperature_yearly,
+        avg (humidity)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_humidity_minutely,
+        avg (humidity)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_humidity_hourly,
+        avg (humidity)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_humidity_daily,
+        avg (humidity)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_humidity_monthly,
+        avg (humidity)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_humidity_yearly,
+        avg (lux)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_lux_minutely,
+        avg (lux)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_lux_hourly,
+        avg (lux)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_lux_daily,
+        avg (lux)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_lux_monthly,
+        avg (lux)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_lux_yearly,
+        device_token
     from enviroment_data
     group by uplinkts, device_token
 WITH DATA
@@ -338,11 +362,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS panic_btn_agg AS
         date_trunc('day', timestamp) timestamp_daily,
         date_trunc('month', timestamp) timestamp_monthly,
         date_trunc('year', timestamp) timestamp_yearly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
         from panic_btn_data
         WHERE
             timestamp < current_timestamp - INTERVAL '2 DAY'
@@ -360,11 +384,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_panic_btn_agg AS
         date_trunc('day', timestamp) timestamp_daily,
         date_trunc('month', timestamp) timestamp_monthly,
         date_trunc('year', timestamp) timestamp_yearly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
-        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
+        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
         from panic_btn_data
         WHERE
             timestamp > current_timestamp - INTERVAL '2 DAY'
@@ -395,10 +419,179 @@ CREATE UNIQUE INDEX panic_btn_agg_idx3 ON panic_btn_agg (
 
 
 -- freshener data
-select * from freshener_data
+select * from fragrance_data
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS fragrance_data_agg AS
+    SELECT
+        id,
+        device_token,
+        fragrance_on,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_fragrance_minutely,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_fragrance_hourly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_fragrance_daily,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_fragrance_monthly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_fragrance_yearly
+    from fragrance_data
+    WHERE
+        timestamp < current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_fragrance_data_agg AS
+    SELECT
+        id,
+        device_token,
+        fragrance_on,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_fragrance_minutely,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_fragrance_hourly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_fragrance_daily,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_fragrance_monthly,
+        sum (case when fragrance_on = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_fragrance_yearly
+    from fragrance_data
+    WHERE 
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+DROP MATERIALIZED VIEW IF EXISTS overview_fragrance_data_agg
+
+DROP MATERIALIZED VIEW IF EXISTS fragrance_data_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_fragrance_data_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY fragrance_data_agg
+
+CREATE UNIQUE INDEX fragrance_data_agg_idx3 ON fragrance_data_agg (
+    id,
+    device_token,
+    fragrance_on,
+    timestamp,
+    timestamp_minutely,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_fragrance_minutely,
+    total_fragrance_hourly,
+    total_fragrance_daily,
+    total_fragrance_monthly,
+    total_fragrance_yearly
+);
+
+CREATE UNIQUE INDEX overview_fragrance_data_agg_idx3 ON overview_fragrance_data_agg (
+    id,
+    device_token,
+    fragrance_on,
+    timestamp,
+    timestamp_minutely,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_fragrance_minutely,
+    total_fragrance_hourly,
+    total_fragrance_daily,
+    total_fragrance_monthly,
+    total_fragrance_yearly
+);
 
 -- ammonia data
 select * from ammonia_data
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS ammonia_data_agg AS
+    SELECT
+        id,
+        device_token,
+        ammonia_level,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_fragrance_minutely,
+        avg (ammonia_level) over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_fragrance_hourly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_fragrance_daily,
+        avg (ammonia_level) over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_fragrance_monthly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_fragrance_yearly
+    from ammonia_data
+    WHERE 
+        timestamp < current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_ammonia_data_agg AS
+    SELECT
+        id,
+        device_token,
+        ammonia_level,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_fragrance_minutely,
+        avg (ammonia_level) over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_fragrance_hourly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_fragrance_daily,
+        avg (ammonia_level) over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_fragrance_monthly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_fragrance_yearly
+    from ammonia_data
+    WHERE 
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+
+DROP MATERIALIZED VIEW IF EXISTS overview_ammonia_data_agg
+
+DROP MATERIALIZED VIEW IF EXISTS ammonia_data_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY ammonia_data_agg;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_ammonia_data_agg;
+
+CREATE UNIQUE INDEX ammonia_data_idx3 ON ammonia_data_agg (
+    id,
+    device_token,
+    ammonia_level,
+    timestamp,
+    timestamp_minutely,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    avg_fragrance_minutely,
+    avg_fragrance_hourly,
+    avg_fragrance_daily,
+    avg_fragrance_monthly,
+    avg_fragrance_yearly
+);
+
+CREATE UNIQUE INDEX overview_ammonia_data_idx3 ON overview_ammonia_data_agg (
+        id,
+        device_token,
+        ammonia_level,
+        timestamp,
+        timestamp_minutely,
+        timestamp_hourly,
+        timestamp_daily,
+        timestamp_monthly,
+        timestamp_yearly,
+        avg_fragrance_minutely,
+        avg_fragrance_hourly,
+        avg_fragrance_daily,
+        avg_fragrance_monthly,
+        avg_fragrance_yearly
+);
 
 -- cleaner report agg
 select * from cleaner_reports limit 1
