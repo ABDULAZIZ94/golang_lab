@@ -1,49 +1,89 @@
 
 -- active connection
 
-select * from locations
+select * from public.locations
 
 -- env agg
 CREATE MATERIALIZED VIEW env_agg as
-    select 
-        id,
+
+    SELECT 
+        env_data_id,
         timestamp,
-        date_trunc('hour', timestamp) as timestamp_hourly,
-        date_trunc('day', timestamp) as timestamp_daily,
-        date_trunc('month', timestamp) as timestamp_monthly,
-        date_trunc('year', timestamp) as timestamp_yearly,
-        avg (iaq)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_iaq_minutely,
-        avg (iaq)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_iaq_hourly,
-        avg (iaq)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_iaq_daily,
-        avg (iaq)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_iaq_monthly,
-        avg (iaq)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_iaq_yearly,
-        avg (temperature)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_temperature_minutely,
-        avg (temperature)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_temperature_hourly,
-        avg (temperature)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_temperature_daily,
-        avg (temperature)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_temperature_monthly,
-        avg (temperature)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_temperature_yearly,
-        avg (humidity)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_humidity_minutely,
-        avg (humidity)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_humidity_hourly,
-        avg (humidity)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_humidity_daily,
-        avg (humidity)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_humidity_monthly,
-        avg (humidity)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_humidity_yearly,
-        avg (lux)::int over (PARTITION BY date_trunc('minute', timestamp), device_token) as avg_lux_minutely,
-        avg (lux)::int over (PARTITION BY date_trunc('hour', timestamp), device_token) as avg_lux_hourly,
-        avg (lux)::int over (PARTITION BY date_trunc('day', timestamp), device_token) as avg_lux_daily,
-        avg (lux)::int over (PARTITION BY date_trunc('month', timestamp), device_token) as avg_lux_monthly,
-        avg (lux)::int over (PARTITION BY date_trunc('year', timestamp), device_token) as avg_lux_yearly,
+        date_trunc('hour', timestamp) AS timestamp_hourly,
+        date_trunc('day', timestamp) AS timestamp_daily,
+        date_trunc('month', timestamp) AS timestamp_monthly,
+        date_trunc('year', timestamp) AS timestamp_yearly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_iaq_minutely,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_iaq_hourly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_iaq_daily,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_iaq_monthly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_iaq_yearly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_temperature_minutely,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_temperature_hourly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_temperature_daily,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_temperature_monthly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_temperature_yearly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_humidity_minutely,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_humidity_hourly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_humidity_daily,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_humidity_monthly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_humidity_yearly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_lux_minutely,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_lux_hourly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_lux_daily,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_lux_monthly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_lux_yearly,
         device_token
-    from enviroment_data
-    group by uplinkts, device_token
+    FROM 
+        enviroment_data
+    WHERE
+        timestamp < current_timestamp - INTERVAL '2 DAY';
+
+WITH DATA
+
+
+CREATE MATERIALIZED VIEW overview_env_agg as
+    SELECT 
+        env_data_id,
+        timestamp,
+        date_trunc('hour', timestamp) AS timestamp_hourly,
+        date_trunc('day', timestamp) AS timestamp_daily,
+        date_trunc('month', timestamp) AS timestamp_monthly,
+        date_trunc('year', timestamp) AS timestamp_yearly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_iaq_minutely,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_iaq_hourly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_iaq_daily,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_iaq_monthly,
+        CAST(avg(iaq) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_iaq_yearly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_temperature_minutely,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_temperature_hourly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_temperature_daily,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_temperature_monthly,
+        CAST(avg(temperature) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_temperature_yearly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_humidity_minutely,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_humidity_hourly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_humidity_daily,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_humidity_monthly,
+        CAST(avg(humidity) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_humidity_yearly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('minute', timestamp), device_token) AS int) AS avg_lux_minutely,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('hour', timestamp), device_token) AS int) AS avg_lux_hourly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('day', timestamp), device_token) AS int) AS avg_lux_daily,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('month', timestamp), device_token) AS int) AS avg_lux_monthly,
+        CAST(avg(lux) OVER (PARTITION BY date_trunc('year', timestamp), device_token) AS int) AS avg_lux_yearly,
+        device_token
+    FROM 
+        enviroment_data
+    WHERE
+        timestamp > current_timestamp - INTERVAL '2 DAY';
 WITH DATA
 
 DROP INDEX env_agg_idx
 
 CREATE UNIQUE INDEX env_agg_idx ON env_agg (uplinkts, device_token);
 
-REFRESH MATERIALIZED VIEW env_agg
-
 REFRESH MATERIALIZED VIEW CONCURRENTLY env_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_env_agg
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS env_agg as
 select
@@ -758,7 +798,47 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS fp_sensor_agg AS
         avg (cpu_temp) over (PARTITION BY date_trunc('year', created_at), device_token) as ct_avg_yearly,
         device_token
     from fp_sensor_data
-    where deleted_at is null
+    where 
+        deleted_at is null 
+        and created_at < current_timestamp - INTERVAL '2 DAY'
+    order by created_at desc, device_token
+WITH DATA;
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS fp_sensor_agg AS
+    select
+        fpr_sensor_data_id,
+        created_at,
+        date_trunc('minute', created_at) created_at_minutely,
+        date_trunc('hour', created_at) created_at_hourly,
+        date_trunc('day', created_at) created_at_daily,
+        date_trunc('month', created_at) created_at_monthly,
+        date_trunc('year', created_at) created_at_yearly,
+        avg (temperature) over (PARTITION BY date_trunc('minute', created_at), device_token) as temp_avg_minutely,
+        avg (temperature) over (PARTITION BY date_trunc('hour', created_at), device_token) as temp_avg_hourly,
+        avg (temperature) over (PARTITION BY date_trunc('day', created_at), device_token) as temp_avg_daily,
+        avg (temperature) over (PARTITION BY date_trunc('month', created_at), device_token) as temp_avg_monthly,
+        avg (temperature) over (PARTITION BY date_trunc('year', created_at), device_token) as temp_avg_yearly,
+        avg (humidity) over (PARTITION BY date_trunc('minute', created_at), device_token) as humidity_avg_minutely,
+        avg (humidity) over (PARTITION BY date_trunc('hour', created_at), device_token) as humidity_avg_hourly,
+        avg (humidity) over (PARTITION BY date_trunc('day', created_at), device_token) as humidity_avg_daily,
+        avg (humidity) over (PARTITION BY date_trunc('month', created_at), device_token) as humidity_avg_monthly,
+        avg (humidity) over (PARTITION BY date_trunc('year', created_at), device_token) as humidity_avg_yearly,
+        avg (rssi) over (PARTITION BY date_trunc('minute', created_at), device_token) as rssi_avg_minutely,
+        avg (rssi) over (PARTITION BY date_trunc('hour', created_at), device_token) as rssi_avg_hourly,
+        avg (rssi) over (PARTITION BY date_trunc('day', created_at), device_token) as rssi_avg_daily,
+        avg (rssi) over (PARTITION BY date_trunc('month', created_at), device_token) as rssi_avg_monthly,
+        avg (rssi) over (PARTITION BY date_trunc('year', created_at), device_token) as rssi_avg_yearly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('minute', created_at), device_token) as ct_avg_minutely,
+        avg (cpu_temp) over (PARTITION BY date_trunc('hour', created_at), device_token) as ct_avg_hourly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('day', created_at), device_token) as ct_avg_daily,
+        avg (cpu_temp) over (PARTITION BY date_trunc('month', created_at), device_token) as ct_avg_monthly,
+        avg (cpu_temp) over (PARTITION BY date_trunc('year', created_at), device_token) as ct_avg_yearly,
+        device_token
+    from fp_sensor_data
+    where 
+        deleted_at is null 
+        and created_at > current_timestamp - INTERVAL '2 DAY'
     order by created_at desc, device_token
 WITH DATA;
 
@@ -853,29 +933,74 @@ from user_reactions
 
 -- using windows function to create needed column so a view is suitable for many queries
 CREATE MATERIALIZED VIEW IF NOT EXISTS user_reaction_agg AS
-select 
-    timestamp, 
-    date_trunc('hour', timestamp) timestamp_hourly, 
-    date_trunc('day', timestamp) timestamp_daily,
-    date_trunc('month', timestamp) timestamp_monthly,
-    date_trunc('year', timestamp) timestamp_yearly,
-    reaction, 
-count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
-count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
-count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
-count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
-count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
-count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
-count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
-count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all
-from 
-    user_reactions
-group by timestamp, reaction
-order by timestamp desc, reaction
+    select 
+        timestamp, 
+        date_trunc('hour', timestamp) timestamp_hourly, 
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        reaction, 
+    count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
+    count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
+    count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
+    count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
+    count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
+    count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
+    count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
+    count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all,
+    count(complaint) over (partition by date_trunc('hour', timestamp),complaint) as total_complaint_by_type_hourly,
+    count(complaint) over (partition by date_trunc('day', timestamp), complaint) as total_complaint_by_type_daily,
+    count(complaint) over (partition by date_trunc('month', timestamp), complaint) as total_complaint_by_type_monthly,
+    count(complaint) over (partition by date_trunc('year', timestamp), complaint) as total_complaint_by_type_yearly,
+    count(complaint) over (partition by date_trunc('hour', timestamp) ) as total_complaint_by_type_hourly_all,
+    count(complaint) over (partition by date_trunc('day', timestamp) ) as total_complaint_by_type_daily_all,
+    count(complaint) over (partition by date_trunc('month', timestamp) ) as total_complaint_by_type_monthly_all,
+    count(complaint) over (partition by date_trunc('year', timestamp) ) as total_complaint_by_type_yearly_all
+    from 
+        user_reactions
+    where
+        timestamp < current_timestamp - INTERVAL '2 DAY'
+    group by timestamp, reaction, complaint
+    order by timestamp desc, reaction
+WITH DATA;
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_user_reaction_agg AS
+    select 
+        timestamp, 
+        date_trunc('hour', timestamp) timestamp_hourly, 
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        reaction,
+        complaint,
+    count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
+    count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
+    count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
+    count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
+    count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
+    count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
+    count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
+    count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all,
+    count(complaint) over (partition by date_trunc('hour', timestamp),complaint) as total_complaint_by_type_hourly,
+    count(complaint) over (partition by date_trunc('day', timestamp), complaint) as total_complaint_by_type_daily,
+    count(complaint) over (partition by date_trunc('month', timestamp), complaint) as total_complaint_by_type_monthly,
+    count(complaint) over (partition by date_trunc('year', timestamp), complaint) as total_complaint_by_type_yearly,
+    count(complaint) over (partition by date_trunc('hour', timestamp) ) as total_complaint_by_type_hourly_all,
+    count(complaint) over (partition by date_trunc('day', timestamp) ) as total_complaint_by_type_daily_all,
+    count(complaint) over (partition by date_trunc('month', timestamp) ) as total_complaint_by_type_monthly_all,
+    count(complaint) over (partition by date_trunc('year', timestamp) ) as total_complaint_by_type_yearly_all
+    from 
+        user_reactions
+    where
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+    group by timestamp, reaction, complaint
+    order by timestamp desc, reaction
 WITH DATA;
 
 select * from user_reaction_agg
 
+DROP MATERIALIZED VIEW IF EXISTS overview_user_reaction_agg
 
 DROP MATERIALIZED VIEW IF EXISTS user_reaction_agg
 
