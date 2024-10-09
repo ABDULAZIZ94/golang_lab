@@ -325,7 +325,74 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
 DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
 
 -- panic_btn data
-select * from panic_btn_data
+select * from panic_btn_data limit 1
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS panic_btn_agg AS
+    SELECT
+        id,
+        device_token,
+        panic_button,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
+        from panic_btn_data
+        WHERE
+            timestamp < current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_panic_btn_agg AS
+    SELECT
+        id,
+        device_token,
+        panic_button,
+        timestamp,
+        date_trunc('minute', timestamp) timestamp_minutely,
+        date_trunc('hour', timestamp) timestamp_hourly,
+        date_trunc('day', timestamp) timestamp_daily,
+        date_trunc('month', timestamp) timestamp_monthly,
+        date_trunc('year', timestamp) timestamp_yearly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp), device_token) as total_panic_button_minutely,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp), device_token) as total_panic_button_hourly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp), device_token) as total_panic_button_daily,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp), device_token) as total_panic_button_monthly,
+        sum (case when panic_button = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp), device_token) as total_panic_button_yearly
+        from panic_btn_data
+        WHERE
+            timestamp > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
+
+DROP MATERIALIZED VIEW IF EXISTS overview_panic_btn_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_panic_btn_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY panic_btn_agg
+
+CREATE UNIQUE INDEX panic_btn_agg_idx3 ON panic_btn_agg (
+    id,
+    device_token,
+    panic_button,
+    timestamp,
+    timestamp_minutely,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_panic_button_minutely,
+    total_panic_button_hourly,
+    total_panic_button_daily,
+    total_panic_button_monthly,
+    total_panic_button_yearly
+);
+
 
 -- freshener data
 select * from freshener_data
