@@ -7,7 +7,7 @@ select * from public.locations
 CREATE MATERIALIZED VIEW env_agg as
     SELECT 
         env_data_id,
-        timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur' ,
+        timestamp ,
         date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') AS timestamp_hourly,
         date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') AS timestamp_daily,
         date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') AS timestamp_monthly,
@@ -336,8 +336,42 @@ with
             device_token, 
             people_in
         from counter_data
-        -- where
-        --     timestamp > current_timestamp - INTERVAL '2 DAY'
+        where
+            timestamp < current_timestamp - INTERVAL '2 DAY'
+    ),
+    counter_agg as (
+        select
+            counter_data_id,
+            timestamp,
+            date_trunc('hour',timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_hourly,
+            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_day,
+            date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_monthly,
+            date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_year,
+            device_token,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by timestamp, device_token) as enter,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_hourly,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_day,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_month,
+            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_year
+        from
+            counter_lag
+    )
+select * from counter_agg
+WITH
+    DATA;
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
+with 
+    counter_lag as (
+        select
+            counter_data_id,
+            timestamp, 
+            device_token, 
+            people_in
+        from counter_data
+        where
+            timestamp > current_timestamp - INTERVAL '2 DAY'
     ),
     counter_agg as (
         select
@@ -379,54 +413,8 @@ CREATE UNIQUE INDEX counter_data_agg_idx4 ON counter_data_agg (
     enter_year
 );
 
-DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
 
-REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
-
-DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
-
--- overview counter data agg
-
-select * from counter_data limit 10
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS overview_counter_data_agg AS
-with 
-    counter_lag as (
-        select
-            counter_data_id,
-            timestamp, 
-            device_token, 
-            people_in
-        from counter_data
-        where
-            timestamp > current_timestamp - INTERVAL '2 DAY'
-    ),
-    counter_agg as (
-        select
-            counter_data_id,
-            timestamp,
-            date_trunc('hour',timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_hourly,
-            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_day,
-            date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_monthly,
-            date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_year,
-            device_token,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by timestamp, device_token) as enter,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_hourly,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_day,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_month,
-            sum(case when people_in = '1' then 1 else 0 end) over (partition by date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as enter_year
-        from
-            counter_lag
-    )
-select * from counter_agg
-WITH
-    DATA;
-
-select * from overview_counter_data_agg
-
-select * from counter_data limit 1
-
-CREATE UNIQUE INDEX overview_counter_data_agg_idx3 ON overview_counter_data_agg (
+CREATE UNIQUE INDEX overview_counter_data_agg_idx4 ON overview_counter_data_agg (
     counter_data_id,
     timestamp,
     timestamp_hourly,
@@ -440,6 +428,20 @@ CREATE UNIQUE INDEX overview_counter_data_agg_idx3 ON overview_counter_data_agg 
     enter_month,
     enter_year
 );
+
+DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_counter_data_agg;
+
+DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
+
+DROP MATERIALIZED VIEW IF EXISTS counter_data_agg
+
+select * from counter_data limit 10
+
+select * from overview_counter_data_agg
+
+select * from counter_data limit 1
 
 DROP INDEX IF EXISTS overview_counter_data_agg_idx3;
 
@@ -494,6 +496,8 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_panic_btn_agg AS
 WITH DATA;
 
 DROP MATERIALIZED VIEW IF EXISTS overview_panic_btn_agg
+
+DROP MATERIALIZED VIEW IF EXISTS panic_btn_agg
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY overview_panic_btn_agg
 
@@ -759,6 +763,8 @@ WITH DATA;
 
 DROP MATERIALIZED VIEW IF EXISTS cleaner_reports_agg
 
+DROP MATERIALIZED VIEW IF EXISTS overview_cleaner_reports_agg
+
 REFRESH MATERIALIZED VIEW CONCURRENTLY cleaner_reports_agg;
 
 CREATE UNIQUE INDEX cleaner_reports_agg_idx3 ON cleaner_reports_agg (
@@ -864,7 +870,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS fp_sensor_agg AS
 WITH DATA;
 
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS fp_sensor_agg AS
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_fp_sensor_agg AS
     select
         fpr_sensor_data_id,
         created_at,
@@ -903,9 +909,45 @@ WITH DATA;
 
 select * from fp_sensor_agg
 
-DROP MATERIALIZED VIEW IF EXISTS user_reaction_agg
+DROP MATERIALIZED VIEW IF EXISTS overview_fp_sensor_agg
 
-REFRESH MATERIALIZED VIEW CONCURRENTLY user_reaction_agg;
+DROP MATERIALIZED VIEW IF EXISTS fp_sensor_agg
+
+DROP INDEX fp_sensor_agg_idx3
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY fp_sensor_agg;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_fp_sensor_agg;
+
+CREATE UNIQUE INDEX overviewfp_sensor_agg_idx3 ON overview_fp_sensor_agg (
+    fpr_sensor_data_id,
+    created_at,
+    created_at_minutely,
+    created_at_hourly,
+    created_at_daily,
+    created_at_monthly,
+    created_at_yearly,
+    temp_avg_minutely,
+    temp_avg_hourly,
+    temp_avg_daily,
+    temp_avg_monthly,
+    temp_avg_yearly,
+    humidity_avg_minutely,
+    humidity_avg_hourly,
+    humidity_avg_daily,
+    humidity_avg_monthly,
+    humidity_avg_yearly,
+    rssi_avg_minutely,
+    rssi_avg_hourly,
+    rssi_avg_daily,
+    rssi_avg_monthly,
+    rssi_avg_yearly,
+    ct_avg_minutely,
+    ct_avg_hourly,
+    ct_avg_daily,
+    ct_avg_monthly,
+    ct_avg_yearly
+);
 
 CREATE UNIQUE INDEX fp_sensor_agg_idx3 ON fp_sensor_agg (
     fpr_sensor_data_id,
@@ -959,8 +1001,33 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS misc_action_agg AS
         namespace,
         status
     from misc_action_data
+    where 
+        timestamp < current_timestamp - INTERVAL '2 DAY'
 WITH DATA;
 
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_misc_action_agg AS
+    select
+        timestamp,
+        date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_minutely,
+        date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_hourly,
+        date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
+        date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
+        date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_minutely,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_hourly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_daily,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_monthly,
+        sum (case when status = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_yearly,
+        misc_data_id,
+        device_token,
+        toilet_info_id,
+        namespace,
+        status
+    from misc_action_data
+    where 
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
 
 select namespace,* from misc_action_agg where namespace
 
@@ -969,6 +1036,25 @@ DROP MATERIALIZED VIEW IF EXISTS misc_action_agg
 REFRESH MATERIALIZED VIEW CONCURRENTLY misc_action_agg;
 
 CREATE UNIQUE INDEX misc_action_agg_idx3 ON misc_action_agg (
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_minutely,
+    total_hourly,
+    total_daily,
+    total_monthly,
+    total_yearly,
+    misc_data_id,
+    device_token,
+    toilet_info_id,
+    namespace,
+    status
+);
+
+
+CREATE UNIQUE INDEX overview_misc_action_agg_idx3 ON overview_misc_action_agg (
     timestamp,
     timestamp_hourly,
     timestamp_daily,
@@ -1088,6 +1174,25 @@ CREATE UNIQUE INDEX user_reaction_agg_idx3 ON user_reaction_agg (
 );
 
 
+CREATE UNIQUE INDEX overview_user_reaction_agg_idx3 ON overview_user_reaction_agg (
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    reaction,
+    complaint,
+    toilet_id,
+    total_reaction_by_type_hourly,
+    total_reaction_by_type_daily,
+    total_reaction_by_type_monthly,
+    total_reaction_by_type_yearly,
+    total_reaction_by_type_hourly_all,
+    total_reaction_by_type_daily_all,
+    total_reaction_by_type_monthly_all,
+    total_reaction_by_type_yearly_all
+);
+
 select distinct timestamp_hourly, total_reaction_by_type_hourly, reaction from user_reaction_agg order by timestamp_hourly desc
 
 
@@ -1095,62 +1200,3 @@ select distinct timestamp_hourly, total_reaction_by_type_hourly, reaction from u
 
 
 -- fail
-WITH
-    DEVICE_LIST AS (
-        select
-            device_token,
-            device_type_id,
-            cubical_id
-        from overview_cubical_devices
-        where
-            cubical_id = ?
-        limit 1
-    ),
-    TRAFFIC_COUNT_DATA AS (
-        SELECT enter_day
-        FROM overview_counter_data_agg
-        WHERE
-            timestamp = to_timestamp(
-                '2024-10-08 00:00:00',
-                'YYYY-MM-DD HH24:MI:SS'
-            )
-        LIMIT 1
-    ),
-    AUTOCLEAN_DATA AS (
-        SELECT total_auto_clean_daily
-        FROM overview_cleaner_reports_agg
-        WHERE
-            created_at_daily = to_timestamp(
-                '2024-10-08 00:00:00',
-                'YYYY-MM-DD HH24:MI:SS'
-            )
-        LIMIT 1
-    ),
-    TOTALCLEAN_DATA AS (
-        SELECT total_freshen_daily
-        FROM overview_cleaner_reports_agg
-        WHERE
-            created_at_daily = to_timestamp(
-                '2024-10-08 00:00:00',
-                'YYYY-MM-DD HH24:MI:SS'
-            )
-        LIMIT 1
-    )
-SELECT
-    COALESCE(enter_day, 0) AS TRAFFIC_COUNT_TODAY,
-    COALESCE(
-        total_auto_clean_daily,
-        0
-    ) AS TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
-    -- LAST_AUTO_CLEAN_ACTIVATED,
-    COALESCE(total_freshen_daily, 0) AS TOTAL_CLEAN_TODAY
-    -- LAST_CLEAN
-FROM
-    DEVICE_LIST
-    CROSS JOIN TRAFFIC_COUNT_DATA
-    CROSS JOIN AUTOCLEAN_DATA
-    CROSS JOIN TOTALCLEAN_DATA
-
-
-
-
