@@ -413,3 +413,9 @@ left join device_pairs dp on dp.device_id = d.device_id
 left join toilet_infos ti on ti.toilet_info_id = dp.toilet_info_id
 where dp.toilet_info_id = 'a97891e5-14df-4f95-7d1e-4ee601581df2' and d.device_type_id = 11
 limit 1
+
+
+select count(misc_data_id), namespace from misc_action_data group by namespace
+
+select distinct timestamp, device_token, count(id) from fragrance_data where device_token in ('608', '609', '610') 
+group by timestamp, device_token

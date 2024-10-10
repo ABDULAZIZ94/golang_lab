@@ -5,7 +5,6 @@ select * from public.locations
 
 -- env agg
 CREATE MATERIALIZED VIEW env_agg as
-
     SELECT 
         env_data_id,
         timestamp,
@@ -37,9 +36,8 @@ CREATE MATERIALIZED VIEW env_agg as
     FROM 
         enviroment_data
     WHERE
-        timestamp < current_timestamp - INTERVAL '2 DAY';
-
-WITH DATA
+        timestamp < current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
 
 
 CREATE MATERIALIZED VIEW overview_env_agg as
@@ -74,8 +72,8 @@ CREATE MATERIALIZED VIEW overview_env_agg as
     FROM 
         enviroment_data
     WHERE
-        timestamp > current_timestamp - INTERVAL '2 DAY';
-WITH DATA
+        timestamp > current_timestamp - INTERVAL '2 DAY'
+WITH DATA;
 
 DROP INDEX env_agg_idx
 
@@ -103,13 +101,19 @@ select * from enviroment_data
 
 DROP MATERIALIZED VIEW IF EXISTS env_agg
 
+DROP MATERIALIZED VIEW IF EXISTS overview_env_agg
+
 DROP VIEW IF EXISTS env_agg
 
 REFRESH MATERIALIZED VIEW env_agg
 
+REFRESH MATERIALIZED VIEW overview_env_agg
+
 select * from env_agg order by uplinkts desc limit 10
 
-CREATE INDEX env_agg_idx ON env_agg (uplinkts DESC);
+CREATE UNIQUE INDEX env_agg_idx ON env_agg (env_data_id, timestamp DESC);
+
+CREATE UNIQUE INDEX overview_env_agg_idx ON overview_env_agg (env_data_id, timestamp DESC);
 
 -- occupanct data agg
 
@@ -123,10 +127,44 @@ with
         occupied,
         lag (occupied, 1) over (order by id) as prev_occupied
         FROM occupancy_data
-        -- where 
-        -- timestamp between to_timestamp('2024-05-01 00:00:00', 'YYYY-MM-DD  HH24:MI:SS') 
-        -- and to_timestamp( '2024-09-02 00:00:00', 'YYYY-MM-DD HH24:MI:SS' ) and
-        -- device_token = '113'
+    WHERE 
+        timestamp < current_timestamp - INTERVAL '2 DAY'
+        order by timestamp desc
+    ),
+    occ_entrance as (
+        SELECT
+            id,
+            timestamp,
+            date_trunc('hour', timestamp) as timestamp_hourly,
+            date_trunc('day', timestamp) as timestamp_daily,
+            date_trunc('month', timestamp) as timestamp_monthly,
+            date_trunc('year', timestamp) as timestamp_yearly,
+            device_token,
+            occupied,
+            prev_occupied,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('hour', timestamp), device_token ) as sum_hourly,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('day', timestamp) , device_token) as sum_daily,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('month', timestamp), device_token) as sum_monthly,
+            sum(case when occupied = true and prev_occupied = false then 1 else 0 end) over ( partition by date_trunc('year', timestamp), device_token) as sum_yearly
+            FROM occ_lag
+    )
+select * from occ_entrance
+WITH
+    DATA;
+
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_occupancy_agg AS
+with 
+    occ_lag as (SELECT
+        id,
+        timestamp,
+        device_token,
+        occupied,
+        lag (occupied, 1) over (order by id) as prev_occupied
+        FROM occupancy_data
+        WHERE 
+            timestamp > current_timestamp - INTERVAL '2 DAY'
         order by timestamp desc
     ),
     occ_entrance as (
@@ -154,11 +192,31 @@ select * from occupancy_data
 
 select * from occupancy_agg
 
+select * from overview_occupancy_agg
+
 REFRESH MATERIALIZED VIEW CONCURRENTLY occupancy_agg;
 
-DROP MATERIALIZED VIEW IF EXISTS occupancy_lag
+DROP MATERIALIZED VIEW IF EXISTS occupancy_agg
+
+DROP MATERIALIZED VIEW IF EXISTS overview_occupancy_agg
 
 DROP INDEX IF EXISTS occupancy_lag_idx3;
+
+CREATE UNIQUE INDEX overview_occupancy_agg_idx3 ON overview_occupancy_agg (
+    id,
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    device_token,
+    occupied,
+    prev_occupied,
+    sum_hourly,
+    sum_daily,
+    sum_monthly,
+    sum_yearly
+);
 
 CREATE UNIQUE INDEX occupancy_agg_idx3 ON occupancy_agg(
     id,
@@ -208,11 +266,12 @@ select
     devices.device_name,
     devices.device_id, 
     devices.device_token,
-    toilet_infos.toilet_name as identifier,
-    toilet_infos.toilet_info_id as identifier_id,
-    device_types.device_type_name as namespace,
-    device_types.device_type_id as namespace_id, 
-    device_pairs.toilet_info_id,
+    toilet_infos.toilet_name,
+    toilet_infos.toilet_info_id,
+    toilet_infos.toilet_type_id,
+    device_types.device_type_name,
+    device_types.device_type_id , 
+    -- device_pairs.toilet_info_id,
     devices.tenant_id
 from
     device_pairs
@@ -226,15 +285,15 @@ WITH
 select * from analytics_devices
 
 CREATE UNIQUE INDEX analytics_devices_idx3 ON analytics_devices (
-device_name,
-device_id,
-device_token,
-identifier,
-identifier_id,
-namespace,
-namespace_id,
-toilet_info_id,
-tenant_id
+    device_name,
+    device_id,
+    device_token,
+    toilet_name,
+    toilet_info_id,
+    device_type_name,
+    device_type_id,
+    toilet_info_id,
+    tenant_id
 );
 
 DROP INDEX IF EXISTS analytics_devices_idx3;
@@ -939,28 +998,30 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS user_reaction_agg AS
         date_trunc('day', timestamp) timestamp_daily,
         date_trunc('month', timestamp) timestamp_monthly,
         date_trunc('year', timestamp) timestamp_yearly,
-        reaction, 
-    count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
-    count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
-    count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
-    count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
-    count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
-    count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
-    count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
-    count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all,
-    count(complaint) over (partition by date_trunc('hour', timestamp),complaint) as total_complaint_by_type_hourly,
-    count(complaint) over (partition by date_trunc('day', timestamp), complaint) as total_complaint_by_type_daily,
-    count(complaint) over (partition by date_trunc('month', timestamp), complaint) as total_complaint_by_type_monthly,
-    count(complaint) over (partition by date_trunc('year', timestamp), complaint) as total_complaint_by_type_yearly,
-    count(complaint) over (partition by date_trunc('hour', timestamp) ) as total_complaint_by_type_hourly_all,
-    count(complaint) over (partition by date_trunc('day', timestamp) ) as total_complaint_by_type_daily_all,
-    count(complaint) over (partition by date_trunc('month', timestamp) ) as total_complaint_by_type_monthly_all,
-    count(complaint) over (partition by date_trunc('year', timestamp) ) as total_complaint_by_type_yearly_all
+        reaction,
+        complaint,
+        toilet_id, 
+        count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
+        count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
+        count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
+        count(reaction) over (partition by date_trunc('year', timestamp), reaction) as total_reaction_by_type_yearly,
+        count(reaction) over (partition by date_trunc('hour', timestamp) ) as total_reaction_by_type_hourly_all,
+        count(reaction) over (partition by date_trunc('day', timestamp) ) as total_reaction_by_type_daily_all,
+        count(reaction) over (partition by date_trunc('month', timestamp) ) as total_reaction_by_type_monthly_all,
+        count(reaction) over (partition by date_trunc('year', timestamp) ) as total_reaction_by_type_yearly_all,
+        count(complaint) over (partition by date_trunc('hour', timestamp),complaint) as total_complaint_by_type_hourly,
+        count(complaint) over (partition by date_trunc('day', timestamp), complaint) as total_complaint_by_type_daily,
+        count(complaint) over (partition by date_trunc('month', timestamp), complaint) as total_complaint_by_type_monthly,
+        count(complaint) over (partition by date_trunc('year', timestamp), complaint) as total_complaint_by_type_yearly,
+        count(complaint) over (partition by date_trunc('hour', timestamp) ) as total_complaint_by_type_hourly_all,
+        count(complaint) over (partition by date_trunc('day', timestamp) ) as total_complaint_by_type_daily_all,
+        count(complaint) over (partition by date_trunc('month', timestamp) ) as total_complaint_by_type_monthly_all,
+        count(complaint) over (partition by date_trunc('year', timestamp) ) as total_complaint_by_type_yearly_all
     from 
         user_reactions
     where
         timestamp < current_timestamp - INTERVAL '2 DAY'
-    group by timestamp, reaction, complaint
+    group by timestamp, reaction, complaint, toilet_id
     order by timestamp desc, reaction
 WITH DATA;
 
@@ -974,6 +1035,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_user_reaction_agg AS
         date_trunc('year', timestamp) timestamp_yearly,
         reaction,
         complaint,
+        toilet_id,
     count(reaction) over (partition by date_trunc('hour', timestamp),reaction) as total_reaction_by_type_hourly,
     count(reaction) over (partition by date_trunc('day', timestamp), reaction) as total_reaction_by_type_daily,
     count(reaction) over (partition by date_trunc('month', timestamp), reaction) as total_reaction_by_type_monthly,
@@ -994,7 +1056,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_user_reaction_agg AS
         user_reactions
     where
         timestamp > current_timestamp - INTERVAL '2 DAY'
-    group by timestamp, reaction, complaint
+    group by timestamp, reaction, complaint, toilet_id
     order by timestamp desc, reaction
 WITH DATA;
 
@@ -1013,6 +1075,8 @@ CREATE UNIQUE INDEX user_reaction_agg_idx3 ON user_reaction_agg (
     timestamp_monthly,
     timestamp_yearly,
     reaction,
+    complaint,
+    toilet_id,
     total_reaction_by_type_hourly,
     total_reaction_by_type_daily,
     total_reaction_by_type_monthly,
@@ -1025,3 +1089,68 @@ CREATE UNIQUE INDEX user_reaction_agg_idx3 ON user_reaction_agg (
 
 
 select distinct timestamp_hourly, total_reaction_by_type_hourly, reaction from user_reaction_agg order by timestamp_hourly desc
+
+
+
+
+
+-- fail
+WITH
+    DEVICE_LIST AS (
+        select
+            device_token,
+            device_type_id,
+            cubical_id
+        from overview_cubical_devices
+        where
+            cubical_id = ?
+        limit 1
+    ),
+    TRAFFIC_COUNT_DATA AS (
+        SELECT enter_day
+        FROM overview_counter_data_agg
+        WHERE
+            timestamp = to_timestamp(
+                '2024-10-08 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        LIMIT 1
+    ),
+    AUTOCLEAN_DATA AS (
+        SELECT total_auto_clean_daily
+        FROM overview_cleaner_reports_agg
+        WHERE
+            created_at_daily = to_timestamp(
+                '2024-10-08 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        LIMIT 1
+    ),
+    TOTALCLEAN_DATA AS (
+        SELECT total_freshen_daily
+        FROM overview_cleaner_reports_agg
+        WHERE
+            created_at_daily = to_timestamp(
+                '2024-10-08 00:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        LIMIT 1
+    )
+SELECT
+    COALESCE(enter_day, 0) AS TRAFFIC_COUNT_TODAY,
+    COALESCE(
+        total_auto_clean_daily,
+        0
+    ) AS TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+    -- LAST_AUTO_CLEAN_ACTIVATED,
+    COALESCE(total_freshen_daily, 0) AS TOTAL_CLEAN_TODAY
+    -- LAST_CLEAN
+FROM
+    DEVICE_LIST
+    CROSS JOIN TRAFFIC_COUNT_DATA
+    CROSS JOIN AUTOCLEAN_DATA
+    CROSS JOIN TOTALCLEAN_DATA
+
+
+
+
