@@ -541,6 +541,8 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY overview_panic_btn_agg
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY panic_btn_agg
 
+DROP INDEX panic_btn_agg_idx3
+
 CREATE UNIQUE INDEX panic_btn_agg_idx3 ON panic_btn_agg (
     id,
     device_token,
