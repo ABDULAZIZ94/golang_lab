@@ -269,6 +269,7 @@ select
     toilet_infos.toilet_name,
     toilet_infos.toilet_info_id,
     toilet_infos.toilet_type_id,
+    toilet_infos.location_id,
     device_types.device_type_name,
     device_types.device_type_id , 
     -- device_pairs.toilet_info_id,
@@ -290,6 +291,8 @@ CREATE UNIQUE INDEX analytics_devices_idx3 ON analytics_devices (
     device_token,
     toilet_name,
     toilet_info_id,
+    toilet_type_id,
+    location_id,
     device_type_name,
     device_type_id,
     toilet_info_id,
@@ -453,47 +456,82 @@ DROP MATERIALIZED VIEW IF EXISTS overview_counter_data_agg
 select * from panic_btn_data limit 1
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS panic_btn_agg AS
-    SELECT
-        id,
-        device_token,
-        panic_button,
-        timestamp,
-        date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_minutely,
-        date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_hourly,
-        date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
-        date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
-        date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_minutely,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_hourly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_daily,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_monthly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_yearly
-        from panic_btn_data
-        WHERE
-            timestamp < current_timestamp - INTERVAL '2 DAY'
+    WITH
+        PANIC_LAG AS (
+            SELECT
+                id,
+                device_token,
+                panic_button,
+                lag (panic_button, 1) over (order by id) as prev_panic_button,
+                timestamp
+            FROM
+                PANIC_BTN_DATA
+        ),
+        PANIC_DATA AS(
+            SELECT
+                id,
+                device_token,
+                panic_button,
+                timestamp,
+                date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_minutely,
+                date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_hourly,
+                date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
+                date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
+                date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_minutely,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_hourly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_daily,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_monthly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_yearly
+                from PANIC_LAG
+                WHERE
+                    timestamp < current_timestamp - INTERVAL '2 DAY'
+                ORDER BY TIMESTAMP DESC, device_token
+        )
+        SELECT * FROM PANIC_DATA
 WITH DATA;
 
+delete from panic_btn_data where timestamp < to_timestamp('2024-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS overview_panic_btn_agg AS
-    SELECT
-        id,
-        device_token,
-        panic_button,
-        timestamp,
-        date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_minutely,
-        date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_hourly,
-        date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
-        date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
-        date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_minutely,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_hourly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_daily,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_monthly,
-        sum (case when panic_button = true then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_yearly
-        from panic_btn_data
-        WHERE
-            timestamp > current_timestamp - INTERVAL '2 DAY'
+    WITH
+        PANIC_LAG AS (
+            SELECT
+                id,
+                device_token,
+                panic_button,
+                lag (panic_button, 1) over (order by id) as prev_panic_button,
+                timestamp
+            FROM
+                PANIC_BTN_DATA
+        ),
+        PANIC_DATA AS(
+            SELECT
+                id,
+                device_token,
+                panic_button,
+                timestamp,
+                date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_minutely,
+                date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_hourly,
+                date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
+                date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
+                date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_minutely,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_hourly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_daily,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_monthly,
+                sum (case when panic_button = true and prev_panic_button = false then 1 else 0 end) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as total_panic_button_yearly
+                from PANIC_LAG
+                WHERE
+                    timestamp > current_timestamp - INTERVAL '2 DAY'
+                ORDER BY TIMESTAMP DESC, device_token
+        )
+        SELECT * FROM PANIC_DATA
 WITH DATA;
+
+select * from overview_panic_btn_agg
+
+select * from panic_btn_agg
 
 DROP MATERIALIZED VIEW IF EXISTS overview_panic_btn_agg
 
@@ -520,6 +558,22 @@ CREATE UNIQUE INDEX panic_btn_agg_idx3 ON panic_btn_agg (
     total_panic_button_yearly
 );
 
+CREATE UNIQUE INDEX overview_panic_btn_agg_idx3 ON overview_panic_btn_agg (
+    id,
+    device_token,
+    panic_button,
+    timestamp,
+    timestamp_minutely,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    total_panic_button_minutely,
+    total_panic_button_hourly,
+    total_panic_button_daily,
+    total_panic_button_monthly,
+    total_panic_button_yearly
+);
 
 -- freshener data
 select * from fragrance_data
@@ -1278,3 +1332,41 @@ CREATE UNIQUE INDEX overview_money_agg_idx3 ON overview_money_agg (
         total_ammount_yearly,
         tenant_id
 );
+
+
+-- violation agg
+CREATE MATERIALIZED VIEW IF NOT EXISTS violation_agg AS
+    select 
+        id, 
+        violation_type_id, 
+        video_url,
+        device_token,
+        created_at,
+        date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_hourly, 
+        date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_daily,
+        date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_monthly,
+        date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_yearly,
+        count(violation) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_violation_hourly,
+        count(violation) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_violation_daily,
+        count(violation) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_violation_monthly,
+        count(violation) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_violation_yearly,
+        violation
+    from 
+        violation_data
+    where
+        created_at > current_timestamp - INTERVAL '2 DAY'
+    order by created_at desc
+WITH DATA;
+
+UPDATE violation_data SET device_token = '10000';
+
+
+select distinct device_id from violation_data
+
+select * from devices where device_name like '%cam%'
+
+select device_token, device_id from devices where device_id in (
+    'd06ce291-d7de-46de-68c0-560e10f69dc2',
+    'bfacd822-e2ee-4a0b-4042-58f0ada3bb48',
+    '0e933e0b-9e5c-46a4-509f-3c68529f876d'
+)
