@@ -1199,4 +1199,45 @@ select distinct timestamp_hourly, total_reaction_by_type_hourly, reaction from u
 
 
 
--- fail
+-- money agg
+CREATE MATERIALIZED VIEW IF NOT EXISTS overview_money_agg AS
+    select 
+        created_at, 
+        date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_hourly, 
+        date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_daily,
+        date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_monthly,
+        date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_yearly,
+        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'),ammount) as total_ammount_by_type_hourly,
+        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_daily,
+        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_monthly,
+        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_yearly,
+        tenant_id
+    from 
+        money_data
+    where
+        created_at > current_timestamp - INTERVAL '2 DAY'
+    group by created_at, tenant_id
+    order by created_at desc
+WITH DATA;
+
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS money_agg AS
+    select 
+        created_at, 
+        date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_hourly, 
+        date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_daily,
+        date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_monthly,
+        date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_yearly,
+        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'),ammount) as total_ammount_by_type_hourly,
+        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_daily,
+        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_monthly,
+        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), ammount) as total_ammount_by_type_yearly,
+        tenant_id
+    from 
+        money_data
+    where
+        created_at > current_timestamp - INTERVAL '2 DAY'
+    group by created_at, tenant_id
+    order by created_at desc
+WITH DATA;

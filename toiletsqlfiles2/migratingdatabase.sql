@@ -560,3 +560,6 @@ FROM user_types lt
     ) rt ON lt.user_type_id = rt.user_type_id
 WHERE
     lt.user_type_id IS NULL;
+
+
+
