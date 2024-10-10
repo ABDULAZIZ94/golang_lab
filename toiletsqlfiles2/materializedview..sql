@@ -1207,10 +1207,10 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_money_agg AS
         date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_daily,
         date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_monthly,
         date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_yearly,
-        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_hourly,
-        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_daily,
-        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_monthly,
-        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_yearly,
+        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_hourly,
+        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_daily,
+        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_monthly,
+        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_yearly,
         tenant_id
     from 
         money_data
@@ -1229,10 +1229,10 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS money_agg AS
         date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_daily,
         date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_monthly,
         date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') created_at_yearly,
-        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_hourly,
-        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_daily,
-        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_monthly,
-        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_by_type_yearly,
+        sum(ammount) over (partition by date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_hourly,
+        sum(ammount) over (partition by date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_daily,
+        sum(ammount) over (partition by date_trunc('month', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_monthly,
+        sum(ammount) over (partition by date_trunc('year', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur')) as total_ammount_yearly,
         tenant_id
     from 
         money_data
@@ -1242,16 +1242,26 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS money_agg AS
     order by created_at desc
 WITH DATA;
 
+DROP MATERIALIZED VIEW money_agg
+
+DROP MATERIALIZED VIEW overview_money_agg
+
+DROP MATERIALIZED VIEW overview_money_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY overview_money_agg
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY money_agg
+
 CREATE UNIQUE INDEX money_agg_idx3 ON money_agg (
     created_at,
     created_at_hourly,
     created_at_daily,
     created_at_monthly,
     created_at_yearly,
-    total_ammount_by_type_hourly,
-    total_ammount_by_type_daily,
-    total_ammount_by_type_monthly,
-    total_ammount_by_type_yearly,
+    total_ammount_hourly,
+    total_ammount_daily,
+    total_ammount_monthly,
+    total_ammount_yearly,
     tenant_id
 );
 
@@ -1262,9 +1272,9 @@ CREATE UNIQUE INDEX overview_money_agg_idx3 ON overview_money_agg (
         created_at_daily,
         created_at_monthly,
         created_at_yearly,
-        total_ammount_by_type_hourly,
-        total_ammount_by_type_daily,
-        total_ammount_by_type_monthly,
-        total_ammount_by_type_yearly,
+        total_ammount_hourly,
+        total_ammount_daily,
+        total_ammount_monthly,
+        total_ammount_yearly,
         tenant_id
 );
