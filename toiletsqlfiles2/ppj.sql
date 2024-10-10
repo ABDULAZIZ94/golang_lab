@@ -1,11 +1,64 @@
 
 -- ppj tenant id 59944171-3a4a-460d-5897-8bb38c524d54 
 
+-- details
+new location B13
+
+location_id = 587339bc-5d2f-4f5b-4e85-53aab5f8cefc 
+
+new toilet_id
+---------------------------
+
+toilet_male = 1e4a1133-d081-4479-702e-78b0684570cf 
+
+toilet_female = 7a48f840-db75-41f2-69a5-69339074f504 
+
+toilet_oku 6de1c976-57c5-4cfb-4dd1-c65f1fb39029 
+
+gateways
+------------
+
+gateway id = d1438e09-c31b-418e-56ea-56acb1604881 
+
+gateway_token = B13_GATEWAY_01
+
+gateway id = 35e1a1ab-7186-4625-71dd-020e8a7120b8 
+
+gateway_token = B13_GATEWAY_02
+
+feedback_panels
+------------------
+
+device_id: f6e0e3eb-7b83-4024-63c8-9debd870fa1f 
+
+device_name FEEDBACK_PANEL_B13_1
+
+device_token:8
+
+device_id: b63bba7c-fe60-46cf-730d-e6b84f7fbbf9 
+
+device_name FEEDBACK_PANEL_B13_2
+
+device_token:9
+
+
 url yang saufi minta
 -------------------
 
+SELECT * FROM public.devices
 
-SELECT * FROM public.devices where device_name like '%OCC%' LIMIT 100
+SELECT * FROM public.devices where device_token = '103'
+
+select location_name, toilet_name, device_name 
+from device_pairs 
+join devices on devices.device_id = device_pairs.device_id
+join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
+join locations on toilet_infos.location_id = locations.location_id
+where devices.device_token = '300'
+
+
+
+SELECT * FROM public.devices where device_name like '%GATE%' LIMIT 100
 
 select * from locations
 
@@ -16,41 +69,103 @@ select * from locations
  
 {{localhost}}:7772/api/v1/telemetry/ graph/analytic/ppj/{toiletTypeID}/{startDate}/{endDate}/{agg}
 
---
 
-new location B13 
-location_id = 587339bc-5d2f-4f5b-4e85-53aab5f8cefc 
 
+
+
+
+
+
+
+-- new location B13 
+-- location_id = 587339bc-5d2f-4f5b-4e85-53aab5f8cefc 
+
+-- gateway 1 B13_GATEWAY_01 d1438e09-c31b-418e-56ea-56acb1604881 
+-- gateway 2 B13_GATEWAY_02  35e1a1ab-7186-4625-71dd-020e8a7120b8 
 select * from device_pairs 
 join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
 where toilet_infos.location_id = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
 
-select * from public.devices order by REGEXP_REPLACE(device_token, '[^0-9]', '', 'g')::int
+select * from public.devices 
+-- where device_type_id = 7
+order by REGEXP_REPLACE(device_token, '[^0-9]', '', 'g')::int
+
+select * from device_pairs where device_id = 'f6e0e3eb-7b83-4024-63c8-9debd870fa1f'
+
+select * from public.device_pairs where gateway_id = 'd1438e09-c31b-418e-56ea-56acb1604881' --bind to gateway 1
+
+select * from public.device_pairs where gateway_id = '35e1a1ab-7186-4625-71dd-020e8a7120b8'  -- bind to gateway 2
+
+
+
 
 
 -- device_id 8 feedback panel f6e0e3eb-7b83-4024-63c8-9debd870fa1f 
+
+select * from device_pairs
+
 select * from device_pairs where device_id = 'f6e0e3eb-7b83-4024-63c8-9debd870fa1f'
 
-select * from device_pairs where gateway_id = 'f6e0e3eb-7b83-4024-63c8-9debd870fa1f'
+
+select * from public.device_pairs where gateway_id = 'f6e0e3eb-7b83-4024-63c8-9debd870fa1f'
 
 
--- eg kemaman
+-- feedback panel 2 device_token 9 device id b63bba7c-fe60-46cf-730d-e6b84f7fbbf9 
+{"error":false,"message":"Device paring success . ID: b63bba7c-fe60-46cf-730d-e6b84f7fbbf9, 35e1a1ab-7186-4625-71dd-020e8a7120b8"}
 {"error":false,"message":"Device paring success . ID: f6e0e3eb-7b83-4024-63c8-9debd870fa1f, d1438e09-c31b-418e-56ea-56acb1604881"}
-
-select * from device_pairs where device_id = 'a5e938c2-744a-4755-6fd2-150a235e1050'
-
-select * from device_pairs where gateway_id = 'a5e938c2-744a-4755-6fd2-150a235e1050'
 
 
 -- b13 ip
+
+select * from public.devices where device_id ='72f1d686-2dcc-4e2a-42f1-c270e8bbddf3'
+
+select * from public.locations
+
 b13 - 192.168.1.64 (1) b13- 192.168.1. 225 (2) 
 
+63f35b10-dc90-4802-6091-49f8474e3e09  --blower male
+f1eccef2-0941-4e9e-5cca-8ac9f484c61d  --env male
 
-new toilet_id
+ef7c85ff-8d6e-4226-5a6f-2ff6d0257bce  -- blower female
+c7d18e5f-a504-40be-55f3-29cd34644045  --env female
+
+{"error":false,"message":"Device created . ID: 7fbb2af4-c911-4fc7-6a22-8e651d316a65"} --occ m1
+
+{"error":false,"message":"Device created . ID: 1114deeb-b2df-4c50-5ca3-92088532320a"} -- occ m2
+
+{"error":false,"message":"Device created . ID: e2f719cb-bb74-4dca-776a-14f1077d062e"} --occ m3
+
+{"error":false,"message":"Device created . ID: 81d738d5-c81d-411a-53cc-224d723a59b9"} -- occ m4
+
+{"error":false,"message":"Device created . ID: 2cc2ec77-860b-4971-51fc-23d245652287"} -- occ f1
+
+{"error":false,"message":"Device created . ID: ea27ea67-7147-4de3-462c-9f52cadf97a4"} -- occ f2
+
+{"error":false,"message":"Device created . ID: 4686506e-6e98-42eb-4f54-99bb184313c3"} -- occ f3
+
+{"error":false,"message":"Device created . ID: 3980aab1-1a39-4ac0-4049-83efb130a22f"} -- occ f4
+
+{"error":false,"message":"Device created . ID: 2128e434-5fbc-4cda-4759-95eba64bd61b"} -- ammonia
+
+
+{"error":false,"message":"Device created . ID: 5fb623c4-8c16-467c-4cda-ef43e2013624"} -- freshener male
+
+{"error":false,"message":"Device created . ID: ab4bd26b-b455-445a-7027-bbf36584ec57"} -- freshener female
+
+
+select * from public.devices
+
+
+env male
+{"error":false,"message":"Device created . ID: ef7c85ff-8d6e-4226-5a6f-2ff6d0257bce"}
+
+
+b13 toilet_id
 ---------------------------
 toilet_male = 1e4a1133-d081-4479-702e-78b0684570cf
 toilet_female = 7a48f840-db75-41f2-69a5-69339074f504
-toilet_oku 6de1c976-57c5-4cfb-4dd1-c65f1fb39029
+
+select * from public.toilet_infos where toilet_info_id = '6de1c976-57c5-4cfb-4dd1-c65f1fb39029'
 
 --m1 
 {"error":false,"message":"Cubical info created ID: af3cf2b6-bf8f-49d8-5546-3f97b2ff16c5"}
@@ -171,6 +286,8 @@ where location_id = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
 
 -- all saujana hijau toilet 
 -- saujana hijau location id 98998a6b-4be1-4ff4-5dd1-8a8e914943ee 
+
+select * from public.devices where device_id = '35e1a1ab-7186-4625-71dd-020e8a7120b8' 
 
 
 -- device cubile pair
