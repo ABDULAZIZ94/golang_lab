@@ -678,11 +678,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS ammonia_data_agg AS
         date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
         date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
         date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_minutely,
-        avg (ammonia_level) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_hourly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_daily,
-        avg (ammonia_level) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_monthly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_yearly
+        avg (ammonia_level) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_ammonia_minutely,
+        avg (ammonia_level) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_ammonia_hourly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_ammonia_daily,
+        avg (ammonia_level) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_ammonia_monthly,
+        avg (ammonia_level) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_ammonia_yearly
     from ammonia_data
     WHERE 
         timestamp < current_timestamp - INTERVAL '2 DAY'
@@ -699,11 +699,46 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_ammonia_data_agg AS
         date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_daily,
         date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_monthly,
         date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') timestamp_yearly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('minute', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_minutely,
-        avg (ammonia_level) over (PARTITION BY date_trunc('hour', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_hourly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_daily,
-        avg (ammonia_level) over (PARTITION BY date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_monthly,
-        avg (ammonia_level) over (PARTITION BY date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'), device_token) as avg_fragrance_yearly
+avg(ammonia_level) over (
+    PARTITION BY
+        date_trunc(
+            'minute',
+            timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'
+        ),
+        device_token
+) as avg_ammonia_minutely,
+avg(ammonia_level) over (
+    PARTITION BY
+        date_trunc(
+            'hour',
+            timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'
+        ),
+        device_token
+) as avg_ammonia_hourly,
+avg(ammonia_level) over (
+    PARTITION BY
+        date_trunc(
+            'day',
+            timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'
+        ),
+        device_token
+) as avg_ammonia_daily,
+avg(ammonia_level) over (
+    PARTITION BY
+        date_trunc(
+            'month',
+            timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'
+        ),
+        device_token
+) as avg_ammonia_monthly,
+avg(ammonia_level) over (
+    PARTITION BY
+        date_trunc(
+            'year',
+            timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur'
+        ),
+        device_token
+) as avg_ammonia_yearly
     from ammonia_data
     WHERE 
         timestamp > current_timestamp - INTERVAL '2 DAY'
