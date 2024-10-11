@@ -762,6 +762,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS cleaner_reports_agg AS
         toilet_type_id,
         cubical_id,
         check_in_ts,
+        duration,
         date_trunc('minute', created_at) created_at_minutely,
         date_trunc('hour', created_at) created_at_hourly,
         date_trunc('day', created_at) created_at_daily,
@@ -777,6 +778,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS cleaner_reports_agg AS
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_auto_clean_daily,
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_auto_clean_monthly,
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_auto_clean_yearly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as avg_duration_minutely,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as avg_duration_hourly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as avg_duration_daily,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as avg_duration_monthly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as avg_duration_yearly,
         freshen_up_state,
         auto_clean_state,
         tenant_id
@@ -808,6 +814,11 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS overview_cleaner_reports_agg AS
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as total_auto_clean_daily,
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as total_auto_clean_monthly,
         sum (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as total_auto_clean_yearly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('minute', created_at), location_id, toilet_type_id) as avg_duration_minutely,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('hour', created_at), location_id, toilet_type_id) as avg_duration_hourly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('day', created_at), location_id, toilet_type_id) as avg_duration_daily,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('month', created_at), location_id, toilet_type_id) as avg_duration_monthly,
+        avg (case when auto_clean_state = '1' then 1 else 0 end) over (PARTITION BY date_trunc('year', created_at), location_id, toilet_type_id) as avg_duration_yearly,
         freshen_up_state,
         auto_clean_state,
         tenant_id
@@ -844,6 +855,11 @@ CREATE UNIQUE INDEX cleaner_reports_agg_idx3 ON cleaner_reports_agg (
     total_auto_clean_daily,
     total_auto_clean_monthly,
     total_auto_clean_yearly,
+    avg_duration_minutely,
+    avg_duration_hourly,
+    avg_duration_daily,
+    avg_duration_monthly,
+    avg_duration_yearly,
     freshen_up_state,
     auto_clean_state,
     tenant_id
@@ -870,6 +886,11 @@ CREATE UNIQUE INDEX overview_cleaner_reports_agg_idx3 ON overview_cleaner_report
     total_auto_clean_daily,
     total_auto_clean_monthly,
     total_auto_clean_yearly,
+    avg_duration_minutely,
+    avg_duration_hourly,
+    avg_duration_daily,
+    avg_duration_monthly,
+    avg_duration_yearly,
     freshen_up_state,
     auto_clean_state,
     tenant_id
@@ -1391,3 +1412,98 @@ WITH DATA;
 select * from analytics_cubical_pair
 
 
+
+
+
+--fail
+
+
+WITH
+    TOILET_LIST as (
+        SELECT ti.toilet_info_id
+        FROM toilet_infos ti
+        where
+            tenant_id = '59944171-3a4a-460d-5897-8bb38c524d54'
+    ),
+    GENTIME AS (
+        SELECT uplinkts
+        FROM generate_series(
+                date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 HOUR'
+            ) uplinkts
+    ),
+    SMELLY_TOILET_DATA as (
+        select distinct
+            on (timestamp_daily) uplinkts,
+            sum(total_complaint_by_type_daily) as smelly_toilet
+        from
+            gentime
+            left join user_reaction_agg on uplinkts = timestamp_daily
+        where
+            complaint = '1'
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+        group by uplinkts, timestamp_daily
+    ),
+    OUT_OF_SUPPLIES_DATA as (
+        select distinct
+            on (timestamp_daily) uplinkts,
+            smelly_toilet,
+            sum(total_complaint_by_type_daily) as out_of_supply
+        from
+            smelly_toilet_data
+            left join user_reaction_agg on uplinkts = timestamp_daily
+        where
+            complaint = '2'
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+        group by uplinkts, smelly_toilet, timestamp_daily
+    ),
+    WET_FLOOR_DATA as (
+        select distinct
+            on (timestamp_daily) uplinkts,
+            smelly_toilet,
+            out_of_supply,
+            sum(total_complaint_by_type_daily) as wet_floor
+        from
+            OUT_OF_SUPPLIES_DATA
+            left join user_reaction_agg on uplinkts = timestamp_daily
+        where
+            complaint = '3'
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+        group by uplinkts, smelly_toilet, out_of_supply, timestamp_daily
+    ),
+    PLUMBING_ISSUES_DATA as (
+        select distinct
+            on (timestamp_daily) uplinkts,
+            smelly_toilet,
+            out_of_supply,
+            wet_floor,
+             sum(total_complaint_by_type_daily) as plumbing_issues
+        from
+            wet_floor_data
+            left join user_reaction_agg on uplinkts = timestamp_daily
+        where
+            complaint = '4'
+            and toilet_id in (
+                select toilet_info_id
+                from toilet_list
+            )
+        group by uplinkts, smelly_toilet, out_of_supply, wet_floor, timestamp_daily
+    )
+select *
+from PLUMBING_ISSUES_DATA
