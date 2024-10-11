@@ -1372,3 +1372,22 @@ select device_token, device_id from devices where device_id in (
     'bfacd822-e2ee-4a0b-4042-58f0ada3bb48',
     '0e933e0b-9e5c-46a4-509f-3c68529f876d'
 )
+
+
+
+
+-- cubical analytics
+CREATE MATERIALIZED VIEW IF NOT EXISTS analytics_cubical_pair AS
+    select 
+        devices.device_token,
+        device_cubical_pairs.cubical_id 
+    from 
+        device_cubical_pairs
+    join
+        devices on devices.device_id = device_cubical_pairs.device_id
+WITH DATA;
+
+
+select * from analytics_cubical_pair
+
+
