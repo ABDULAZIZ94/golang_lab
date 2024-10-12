@@ -79,23 +79,74 @@ DROP INDEX env_agg_idx
 
 CREATE UNIQUE INDEX env_agg_idx ON env_agg (uplinkts, device_token);
 
+
+
 REFRESH MATERIALIZED VIEW CONCURRENTLY env_agg
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY overview_env_agg
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS env_agg as
-select
-    avg(iaq)::int as iaq,
-    avg(temperature)::int as temperature,
-    avg(humidity)::int as humidity,
-    avg(lux)::int as lux,
-    date_trunc('HOUR', timestamp) as uplinkts,
+CREATE UNIQUE INDEX env_agg_idx3 ON env_agg (
+        env_data_id,
+        timestamp,
+        timestamp_hourly,
+        timestamp_daily,
+        timestamp_monthly,
+        timestamp_yearly,
+        avg_iaq_minutely,
+        avg_iaq_hourly,
+        avg_iaq_daily,
+        avg_iaq_monthly,
+        avg_iaq_yearly,
+        avg_temperature_minutely,
+        avg_temperature_hourly,
+        avg_temperature_daily,
+        avg_temperature_monthly,
+        avg_temperature_yearly,
+        avg_humidity_minutely,
+        avg_humidity_hourly,
+        avg_humidity_daily,
+        avg_humidity_monthly,
+        avg_humidity_yearly,
+        avg_lux_minutely,
+        avg_lux_hourly,
+        avg_lux_daily,
+        avg_lux_monthly,
+        avg_lux_yearly,
+        device_token
+);
+
+
+CREATE UNIQUE INDEX overview_env_agg_idx3 ON overview_env_agg (
+    env_data_id,
+    timestamp,
+    timestamp_hourly,
+    timestamp_daily,
+    timestamp_monthly,
+    timestamp_yearly,
+    avg_iaq_minutely,
+    avg_iaq_hourly,
+    avg_iaq_daily,
+    avg_iaq_monthly,
+    avg_iaq_yearly,
+    avg_temperature_minutely,
+    avg_temperature_hourly,
+    avg_temperature_daily,
+    avg_temperature_monthly,
+    avg_temperature_yearly,
+    avg_humidity_minutely,
+    avg_humidity_hourly,
+    avg_humidity_daily,
+    avg_humidity_monthly,
+    avg_humidity_yearly,
+    avg_lux_minutely,
+    avg_lux_hourly,
+    avg_lux_daily,
+    avg_lux_monthly,
+    avg_lux_yearly,
     device_token
-from enviroment_data
-group by
-    uplinkts,
-    device_token
-WITH DATA;
+);
+
+
 
 select * from enviroment_data
 
@@ -347,7 +398,7 @@ with
             counter_data_id,
             timestamp,
             date_trunc('hour',timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_hourly,
-            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_day,
+            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_daily,
             date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_monthly,
             date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_year,
             device_token,
@@ -381,7 +432,7 @@ with
             counter_data_id,
             timestamp,
             date_trunc('hour',timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_hourly,
-            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_day,
+            date_trunc('day', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_daily,
             date_trunc('month', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_monthly,
             date_trunc('year', timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Kuala_Lumpur') as timestamp_year,
             device_token,
@@ -405,7 +456,7 @@ CREATE UNIQUE INDEX counter_data_agg_idx4 ON counter_data_agg (
     counter_data_id,
     timestamp,
     timestamp_hourly,
-    timestamp_day,
+    timestamp_daily,
     timestamp_monthly,
     timestamp_year,
     device_token,
@@ -421,7 +472,7 @@ CREATE UNIQUE INDEX overview_counter_data_agg_idx4 ON overview_counter_data_agg 
     counter_data_id,
     timestamp,
     timestamp_hourly,
-    timestamp_day,
+    timestamp_daily,
     timestamp_monthly,
     timestamp_year,
     device_token,
@@ -728,11 +779,11 @@ CREATE UNIQUE INDEX ammonia_data_idx3 ON ammonia_data_agg (
     timestamp_daily,
     timestamp_monthly,
     timestamp_yearly,
-    avg_fragrance_minutely,
-    avg_fragrance_hourly,
-    avg_fragrance_daily,
-    avg_fragrance_monthly,
-    avg_fragrance_yearly
+    avg_ammonia_minutely,
+    avg_ammonia_hourly,
+    avg_ammonia_daily,
+    avg_ammonia_monthly,
+    avg_ammonia_yearly
 );
 
 CREATE UNIQUE INDEX overview_ammonia_data_idx3 ON overview_ammonia_data_agg (
@@ -745,11 +796,11 @@ CREATE UNIQUE INDEX overview_ammonia_data_idx3 ON overview_ammonia_data_agg (
         timestamp_daily,
         timestamp_monthly,
         timestamp_yearly,
-        avg_fragrance_minutely,
-        avg_fragrance_hourly,
-        avg_fragrance_daily,
-        avg_fragrance_monthly,
-        avg_fragrance_yearly
+        avg_ammonia_minutely,
+        avg_ammonia_hourly,
+        avg_ammonia_daily,
+        avg_ammonia_monthly,
+        avg_ammonia_yearly
 );
 
 -- cleaner report agg
@@ -1412,98 +1463,49 @@ WITH DATA;
 select * from analytics_cubical_pair
 
 
+CREATE UNIQUE INDEX analytics_cubical_pair_idx ON analytics_cubical_pair(
+    device_token,
+    cubical_id
+);
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY analytics_cubical_pair
 
 
-
---fail
-
+-- 
 
 WITH
-    TOILET_LIST as (
-        SELECT ti.toilet_info_id
-        FROM toilet_infos ti
-        where
-            tenant_id = '59944171-3a4a-460d-5897-8bb38c524d54'
+    DEVICE_LIST AS (
+        SELECT DEVICE_TOKEN
+        FROM ANALYTICS_DEVICES
+        WHERE
+            LOCATION_ID = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
     ),
     GENTIME AS (
-        SELECT uplinkts
+        SELECT timestamp
         FROM generate_series(
                 date_trunc(
                     'HOUR', TO_TIMESTAMP(
-                        '2024-10-06 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                        '2024-09-02 07:00:00', 'YYYY-MM-DD HH24:MI:SS'
                     )
                 ), date_trunc(
                     'HOUR', TO_TIMESTAMP(
-                        '2024-10-07 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                        '2024-10-03 23:59:59', 'YYYY-MM-DD HH24:MI:SS'
                     )
                 ), interval '1 HOUR'
-            ) uplinkts
+            ) timestamp
     ),
-    SMELLY_TOILET_DATA as (
-        select distinct
-            on (timestamp_daily) uplinkts,
-            sum(total_complaint_by_type_daily) as smelly_toilet
-        from
-            gentime
-            left join user_reaction_agg on uplinkts = timestamp_daily
-        where
-            complaint = '1'
-            and toilet_id in (
-                select toilet_info_id
-                from toilet_list
-            )
-        group by uplinkts, timestamp_daily
-    ),
-    OUT_OF_SUPPLIES_DATA as (
-        select distinct
-            on (timestamp_daily) uplinkts,
-            smelly_toilet,
-            sum(total_complaint_by_type_daily) as out_of_supply
-        from
-            smelly_toilet_data
-            left join user_reaction_agg on uplinkts = timestamp_daily
-        where
-            complaint = '2'
-            and toilet_id in (
-                select toilet_info_id
-                from toilet_list
-            )
-        group by uplinkts, smelly_toilet, timestamp_daily
-    ),
-    WET_FLOOR_DATA as (
-        select distinct
-            on (timestamp_daily) uplinkts,
-            smelly_toilet,
-            out_of_supply,
-            sum(total_complaint_by_type_daily) as wet_floor
-        from
-            OUT_OF_SUPPLIES_DATA
-            left join user_reaction_agg on uplinkts = timestamp_daily
-        where
-            complaint = '3'
-            and toilet_id in (
-                select toilet_info_id
-                from toilet_list
-            )
-        group by uplinkts, smelly_toilet, out_of_supply, timestamp_daily
-    ),
-    PLUMBING_ISSUES_DATA as (
-        select distinct
-            on (timestamp_daily) uplinkts,
-            smelly_toilet,
-            out_of_supply,
-            wet_floor,
-             sum(total_complaint_by_type_daily) as plumbing_issues
-        from
-            wet_floor_data
-            left join user_reaction_agg on uplinkts = timestamp_daily
-        where
-            complaint = '4'
-            and toilet_id in (
-                select toilet_info_id
-                from toilet_list
-            )
-        group by uplinkts, smelly_toilet, out_of_supply, wet_floor, timestamp_daily
+    AMMONIA_DATA AS (
+        SELECT DISTINCT
+            ON (TIMESTAMP_HOURLY) AVG_AMMONIA_HOURLY AS AMMONIA_LEVEL,
+             GENTIME.TIMESTAMP AS UPLINKTS
+        FROM
+            AMMONIA_DATA_AGG
+        JOIN GENTIME ON GENTIME.TIMESTAMP = TIMESTAMP_HOURLY
+        JOIN DEVICE_LIST USING (DEVICE_TOKEN) 
     )
-select *
-from PLUMBING_ISSUES_DATA
+SELECT *
+FROM AMMONIA_DATA
+
+
+
+
