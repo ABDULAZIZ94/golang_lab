@@ -30,3 +30,15 @@ delete from public.event_logs where timestamp=NULL
 delete from public.event_logs where date_time < to_timestamp('2024-08-30 00:00:00','YYYY-MM-DD HH24:MI:SS')
 
 delete from public.event_logs where metertoken IS NULL
+
+
+
+UPDATE "loads"
+SET
+    "updated_at" = '2024-10-17 23:58:05.973'
+WHERE
+    id = 'fadbe8c3-e90b-41e0-6e3b-ba6731c5adb1'
+    AND "loads"."deleted_at" IS NULL
+
+
+

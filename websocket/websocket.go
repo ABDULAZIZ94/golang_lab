@@ -4,68 +4,43 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
 
-type webSocketHandler struct {
-	upgrader websocket.Upgrader
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool { return true }, // Allow requests from any origin
 }
 
-func (wsh webSocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c, err := wsh.upgrader.Upgrade(w, r, nil)
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("error %s when upgrading connection to websocket", err)
+		log.Println("Upgrade error:", err)
 		return
 	}
-	defer func() {
-		log.Println("closing connection")
-		c.Close()
-	}()
+	defer conn.Close()
+
 	for {
-		mt, message, err := c.ReadMessage()
+		// Read message from client
+		_, msg, err := conn.ReadMessage()
 		if err != nil {
-			log.Printf("Error %s when reading message from client", err)
-			return
+			log.Println("Read error:", err)
+			break
 		}
-		if mt == websocket.BinaryMessage {
-			err = c.WriteMessage(websocket.TextMessage, []byte("server doesn't support binary messages"))
-			if err != nil {
-				log.Printf("Error %s when sending message to client", err)
-			}
-			return
-		}
-		log.Printf("Receive message %s", string(message))
-		if strings.Trim(string(message), "\n") != "start" {
-			err = c.WriteMessage(websocket.TextMessage, []byte("You did not say the magic word!"))
-			if err != nil {
-				log.Printf("Error %s when sending message to client", err)
-				return
-			}
-			continue
-		}
-		log.Println("start responding to client...")
-		i := 1
-		for {
-			response := fmt.Sprintf("Notification %d", i)
-			err = c.WriteMessage(websocket.TextMessage, []byte(response))
-			if err != nil {
-				log.Printf("Error %s when sending message to client", err)
-				return
-			}
-			i = i + 1
-			time.Sleep(2 * time.Second)
+		log.Printf("Received: %s", msg)
+
+		// Respond with the same message
+		err = conn.WriteMessage(websocket.TextMessage, msg)
+		if err != nil {
+			log.Println("Write error:", err)
+			break
 		}
 	}
 }
 
 func main() {
-	webSocketHandler := webSocketHandler{
-		upgrader: websocket.Upgrader{},
-	}
-	http.Handle("/", webSocketHandler)
-	log.Print("Starting server...")
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	http.HandleFunc("/ws", handleWebSocket)
+
+	fmt.Println("Server started at :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
