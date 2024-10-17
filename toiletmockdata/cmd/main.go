@@ -22,7 +22,14 @@ type (
 	MqttOccupancyData struct {
 		Namespace   string `json:"namespace"`
 		NamespaceID int    `json:"namespaceID"`
-		Activated   int    `json:"activated"`
+		Occupied    int    `json:"activated"`
+		Timestamp   int64  `json:"timestamp"`
+	}
+	MqttCounterData struct {
+		Namespace   string `json:"namespace"`
+		NamespaceID int    `json:"namespaceID"`
+		In          int    `json:"in"`
+		Out         int    `json:"out"`
 		Timestamp   int64  `json:"timestamp"`
 	}
 
@@ -101,73 +108,88 @@ func main() {
 	// fragrance_data := ""
 	// for {
 	//publish ammonia data
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/75/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/75/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/76/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/76/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/80/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/80/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/79/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/79/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/78/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/78/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/77/uplink", 0, false, generateAmmoniaData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/77/uplink", 0, false, generateAmmoniaData())
 	// time.Sleep(1 * time.Second)
 	//publish smoke data
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/110/uplink", 0, false, generateSmokeData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/110/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/69/uplink", 0, false, generateSmokeData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/69/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/85/uplink", 0, false, generateSmokeData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/85/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/86/uplink", 0, false, generateSmokeData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/86/uplink", 0, false, generateSmokeData())
 	// time.Sleep(1 * time.Second)
 	//publish occupancy data
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/73/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/73/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/74/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/74/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/81/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/81/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/82/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/82/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
 	//occupancy mbk female
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/91/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/91/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/92/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/92/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/93/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/93/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/94/uplink", 0, false, generateOccupancyData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/94/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
 
+	//counter mbk
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/103/uplink", 0, false, generateCounterData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/104/uplink", 0, false, generateCounterData())
+	time.Sleep(1 * time.Second)
+
 	//occupancy mbk male
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/87/uplink", 0, false, generateOccupancyData())
-	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/88/uplink", 0, false, generateOccupancyData())
-	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/89/uplink", 0, false, generateOccupancyData())
-	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/90/uplink", 0, false, generateOccupancyData())
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/300/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/301/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/302/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/303/uplink", 0, false, generateOccupancyData())
+
+	//occupancy female
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/304/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/305/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/306/uplink", 0, false, generateOccupancyData())
+	time.Sleep(1 * time.Second)
+	mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/307/uplink", 0, false, generateOccupancyData())
 	// time.Sleep(1 * time.Second)
 
 	//publish panic data
-	mqtt.GetMqttClient().Publish("vl/smarttoilet/589ee2f0-75e1-4cd0-5c74-78a4df1288fd/1000/uplink", 0, false, generatePanicBtnData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/589ee2f0-75e1-4cd0-5c74-78a4df1288fd/1000/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/72/uplink", 0, false, generatePanicBtnData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/72/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/83/uplink", 0, false, generatePanicBtnData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/83/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/84/uplink", 0, false, generatePanicBtnData())
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/84/uplink", 0, false, generatePanicBtnData())
 	// time.Sleep(1 * time.Second)
 	//publish frangrance data
 	// fragrance_data, total_fragrance_cummulative1 = generateFragranceData(total_fragrance_cummulative1)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/68/uplink", 0, false, fragrance_data)
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/68/uplink", 0, false, fragrance_data)
 	// time.Sleep(1 * time.Second)
 	// fragrance_data, total_fragrance_cummulative2 = generateFragranceData(total_fragrance_cummulative2)
-	// mqtt.GetMqttClient().Publish("vl/staging/t2/67/uplink", 0, false, fragrance_data)
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/59944171-3a4a-460d-5897-8bb38c524d54/67/uplink", 0, false, fragrance_data)
 
-	// mqtt.GetMqttClient().Publish("vl/staging/command", 0, false, "test")
+	// mqtt.GetMqttClient().Publish("vl/smarttoilet/command", 0, false, "test")
 	time.Sleep(10 * time.Second)
 	// }
 
@@ -194,11 +216,23 @@ func generateSmokeData() (s string) {
 	text_data, _ := json.Marshal(data)
 	return string(text_data)
 }
+func generateCounterData() (s string) {
+	data := &MqttCounterData{
+		Namespace:   "COUNTER",
+		NamespaceID: 0,
+		In:          1, //rand.Intn(2 - 0),
+		Out:         1, //rand.Intn(2 - 0),
+		Timestamp:   time.Now().Unix(),
+	}
+	text_data, _ := json.Marshal(data)
+	return string(text_data)
+}
+
 func generateOccupancyData() (s string) {
 	data := &MqttOccupancyData{
 		Namespace:   "OCCUPANCY",
 		NamespaceID: 0,
-		Activated:   rand.Intn(2 - 0),
+		Occupied:    rand.Intn(2 - 0),
 		Timestamp:   time.Now().Unix(),
 	}
 	text_data, _ := json.Marshal(data)

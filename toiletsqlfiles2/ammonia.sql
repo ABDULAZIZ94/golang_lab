@@ -174,6 +174,18 @@ FROM (
     ) Q6 ON 1 = 1
 
 
-select * from ammonia_data
+select * from ammonia_data where ammonia_level != 0
 
-delete from ammonia_data where timestamp > NOW()
+select * from ammonia_data
+where timestamp > NOW() - interval '2 YEAR'
+order by timestamp desc
+
+select * from ammonia_data
+where timestamp > NOW() - interval '1 YEAR'
+
+
+delete from ammonia_data where device_token not in ('70','71')
+
+delete from ammonia_data where timestamp < NOW() - interval '1 YEAR'
+
+select * from ammonia_data

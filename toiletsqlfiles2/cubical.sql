@@ -36,6 +36,15 @@ where cp.toilet_info_id = '9388096c-784d-49c8-784c-1868b1233165' --kemaman male
 -- cubical and device pairs
 select * from device_cubical_pairs
 
+-- cubical detailed information
+select cubical_id, cubical_name, cubical_nick_name, toilet_name, location_name, device_token
+from cubical_pairs
+left join cubical_infos using(cubical_id)
+left join device_cubical_pairs using (cubical_id)
+left join devices using(device_id)
+left join toilet_infos using(toilet_info_id)
+left join locations using(location_id)
+
 -- ini menjadi aka ok
 INSERT INTO DEVICE_CUBICAL_PAIRS (device_cubical_pair_id, cubical_id, device_id)
 VALUES (uuid_generate_v4 (), '881ac292-f7ba-42ed-61be-7ea9e5368d89','3c64d02c-abfb-4b57-5dfe-116d163ecee3')
@@ -763,3 +772,211 @@ from
 
 
 select * from manual_device_activations where  limit 1  
+
+
+
+--
+
+WITH
+    DEVICE_LIST AS (
+        select d.device_token, d.device_type_id
+        from
+            device_cubical_pairs dcp
+            join devices d on d.device_id = dcp.device_id
+        where
+            dcp.cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+    ),
+    GENTIME as (
+        SELECT uplinkTS
+        FROM generate_series(
+                date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-10-15 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), date_trunc(
+                    'HOUR', TO_TIMESTAMP(
+                        '2024-10-16 11:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                ), interval '1 HOUR'
+            ) uplinkTS
+    )
+select SUM(COALESCE(ENTRANCE, 0)) as USER, uplinkts
+from gentime
+    left join (
+        select
+            CASE
+                WHEN LAG(occupied, 1) OVER (
+                    ORDER BY id
+                ) = FALSE
+                AND OCCUPIED = TRUE THEN 1
+                ELSE 0
+            END AS ENTRANCE, date_trunc('HOUR', timestamp) as uplinkts
+        from occupancy_data
+        where
+            timestamp between TO_TIMESTAMP(
+                '2024-10-15 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-16 11:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            )
+            and device_token in (
+                '301'
+                -- select device_token
+                -- from device_list
+                -- where
+                --     device_type_id = 12
+            )
+            AND (
+                (timestamp::time >= '23:00:00')
+                OR (
+                    timestamp::time >= '00:00:00'
+                    AND timestamp::time <= '11:00:00'
+                )
+            )
+        ORDER BY timestamp DESC
+    ) Q1 using (uplinkts)
+group by
+    uplinkts
+order by uplinkts
+
+
+--
+WITH
+    DEVICE_LIST AS (
+        select d.device_token, d.device_type_id
+        from
+            device_cubical_pairs dcp
+            join devices d on d.device_id = dcp.device_id
+        where
+            dcp.cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+    )
+SELECT
+    COALESCE(TRAFIC_COUNT_TODAY, 0) AS TRAFFIC_COUNT_TODAY,
+    COALESCE(
+        TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+        0
+    ) AS TOTAL_AUTO_CLEAN_ACTIVATED_TODAY,
+    LAST_AUTO_CLEAN_ACTIVATED,
+    COALESCE(TOTAL_CLEAN_TODAY, 0) AS TOTAL_CLEAN_TODAY,
+    LAST_CLEAN
+FROM (
+        select sum(cubical_entrance) as TRAFIC_COUNT_TODAY
+        from (
+                select (
+                        case
+                            when occupied = true
+                            and LAG(occupied, 1) OVER (
+                                ORDER BY id
+                            ) = false then 1
+                            else 0
+                        end
+                    ) AS cubical_entrance, date_trunc('HOUR', timestamp) as uplinkts
+                from occupancy_data
+                where
+                    device_token in (
+                        '301'
+                        -- select device_token
+                        -- from device_list
+                        -- where
+                        --     device_type_id = 12
+                    )
+                    and (
+                        timestamp::time >= '23:00:00'
+                        OR (
+                            timestamp::time >= '00:00:00'
+                            AND timestamp::time <= '11:00:00'
+                        )
+                    )
+                    AND timestamp between TO_TIMESTAMP(
+                        '2024-10-15 23:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    ) and TO_TIMESTAMP(
+                        '2024-10-16 11:00:00', 'YYYY-MM-DD HH24:MI:SS'
+                    )
+                order by timestamp
+            ) S1
+    ) Q1LEFT
+    JOIN (
+        select
+            count(cleaner_report_id) as TOTAL_AUTO_CLEAN_ACTIVATED_TODAY
+        from cleaner_reports
+        where
+            auto_clean_state = '1'
+            and cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+            and (
+                created_at::time >= '23:00:00'
+                OR (
+                    created_at::time >= '00:00:00'
+                    AND created_at::time <= '11:00:00'
+                )
+            )
+            AND created_at between TO_TIMESTAMP(
+                '2024-10-15 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-16 11:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q3 ON 1 = 1
+    LEFT JOIN (
+        select
+            created_at as LAST_AUTO_CLEAN_ACTIVATED
+        from cleaner_reports
+        where
+            auto_clean_state = '1'
+            and cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+            and (
+                created_at::time >= '23:00:00'
+                OR (
+                    created_at::time >= '00:00:00'
+                    AND created_at::time <= '11:00:00'
+                )
+            )
+            AND created_at between TO_TIMESTAMP(
+                '2024-10-15 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-16 11:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+        order by created_at desc
+        limit 1
+    ) Q4 ON 1 = 1
+    LEFT JOIN (
+        select count(cleaner_report_id) as TOTAL_CLEAN_TODAY
+        from cleaner_reports
+        where
+            auto_clean_state = '0'
+            and cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+            and (
+                created_at::time >= '23:00:00'
+                OR (
+                    created_at::time >= '00:00:00'
+                    AND created_at::time <= '11:00:00'
+                )
+            )
+            AND created_at between TO_TIMESTAMP(
+                '2024-10-15 23:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            ) and TO_TIMESTAMP(
+                '2024-10-16 11:00:00',
+                'YYYY-MM-DD HH24:MI:SS'
+            )
+    ) Q5 ON 1 = 1
+    LEFT JOIN (
+        select created_at as LAST_CLEAN
+        from cleaner_reports
+        where
+            auto_clean_state = '0'
+            and cubical_id = 'a8acedbc-6209-4fcb-5bfd-5f68082ed81d'
+            and (
+                created_at::time >= '23:00:00'
+                OR (
+                    created_at::time >= '00:00:00'
+                    AND created_at::time <= '11:00:00'
+                )
+            )
+            AND created_at BETWEEN (
+                current_timestamp - interval '7 DAY'
+            ) AND current_timestamp
+        order by created_at desc
+        limit 1
+    ) Q6 ON 1 = 1

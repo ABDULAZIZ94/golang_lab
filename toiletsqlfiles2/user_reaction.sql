@@ -1,9 +1,11 @@
 
 
 SELECT * FROM public.user_reactions
+join toilet_infos on toilet_infos.toilet_info_id = user_reactions.toilet_id
+join locations on locations.location_id = toilet_infos.location_id
 ORDER BY timestamp DESC 
 
-select * from reactions
+select * from reactions 
 select * from complaints
 
 select ur.reaction_id, ur.timestamp,  r.react_name, co.complaint_name
