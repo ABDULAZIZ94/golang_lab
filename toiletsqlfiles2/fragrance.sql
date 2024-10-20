@@ -140,3 +140,29 @@ FROM (
                 'YYYY-MM-DD HH24:MI:SS'
             )
     ) Q6 ON 1 = 1
+
+
+
+select * from fragrance_data
+order by timestamp desc
+
+    select sum(case when fragrance_on = true then 1 else 0 end) from fragrance_data
+    where current_timestamp > (current_timestamp - interval '1 DAY')
+    and device_token = '611'
+
+
+
+
+select count(case when status = '1' then 1 end)/6 as total_fragrance
+from misc_action_data
+where misc_action_data.namespace = 'FRESHENER'
+and device_token = '611'
+and  (timestamp::time >= '23:00:00' OR ( timestamp::time >= '00:00:00' AND timestamp::time <= '11:00:00'))
+and timestamp between (select start_date from start_end) and (select end_date from start_end)
+
+
+
+select * from misc_action_data
+where namespace = 'FRESHENER'
+
+

@@ -186,6 +186,8 @@ where timestamp > NOW() - interval '1 YEAR'
 
 delete from ammonia_data where device_token not in ('70','71')
 
+
 delete from ammonia_data where timestamp < NOW() - interval '1 YEAR'
 
-select * from ammonia_data
+
+select * from ammonia_data order by timestamp desc

@@ -32,6 +32,8 @@ type (
 
 	PilotDatapayload struct {
 		Namespace         string
+		DeviceName        string
+		DeviceShortName   string
 		LoadId            string
 		Voltage           float32
 		Current           float32
@@ -80,7 +82,7 @@ func main() {
 
 		// meter 2
 		mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/826fc9fd-4c99-4985-5221-4cb90f70c176/uplink",
-			0, false, generatePilotPayloadData("HOME_PAYLOADS", &PowerConsumption, "826fc9fd-4c99-4985-5221-4cb90f70c176"))
+			0, false, generatePilotPayloadData("HOME_PAYLOADS", &PowerConsumption, "826fc9fd-4c99-4985-5221-4cb90f70c176", "Device 1", "D1"))
 		time.Sleep(3 * time.Second)
 		// mqtt.GetMqttClient().Publish("vl/em-staging/e6daf318-6516-4350-6b56-ae0a44b7e5d7/LOAD_2/uplink",
 		// 	0, false, generatePilotPayloadData("HOME_PAYLOADS", &PowerConsumption, "2"))
@@ -128,7 +130,7 @@ func generatePayloadData(cs string, currentpowerconsumption *float32) (s string)
 	return string(text_data)
 }
 
-func generatePilotPayloadData(cs string, currentpowerconsumption *float32, loadid string) (s string) {
+func generatePilotPayloadData(cs string, currentpowerconsumption *float32, loadid string, devicename string, devshort string) (s string) {
 
 	currentconsumption := *currentpowerconsumption + rrfloat(1, 5)
 	*currentpowerconsumption = currentconsumption
@@ -136,6 +138,8 @@ func generatePilotPayloadData(cs string, currentpowerconsumption *float32, loadi
 	data := &PilotDatapayload{
 		Namespace:         cs,
 		LoadId:            loadid,
+		DeviceName:        devicename,
+		DeviceShortName:   devshort,
 		Voltage:           rrfloat(1000, 2000),
 		Current:           rrfloat(1000, 2000),
 		EnergyConsumption: currentconsumption,
