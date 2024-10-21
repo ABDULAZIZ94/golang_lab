@@ -1,3 +1,4 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@energy-staging
 -- all query taken from telemetry ingest
 
 r in check access level context.Background.WithValue(type *http.contextKey, val <not Stringer>).WithValue(type *http.contextKey, val 172.17.0.9:7772).WithCancel.WithCancel.WithValue(type *chi.contextKey, val <not Stringer>).WithValue(type *gate.contextKey, val <not Stringer>).WithValue(type *gate.contextKey, val <not Stringer>)
@@ -178,3 +179,17 @@ misc.CheckAccessLevel access_info: {"StateID":0,"UserTypeID":2,"AccessLevelID":2
 
 -- gentime 
 select gentime_f2('2024-07-22 00:00:00'::timestamptz , '2024-07-22 23:59:59'::timestamptz , 'HOUR'::text, '1 HOUR'::interval)
+
+
+
+SELECT DISTINCT
+   AVG(VOLTAGE) AS TODAY_VOLTAGE, 
+   AVG(CURRENT) AS TODAY_CURRENT, 
+   AVG(ENERGY_CONSUMPTION) AS TODAY_POWER_CONSUMPTION, 
+   date_trunc('HOUR', TIMESTAMP) AS UPLINKTS
+FROM  PILOT_LOADS_DATA 
+WHERE TIMESTAMP BETWEEN (CURRENT_TIMESTAMP - INTERVAL '24 HOUR') 
+AND CURRENT_TIMESTAMP  
+AND load_id = '826fc9fd-4c99-4985-5221-4cb90f70c176' 
+group by UPLINKTS
+order by UPLINKTS 
