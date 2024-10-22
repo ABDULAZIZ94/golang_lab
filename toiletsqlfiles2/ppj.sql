@@ -63,7 +63,12 @@ where devices.device_token = '300'
 
 
 
-SELECT * FROM public.devices where device_name like '%OCC%' LIMIT 100
+SELECT * FROM public.devices
+LEFT JOIN DEVICE_PAIRS using(device_id)
+LEFT JOIN TOILET_INFOS USING(toilet_info_id)
+LEFT JOIN LOCATIONS USING (location_id)
+where device_name like '%BLO%' LIMIT 100
+
 
 select * from locations
 
@@ -75,13 +80,13 @@ select * from locations
 {{localhost}}:7772/api/v1/telemetry/ graph/analytic/ppj/{toiletTypeID}/{startDate}/{endDate}/{agg}
 
 
-
+select * from device_pairs where device_id ='f7b6dfff-1303-466f-6d72-67444827671b'
 
 -- occupancy details
 SELECT *
 FROM public.devices
--- where
---     device_name like '%FEED%'
+where
+    device_name like '%%'
 order by REGEXP_REPLACE(
         device_token, '[^0-9]', '', 'g'
     )::int
@@ -432,16 +437,23 @@ where
 -- del e3b73d18-9fc2-405f-5685-bb21bb73e6c4 , 1a30dea0-03c9-41d6-5918-b15807c3661f 
 
 select * from device_pairs
-
+----------------------------------------------------------------------------------------------------------------------------
 -- laman perdana  9945f766-738f-4de4-5b51-ac878029af56
 select * from public.locations
 
 -- list toilet for laman perdana
 -- b26430b7-eb8a-473d-424a-1f47799d421d male
 -- 30935d4a-bcea-48e0-73c6-346f6c8dad6b female
--- 68e9a02d-a33f-4f58-728c-6953f874f597 oku male 
--- bdc86969-c230-4a93-6dbe-19b815a8e168 oku female
 
+-- paired gateway_01 male_toilet
+select * from public.device_pairs 
+left join devices using (device_id)
+where gateway_id = '93f04ea4-de81-4c9d-716f-8bc95e3ebb7b'
+
+-- paired gateway_02 female_toilet
+select * from public.device_pairs 
+left join devices using(device_id)
+where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
 
 
 -- occupancy devices
@@ -497,16 +509,16 @@ left join toilet_infos using (toilet_info_id)
 where location_id ='9945f766-738f-4de4-5b51-ac878029af56'
 
 
+select * from devices where device_id ='93f04ea4-de81-4c9d-716f-8bc95e3ebb7b'
 
 -- devices pair
 -- feedback panel token = 9 , id = b63bba7c-fe60-46cf-730d-e6b84f7fbbf9 
-{"error":false,"message":"Device created . ID: 93f04ea4-de81-4c9d-716f-8bc95e3ebb7b"} -- laman perdana gateway
+{"error":false,"message":"Device created . ID: 93f04ea4-de81-4c9d-716f-8bc95e3ebb7b"} -- laman perdana gateway 01
+{"error":false,"message":"Device created . ID: 0d517343-5eb7-4d56-7c0b-9cdf17920168"} -- laman perdana gateway 02
 
 -- new feedback panel
 {"error":false,"message":"Device created . ID: 9a8b80ac-675c-47b2-5719-a9a81e0ea67a"} -- 01
 {"error":false,"message":"Device created . ID: a0e4bc77-0132-4c06-4a01-eef64e36690c"} -- 02
-
-
 
 select * from public.devices where device_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9' -- device token 9
 
@@ -526,6 +538,23 @@ from
 where
     toilet_infos.location_id = '9945f766-738f-4de4-5b51-ac878029af56'
 
+-- exhaust fan
+{"error":false,"message":"Device created . ID: fde75e65-af87-4176-7a16-1db6a8cfd4bf"} -- 4050
+{"error":false,"message":"Device created . ID: 3e7de029-f6f5-4938-5f5f-882c076687f3"} -- 4051
+
+-- blower
+{"error":false,"message":"Device created . ID: 25075ab8-3018-4186-4ee9-5807fe6f0aa4"} -- male 4048
+{"error":false,"message":"Device created . ID: 09f26806-0520-4367-632b-7ed8b5d870be"} -- male 4049
+
+-- freshener
+{"error":false,"message":"Device created . ID: e61b0e4b-3896-4a46-496e-ad424320b162"} --613
+{"error":false,"message":"Device created . ID: 9832b9c0-75e3-46c1-7ba2-d1a2fcf0648a"} --614
+
+
+-- ammonia sensors
+{"error":false,"message":"Device created . ID: 033d9091-cf9f-4d03-61bd-ec7e2a844411"} --72
+
+
 -- cubical pairs
 {"error":false,"message":"Cubical info created ID: 1bc095d3-5ebf-4c47-6f95-041901a03b46"} -- m1
 {"error":false,"message":"Cubical info created ID: edd6a42a-7c17-4da7-45bd-0467c50ed73f"} -- m2
@@ -539,7 +568,7 @@ where
 
 
 
-
+select* from public.device_pairs where device_id = '9832b9c0-75e3-46c1-7ba2-d1a2fcf0648a'
 
 select *
 from cubical_pairs
