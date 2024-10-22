@@ -63,7 +63,7 @@ where devices.device_token = '300'
 
 
 
-SELECT * FROM public.devices where device_name like '%COU%' LIMIT 100
+SELECT * FROM public.devices where device_name like '%OCC%' LIMIT 100
 
 select * from locations
 
@@ -80,8 +80,8 @@ select * from locations
 -- occupancy details
 SELECT *
 FROM public.devices
-where
-    device_name like '%OCCU%'
+-- where
+--     device_name like '%FEED%'
 order by REGEXP_REPLACE(
         device_token, '[^0-9]', '', 'g'
     )::int
@@ -288,10 +288,10 @@ where device_token in ('226', '227')
 {"error":false,"message":"Device created . ID: c7d18e5f-a504-40be-55f3-29cd34644045"} --female
 {"error":false,"message":"Device created . ID: 251a4e83-8955-47fc-529a-28329d8a3b41"} --oku
 
--- laman view
+-- laman perdana
 {"error":false,"message":"Location created . ID: 9945f766-738f-4de4-5b51-ac878029af56"}
 
--- laman view env
+-- laman perdana
 
 {"error":false,"message":"Device created . ID: f834362d-9302-44b3-4698-6b506d0b9d5c"} -- male
 {"error":false,"message":"Device created . ID: d509b6fb-ef7a-4010-47cd-26e444074af6"} -- female
@@ -308,19 +308,6 @@ where device_token in ('226', '227')
  {"error":false,"message":"Toilet info created ID: 68e9a02d-a33f-4f58-728c-6953f874f597"}
 
 
-
- 
--- laman view counter device 
---
-{"error":false,"message":"Device created . ID: 11ee53f7-0983-41c6-55c1-24cdb5b46b9e"} -- male 106
-
-{"error":false,"message":"Device created . ID: d37e9802-2363-4076-5404-d3768ef22e51"}
- -- female 107
-
-{"error":false,"message":"Device created . ID: 253cc90f-d484-42be-6332-5a867ff8546c"} -- oku 108
-
--- feedback panel aka gateway
-{"error":false,"message":"Device created . ID: b63bba7c-fe60-46cf-730d-e6b84f7fbbf9"}
 
 
 -- pair
@@ -446,3 +433,132 @@ where
 
 select * from device_pairs
 
+-- laman perdana  9945f766-738f-4de4-5b51-ac878029af56
+select * from public.locations
+
+-- list toilet for laman perdana
+-- b26430b7-eb8a-473d-424a-1f47799d421d male
+-- 30935d4a-bcea-48e0-73c6-346f6c8dad6b female
+-- 68e9a02d-a33f-4f58-728c-6953f874f597 oku male 
+-- bdc86969-c230-4a93-6dbe-19b815a8e168 oku female
+
+
+
+-- occupancy devices
+{"error":false,"message":"Device created . ID: 91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf"} -- occ m1
+{"error":false,"message":"Device created . ID: c5d6285c-6851-4904-5c6c-f6d4185b1950"} -- occ m2
+{"error":false,"message":"Device created . ID: 104d82f4-738b-4660-7f92-31a7e6ed50a0"} -- occ m3
+-- {"error":false,"message":"Device created . ID: 8190ebaf-5b9c-4e4c-65ce-7aeb682f7c28"} -- occ m4
+
+{"error":false,"message":"Device created . ID: 5bf5bc9c-769b-46ec-6146-b1f8db451b1c"} -- occ f1
+{"error":false,"message":"Device created . ID: e4dec6d6-7b54-4782-4f25-d586af34d702"} -- occ f2
+{"error":false,"message":"Device created . ID: b4efc5d4-6f6a-4091-5496-1f266da0bef0"} -- occ f3
+{"error":false,"message":"Device created . ID: d11378df-b8b4-4110-5f43-09338422bc27"} -- occ f4
+{"error":false,"message":"Device created . ID: 2cec46eb-5200-46dc-50db-17fc2d3cd917"} -- occ f5
+
+-- cubical ids
+{"error":false,"message":"Cubical info created ID: 260a79c2-0e3b-4666-66ae-da91a16e8974"} -- m1
+{"error":false,"message":"Cubical info created ID: d305cd18-af2b-4a4d-5f34-1b19a59bc2ae"} -- m2
+{"error":false,"message":"Cubical info created ID: a3b74d22-b7bf-4210-6dde-8fd7f31ab19b"} -- m3
+
+{"error":false,"message":"Cubical info created ID: c4e8c4a2-9c4d-4c12-7231-f5226665407e"} -- f1
+{"error":false,"message":"Cubical info created ID: 115ae3bc-01e6-4027-6c90-17fcb5b08f4d"} -- f2
+{"error":false,"message":"Cubical info created ID: 2d5593a7-15f3-45a5-6535-2d1e8cbc4d5b"} -- f3
+{"error":false,"message":"Cubical info created ID: 6c00b3f5-cc3c-418e-66c7-7f753f3c4274"} -- f4
+{"error":false,"message":"Cubical info created ID: b207568e-df9c-4acb-6e9f-c581c44210fc"} -- f5
+
+
+
+
+
+select * from cubical_infos
+right join cubical_pairs using(cubical_id)
+
+delete from cubical_pairs where cubical_pair_id in(
+    'd0ac307f-f034-46da-787f-eb16df47295c',
+    '5c6ccdb7-37ec-46e3-64e6-a63e9694493e',
+    'e6a08b01-ca4f-49d7-7202-e885a9fae1af',
+    'bb7de31b-6d4e-4d5c-5078-7a4b4317691b',
+    '929a328b-0d79-4f8f-41ce-89c24269d7fc',
+    'ab652cc6-b72c-4442-646e-e43ebcb82d17',
+    'c2601b15-68e0-4e00-501e-686014e43881',
+    '8ae0e527-4161-4e04-767d-31f75165be68'
+)
+
+select *
+from public.toilet_infos
+where
+    location_id = '9945f766-738f-4de4-5b51-ac878029af56'
+
+-- list devices in laman perdana
+select * from device_pairs
+left join devices using (device_id)
+left join toilet_infos using (toilet_info_id)
+where location_id ='9945f766-738f-4de4-5b51-ac878029af56'
+
+
+
+-- devices pair
+-- feedback panel token = 9 , id = b63bba7c-fe60-46cf-730d-e6b84f7fbbf9 
+{"error":false,"message":"Device created . ID: 93f04ea4-de81-4c9d-716f-8bc95e3ebb7b"} -- laman perdana gateway
+
+-- new feedback panel
+{"error":false,"message":"Device created . ID: 9a8b80ac-675c-47b2-5719-a9a81e0ea67a"} -- 01
+{"error":false,"message":"Device created . ID: a0e4bc77-0132-4c06-4a01-eef64e36690c"} -- 02
+
+
+
+select * from public.devices where device_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9' -- device token 9
+
+select * from device_pairs where gateway_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9'
+
+select * from public.device_pairs where device_pair_id in (
+    '5f3814ab-61a4-4985-5c84-f4061c58cf2e',
+'fc597f17-c5cf-442c-4d35-6a67ac2ca879',
+'f132ad36-4324-40f3-4d43-3c9dc8c281f3'
+)
+
+select *
+from
+    device_pairs
+    join devices on devices.device_id = device_pairs.device_id
+    join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
+where
+    toilet_infos.location_id = '9945f766-738f-4de4-5b51-ac878029af56'
+
+-- cubical pairs
+{"error":false,"message":"Cubical info created ID: 1bc095d3-5ebf-4c47-6f95-041901a03b46"} -- m1
+{"error":false,"message":"Cubical info created ID: edd6a42a-7c17-4da7-45bd-0467c50ed73f"} -- m2
+{"error":false,"message":"Cubical info created ID: 6d015246-13a1-4cf7-4219-70fc824f3dfe"} -- m3
+
+{"error":false,"message":"Cubical info created ID: acf993f9-6ea5-4274-429e-114d0905f130"} -- f1
+{"error":false,"message":"Cubical info created ID: c909bf67-7530-4d2b-7c23-f982c3d78a97"} -- f2
+{"error":false,"message":"Cubical info created ID: f856559d-3a07-48cf-5311-505e6b3b2dc4"} -- f3
+{"error":false,"message":"Cubical info created ID: b839ad7c-348f-4cb3-5d41-3f1738d7a76a"} -- f4
+{"error":false,"message":"Cubical info created ID: 40af79d3-a44e-4677-4b10-607d389f65f5"} -- f5
+
+
+
+
+
+select *
+from cubical_pairs
+    join toilet_infos on toilet_infos.toilet_info_id = cubical_pairs.toilet_info_id
+
+-- new device
+{"error":false,"message":"Device created . ID: 07e4b54a-06d5-43c5-5df9-adc7df6e863b"}
+
+
+{"error":false,"message":"Device created . ID: 07e4b54a-06d5-43c5-5df9-adc7df6e863b"} -- oku counter 109
+
+{"error":false,"message":"Device created . ID: 11ee53f7-0983-41c6-55c1-24cdb5b46b9e"} -- male 106
+
+
+{"error":false,"message":"Device created . ID: d37e9802-2363-4076-5404-d3768ef22e51"}
+ -- female 107
+
+
+{"error":false,"message":"Device created . ID: 253cc90f-d484-42be-6332-5a867ff8546c"} -- oku 108
+
+-- feedback panel aka gateway
+{"error":false,"message":"Device created . ID: b63bba7c-fe60-46cf-730d-e6b84f7fbbf9"}
