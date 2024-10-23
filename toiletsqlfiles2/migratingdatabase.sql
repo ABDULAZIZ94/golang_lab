@@ -94,8 +94,6 @@ INSERT INTO
         toilet_id,
         score
     )
-
-
 SELECT rt.*
 FROM user_reactions lt
     RIGHT JOIN (
@@ -199,6 +197,7 @@ FROM feedback_panel_settings lt
 WHERE
     lt.fp_entry_set_id IS NULL;
 
+    
 -- migrate enviroment data
 INSERT INTO
     enviroment_data (
