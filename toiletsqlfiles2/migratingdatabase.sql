@@ -33,7 +33,23 @@ WHERE
 
 -- migrate toilet infos
 
-
+INSERT INTO
+    toilet_infos (
+        toilet_info_id,
+        toilet_name,
+        toilet_type_id,
+        tenant_id,
+        created_at,
+        updated_at,
+        deleted_at,
+        fan_status,
+        display_status,
+        occupied_status,
+        location_id,
+        blower_status,
+        toilet_index
+    )
+-- check toilet differences
 SELECT rt.*
 FROM toilet_infos lt
     RIGHT JOIN (
@@ -197,7 +213,7 @@ FROM feedback_panel_settings lt
 WHERE
     lt.fp_entry_set_id IS NULL;
 
-    
+
 -- migrate enviroment data
 INSERT INTO
     enviroment_data (
@@ -395,7 +411,7 @@ INSERT INTO
         created_at,
         updated_at,
         deleted_at
-    )
+    )    
 SELECT rt.*
 FROM device_pairs lt
     RIGHT JOIN (
