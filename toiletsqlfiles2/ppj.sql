@@ -407,10 +407,10 @@ where location_id = '98998a6b-4be1-4ff4-5dd1-8a8e914943ee'
 select * from public.toilet_infos where toilet_info_id in ('23acd373-4a29-427d-40b7-94d348e4f423','f6cb76e9-1cb0-4c6d-5db2-536e7d0fa4ea')
 
 -- device cubile pair
-{"error":false,"message":"Device Cubical paring success . ID: af3cf2b6-bf8f-49d8-5546-3f97b2ff16c5 with c55a8c99-ae16-4d85-698f-8deb63444384"} --m1
-{"error":false,"message":"Device Cubical paring success . ID: a8acedbc-6209-4fcb-5bfd-5f68082ed81d with 19556ffe-8bba-429e-674a-b517b75891ca"} --m2
+{"error":false,"message":"Device Cubical paring success . ID: af3cf2b6-bf8f-49d8-5546-3f97b2ff16c5 with c55a8c99-ae16-4d85-698f-8deb63444384"} -- m1
+{"error":false,"message":"Device Cubical paring success . ID: a8acedbc-6209-4fcb-5bfd-5f68082ed81d with 19556ffe-8bba-429e-674a-b517b75891ca"} -- m2
 {"error":false,"message":"Device Cubical paring success . ID: 602b555d-ed3f-4a39-4f7c-4acc2a46d29d with bfce706a-0c84-48f8-514c-c5a6b7983a06"} -- m3
-{"error":false,"message":"Device Cubical paring success . ID: 602b555d-ed3f-4a39-4f7c-4acc2a46d29d with bfce706a-0c84-48f8-514c-c5a6b7983a06"} --m4
+{"error":false,"message":"Device Cubical paring success . ID: 602b555d-ed3f-4a39-4f7c-4acc2a46d29d with bfce706a-0c84-48f8-514c-c5a6b7983a06"} -- m4
 
 
 select *
@@ -516,18 +516,23 @@ select * from devices where device_id ='93f04ea4-de81-4c9d-716f-8bc95e3ebb7b'
 {"error":false,"message":"Device created . ID: 93f04ea4-de81-4c9d-716f-8bc95e3ebb7b"} -- laman perdana gateway 01
 {"error":false,"message":"Device created . ID: 0d517343-5eb7-4d56-7c0b-9cdf17920168"} -- laman perdana gateway 02
 
+select * from devices where device_id in (
+    '93f04ea4-de81-4c9d-716f-8bc95e3ebb7b',
+    '0d517343-5eb7-4d56-7c0b-9cdf17920168'
+)
+
 -- new feedback panel
 {"error":false,"message":"Device created . ID: 9a8b80ac-675c-47b2-5719-a9a81e0ea67a"} -- 01
 {"error":false,"message":"Device created . ID: a0e4bc77-0132-4c06-4a01-eef64e36690c"} -- 02
 
 select * from public.devices where device_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9' -- device token 9
 
-select * from device_pairs where gateway_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9'
+select * from device_pairs where device_id = 'b63bba7c-fe60-46cf-730d-e6b84f7fbbf9'
 
 select * from public.device_pairs where device_pair_id in (
     '5f3814ab-61a4-4985-5c84-f4061c58cf2e',
-'fc597f17-c5cf-442c-4d35-6a67ac2ca879',
-'f132ad36-4324-40f3-4d43-3c9dc8c281f3'
+    'fc597f17-c5cf-442c-4d35-6a67ac2ca879',
+    'f132ad36-4324-40f3-4d43-3c9dc8c281f3'
 )
 
 select *
