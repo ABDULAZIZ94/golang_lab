@@ -623,3 +623,22 @@ from cubical_pairs
 	"311":9
     }
 }
+
+
+# autostart
+xrandr --output eDP-1 --rotate right
+xinput set-prop "ILITEK ILITEK-TP" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+
+chromium \
+    --no-first-run \
+    --disable-translate \
+    --disable-infobars \
+    --disable-suggestions-service \
+    --disable-save-password-bubble \
+    --start-maximized \
+    --incognito \
+    --pull-to-refresh=2 \
+    --disable-pinch \
+    --kiosk "http://localhost/" \
+    --window-size=1080,1090 &
+
