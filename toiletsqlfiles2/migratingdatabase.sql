@@ -1,4 +1,4 @@
--- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@energy-staging
 
 -- enable extension
 CREATE EXTENSION dblink;
@@ -578,3 +578,19 @@ WHERE
 
 
 
+--
+UPDATE "loads"
+SET
+    "id" = 'fadbe8c3-e90b-41e0-6e3b-ba6731c5adb1',
+    "is_three_phase" = false,
+    "load_name" = 'Fridge Updated Ver4',
+    "phase_color" = 'Red',
+    "phase_color_valid" = true,
+    "load_threshold_min" = 300,
+    "load_threshold_max" = 200,
+    "operation_start_hour" = '2000-01-01 02:00:00',
+    "operation_end_hour" = '2000-01-01 21:00:00',
+    "updated_at" = '2024-10-23 17:15:31.098'
+WHERE
+    id = 'fadbe8c3-e90b-41e0-6e3b-ba6731c5adb1'
+    AND "loads"."deleted_at" IS NULL

@@ -596,3 +596,30 @@ from cubical_pairs
 
 -- feedback panel aka gateway
 {"error":false,"message":"Device created . ID: b63bba7c-fe60-46cf-730d-e6b84f7fbbf9"}
+
+
+-- feedbak panel male setting
+{
+    "Port6LP":"/dev/ttyAMA4",
+    "BaudRate6LP": 115200,
+    "PortFP":"/dev/ttyAMA1",
+    "BaudRateFP": 115200,
+    "PortRFID":"/dev/ttyAMA3",
+    "BaudRateRFID":9600,
+    "DeviceToken": "LAMAN_PERDANA_GATEWAY_01",
+    "HostURL": "https://api-toilet-staging.vectolabs.com:7772",
+    "Location": "9945f766-738f-4de4-5b51-ac878029af56",
+    "FeedbackPanelId": "FP_LAMAN_PERDANA_01",
+    "OfflineMqttServer":"127.0.0.1:1883",
+    "DeviceMappings": {
+        "4048": 1,
+        "229": 2,
+        "72": 3,
+        "613": 4,
+        "106":5,
+	"308":6,
+	"309":7,
+	"310":8,
+	"311":9
+    }
+}
