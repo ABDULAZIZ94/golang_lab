@@ -461,6 +461,55 @@ where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
 {"error":false,"message":"Device created . ID: c5d6285c-6851-4904-5c6c-f6d4185b1950"} -- occ m2
 {"error":false,"message":"Device created . ID: 104d82f4-738b-4660-7f92-31a7e6ed50a0"} -- occ m3
 -- {"error":false,"message":"Device created . ID: 8190ebaf-5b9c-4e4c-65ce-7aeb682f7c28"} -- occ m4
+{"error":false,"message":"Device created . ID: 42d6e1a1-8f03-4f3c-61f6-bedd64f63328"} -- m4
+
+
+{"error":false,"message":"Device created . ID: 5bf5bc9c-769b-46ec-6146-b1f8db451b1c"} -- occ f1
+{"error":false,"message":"Device created . ID: e4dec6d6-7b54-4782-4f25-d586af34d702"} -- occ f2
+{"error":false,"message":"Device created . ID: b4efc5d4-6f6a-4091-5496-1f266da0bef0"} -- occ f3
+{"error":false,"message":"Device created . ID: d11378df-b8b4-4110-5f43-09338422bc27"} -- occ f4
+{"error":false,"message":"Device created . ID: 2cec46eb-5200-46dc-50db-17fc2d3cd917"} -- occ f5
+{"error":false,"message":"Device created . ID: 9aa53d78-6fce-46ea-40c2-871efc4ee886"} -- occ f6
+
+
+-- cubical ids
+{"error":false,"message":"Cubical info created ID: 260a79c2-0e3b-4666-66ae-da91a16e8974"} -- m1
+{"error":false,"message":"Cubical info created ID: d305cd18-af2b-4a4d-5f34-1b19a59bc2ae"} -- m2
+{"error":false,"message":"Cubical info created ID: a3b74d22-b7bf-4210-6dde-8fd7f31ab19b"} -- m3
+{"error":false,"message":"Cubical info created ID: 586b94c9-5ca4-46fa-7628-1c01cb4f2460"} -- m4 
+
+{"error":false,"message":"Cubical info created ID: c4e8c4a2-9c4d-4c12-7231-f5226665407e"} -- f1
+{"error":false,"message":"Cubical info created ID: 115ae3bc-01e6-4027-6c90-17fcb5b08f4d"} -- f2
+{"error":false,"message":"Cubical info created ID: 2d5593a7-15f3-45a5-6535-2d1e8cbc4d5b"} -- f3
+{"error":false,"message":"Cubical info created ID: 6c00b3f5-cc3c-418e-66c7-7f753f3c4274"} -- f4
+{"error":false,"message":"Cubical info created ID: b207568e-df9c-4acb-6e9f-c581c44210fc"} -- f5
+{"error":false,"message":"Cubical info created ID: 1543e26a-6f99-4076-69ed-81bfed019c57"} -- f6 
+
+
+-- manage occupancy sensor
+select * from public.devices
+where device_id in ('91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf',
+'c5d6285c-6851-4904-5c6c-f6d4185b1950',
+'104d82f4-738b-4660-7f92-31a7e6ed50a0',
+'42d6e1a1-8f03-4f3c-61f6-bedd64f63328',
+'5bf5bc9c-769b-46ec-6146-b1f8db451b1c',
+'e4dec6d6-7b54-4782-4f25-d586af34d702',
+'b4efc5d4-6f6a-4091-5496-1f266da0bef0',
+'d11378df-b8b4-4110-5f43-09338422bc27',
+'2cec46eb-5200-46dc-50db-17fc2d3cd917',
+'9aa53d78-6fce-46ea-40c2-871efc4ee886',
+'11ee53f7-0983-41c6-55c1-24cdb5b46b9e', --counter
+'f834362d-9302-44b3-4698-6b506d0b9d5c', -- env
+'9a8b80ac-675c-47b2-5719-a9a81e0ea67a', --fp
+'d37e9802-2363-4076-5404-d3768ef22e51', --counter
+'d509b6fb-ef7a-4010-47cd-26e444074af6', --env
+'a0e4bc77-0132-4c06-4a01-eef64e36690c' --fp
+)
+
+-- {"error":false,"message":"Device created . ID: 8190ebaf-5b9c-4e4c-65ce-7aeb682f7c28"} -- occ m4
+
+select * from device_pairs where device_id = '42d6e1a1-8f03-4f3c-61f6-bedd64f63328'
+
 
 {"error":false,"message":"Device created . ID: 5bf5bc9c-769b-46ec-6146-b1f8db451b1c"} -- occ f1
 {"error":false,"message":"Device created . ID: e4dec6d6-7b54-4782-4f25-d586af34d702"} -- occ f2
@@ -468,34 +517,29 @@ where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
 {"error":false,"message":"Device created . ID: d11378df-b8b4-4110-5f43-09338422bc27"} -- occ f4
 {"error":false,"message":"Device created . ID: 2cec46eb-5200-46dc-50db-17fc2d3cd917"} -- occ f5
 
--- cubical ids
-{"error":false,"message":"Cubical info created ID: 260a79c2-0e3b-4666-66ae-da91a16e8974"} -- m1
-{"error":false,"message":"Cubical info created ID: d305cd18-af2b-4a4d-5f34-1b19a59bc2ae"} -- m2
-{"error":false,"message":"Cubical info created ID: a3b74d22-b7bf-4210-6dde-8fd7f31ab19b"} -- m3
 
-{"error":false,"message":"Cubical info created ID: c4e8c4a2-9c4d-4c12-7231-f5226665407e"} -- f1
-{"error":false,"message":"Cubical info created ID: 115ae3bc-01e6-4027-6c90-17fcb5b08f4d"} -- f2
-{"error":false,"message":"Cubical info created ID: 2d5593a7-15f3-45a5-6535-2d1e8cbc4d5b"} -- f3
-{"error":false,"message":"Cubical info created ID: 6c00b3f5-cc3c-418e-66c7-7f753f3c4274"} -- f4
-{"error":false,"message":"Cubical info created ID: b207568e-df9c-4acb-6e9f-c581c44210fc"} -- f5
+select * from devices where device_id in (
+    '91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf'
+)
 
+select * from device_cubical_pairs
+left join cubical_infos using (cubical_id)
 
-
-
+select * from cubical_infos
 
 select * from cubical_infos
 right join cubical_pairs using(cubical_id)
 
-delete from cubical_pairs where cubical_pair_id in(
-    'd0ac307f-f034-46da-787f-eb16df47295c',
-    '5c6ccdb7-37ec-46e3-64e6-a63e9694493e',
-    'e6a08b01-ca4f-49d7-7202-e885a9fae1af',
-    'bb7de31b-6d4e-4d5c-5078-7a4b4317691b',
-    '929a328b-0d79-4f8f-41ce-89c24269d7fc',
-    'ab652cc6-b72c-4442-646e-e43ebcb82d17',
-    'c2601b15-68e0-4e00-501e-686014e43881',
-    '8ae0e527-4161-4e04-767d-31f75165be68'
-)
+-- delete from cubical_pairs where cubical_pair_id in(
+--     'd0ac307f-f034-46da-787f-eb16df47295c',
+--     '5c6ccdb7-37ec-46e3-64e6-a63e9694493e',
+--     'e6a08b01-ca4f-49d7-7202-e885a9fae1af',
+--     'bb7de31b-6d4e-4d5c-5078-7a4b4317691b',
+--     '929a328b-0d79-4f8f-41ce-89c24269d7fc',
+--     'ab652cc6-b72c-4442-646e-e43ebcb82d17',
+--     'c2601b15-68e0-4e00-501e-686014e43881',
+--     '8ae0e527-4161-4e04-767d-31f75165be68'
+-- )
 
 select *
 from public.toilet_infos
@@ -550,6 +594,15 @@ where
 -- blower
 {"error":false,"message":"Device created . ID: 25075ab8-3018-4186-4ee9-5807fe6f0aa4"} -- male 4048
 {"error":false,"message":"Device created . ID: 09f26806-0520-4367-632b-7ed8b5d870be"} -- male 4049
+
+
+3e7de029-f6f5-4938-5f5f-882c076687f3 -- 4051 exhaust fan
+fde75e65-af87-4176-7a16-1db6a8cfd4bf -- 4050 exhaust fan
+09f26806-0520-4367-632b-7ed8b5d870be -- 4049 blower female
+25075ab8-3018-4186-4ee9-5807fe6f0aa4 -- 4048 blower male
+EXHAUST_FAN_MALE
+
+select * from public.device_pairs where device_id in('3e7de029-f6f5-4938-5f5f-882c076687f3', 'fde75e65-af87-4176-7a16-1db6a8cfd4bf')
 
 -- freshener
 {"error":false,"message":"Device created . ID: e61b0e4b-3896-4a46-496e-ad424320b162"} --613
