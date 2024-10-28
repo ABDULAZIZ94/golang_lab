@@ -70,7 +70,7 @@ LEFT JOIN LOCATIONS USING (location_id)
 where device_name like '%BLO%' LIMIT 100
 
 
-select * from locations
+select * from public.locations
 
  
 {{localhost}}:7772/api/v1/telemetry/overview/advanced/ppj/{locationID}
@@ -293,15 +293,6 @@ where device_token in ('226', '227')
 {"error":false,"message":"Device created . ID: c7d18e5f-a504-40be-55f3-29cd34644045"} --female
 {"error":false,"message":"Device created . ID: 251a4e83-8955-47fc-529a-28329d8a3b41"} --oku
 
--- laman perdana
-{"error":false,"message":"Location created . ID: 9945f766-738f-4de4-5b51-ac878029af56"}
-
--- laman perdana
-
-{"error":false,"message":"Device created . ID: f834362d-9302-44b3-4698-6b506d0b9d5c"} -- male
-{"error":false,"message":"Device created . ID: d509b6fb-ef7a-4010-47cd-26e444074af6"} -- female
-{"error":false,"message":"Device created . ID: d509b6fb-ef7a-4010-47cd-26e444074af6"} -- oku
-
 
 -- toilet male
 {"error":false,"message":"Toilet info created ID: b26430b7-eb8a-473d-424a-1f47799d421d"}
@@ -326,7 +317,7 @@ where device_token in ('226', '227')
 
 -- all b13 toilet
 
-select * from toilet_infos 
+select * from public.toilet_infos 
 where location_id = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
 
 -- all devices on b13
@@ -445,6 +436,27 @@ select * from public.locations
 -- b26430b7-eb8a-473d-424a-1f47799d421d male
 -- 30935d4a-bcea-48e0-73c6-346f6c8dad6b female
 
+select *
+from public.toilet_infos
+where
+    location_id = '9945f766-738f-4de4-5b51-ac878029af56'
+
+-- laman perdana
+{"error":false,"message":"Location created . ID: 9945f766-738f-4de4-5b51-ac878029af56"}
+
+-- laman perdana
+
+-- male -- not exists b26430b7-eb8a-473d-424a-1f47799d421d 
+-- female -- not exists 30935d4a-bcea-48e0-73c6-346f6c8dad6b 
+
+{"error":false,"message":"Toilet info created ID: 1fb8e9f7-bed9-45a6-769b-f25281bec589"} -- oku male
+{"error":false,"message":"Toilet info created ID: a8ff0994-f76c-4290-4f45-4d5f65d84545"} -- oku female
+
+-- toilet id locations
+select * from toilet_infos
+-- join locations on locations.location_id = toilet_infos.location_id
+where toilet_info_id = 'd509b6fb-ef7a-4010-47cd-26e444074af6'
+
 -- paired gateway_01 male_toilet
 select * from public.device_pairs 
 left join devices using (device_id)
@@ -457,7 +469,7 @@ where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
 
 
 -- occupancy devices
-{"error":false,"message":"Device created . ID: 91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf"} -- occ m1
+{"error":false,"message":"Device created . ID: 91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf"} -- occ m1 
 {"error":false,"message":"Device created . ID: c5d6285c-6851-4904-5c6c-f6d4185b1950"} -- occ m2
 {"error":false,"message":"Device created . ID: 104d82f4-738b-4660-7f92-31a7e6ed50a0"} -- occ m3
 -- {"error":false,"message":"Device created . ID: 8190ebaf-5b9c-4e4c-65ce-7aeb682f7c28"} -- occ m4
@@ -471,6 +483,28 @@ where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
 {"error":false,"message":"Device created . ID: 2cec46eb-5200-46dc-50db-17fc2d3cd917"} -- occ f5
 {"error":false,"message":"Device created . ID: 9aa53d78-6fce-46ea-40c2-871efc4ee886"} -- occ f6
 
+select * from cubical_infos
+
+select * from cubical_pairs
+
+select * from public.cubical_pairs
+-- join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
+where cubical_pairs.toilet_info_id = '30935d4a-bcea-48e0-73c6-346f6c8dad6b'
+
+select * from cubical_pairs where cubical_pair_id in (
+    '785e7bf7-5858-4c0b-5aa9-099f3a60f913',
+    'c0d98264-81c5-4820-4dc4-4a487ff90a9d',
+    '87ba078c-fa7c-41a1-6ac4-ad2d11befe9d',
+    '0419974a-5695-4618-4a55-414b2733e8aa'
+)
+
+ 
+select * from cubical_pairs
+join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
+join toilet_infos on toilet_infos.toilet_info_id = cubical_pairs.toilet_info_id
+where toilet_infos.location_id = '30935d4a-bcea-48e0-73c6-346f6c8dad6b'
+
+select * from cubical_pairs
 
 -- cubical ids
 {"error":false,"message":"Cubical info created ID: 260a79c2-0e3b-4666-66ae-da91a16e8974"} -- m1
@@ -526,6 +560,8 @@ select * from device_cubical_pairs
 left join cubical_infos using (cubical_id)
 
 select * from cubical_infos
+
+select * from cubical_infos where cubical_id = 'd305cd18-af2b-4a4d-5f34-1b19a59bc2ae'
 
 select * from cubical_infos
 right join cubical_pairs using(cubical_id)
@@ -695,3 +731,22 @@ chromium \
     --kiosk "http://localhost/" \
     --window-size=1080,1090 &
 
+# new counter
+{"error":false,"message":"Device created . ID: 9ea5632a-e41d-458d-6220-2be086bae61e"} -- oku counter male
+{"error":false,"message":"Device created . ID: 051c42ba-9858-459d-76cf-c5dc15769944"} -- oku counter female
+
+
+# kpkt 
+{"error":false,"message":"Tenant created , ID: 984bbf11-868c-43e8-6c5e-d9a0151fefc6"}↵
+
+select * from tenants where tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+
+-- new location kpkt
+{"error":false,"message":"Location created . ID: 2a83bc9b-0dba-451e-7760-a29bfc3db337"}
+
+-- toilet male kpkt
+{"error":false,"message":"Toilet info created ID: 050c7c1d-13fc-48b3-6a4c-e15dfe02a688"}
+
+
+-- toilet female kpkt
+{"error":false,"message":"Toilet info created ID: 3194cc8d-31f9-4441-504d-c45758ed9559"}
