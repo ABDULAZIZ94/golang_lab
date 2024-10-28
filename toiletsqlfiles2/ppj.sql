@@ -491,11 +491,24 @@ select * from public.cubical_pairs
 -- join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
 where cubical_pairs.toilet_info_id = '30935d4a-bcea-48e0-73c6-346f6c8dad6b'
 
+select * from public.toilet_infos where toilet_info_id in (
+    '1fb8e9f7-bed9-45a6-769b-f25281bec589',
+    'a8ff0994-f76c-4290-4f45-4d5f65d84545'
+)
+
+
+
 select * from cubical_pairs where cubical_pair_id in (
     '785e7bf7-5858-4c0b-5aa9-099f3a60f913',
     'c0d98264-81c5-4820-4dc4-4a487ff90a9d',
     '87ba078c-fa7c-41a1-6ac4-ad2d11befe9d',
-    '0419974a-5695-4618-4a55-414b2733e8aa'
+    '0419974a-5695-4618-4a55-414b2733e8aa',
+    'ea4f6bd4-1e78-429b-4e2d-81a8af9f4189', --female pairs
+    '09379790-5451-4bde-76f1-c113dbe60dbf',
+    '24c35c72-158d-45f1-6bef-20cd57a3bfb2',
+    'dba4c36c-c450-46de-610c-8be0c2c6a9e8',
+    '52522be1-9557-4be0-6996-61d556572a25',
+    'a4370c08-a3d3-4c80-70e7-0b20cc2ce054'
 )
 
  
