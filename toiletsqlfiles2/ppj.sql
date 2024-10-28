@@ -533,6 +533,8 @@ select * from cubical_pairs
 {"error":false,"message":"Cubical info created ID: 1543e26a-6f99-4076-69ed-81bfed019c57"} -- f6 
 
 
+select * from public.cubical_pairs where cubical_id in ('586b94c9-5ca4-46fa-7628-1c01cb4f2460', '1543e26a-6f99-4076-69ed-81bfed019c57')
+
 -- manage occupancy sensor
 select * from public.devices
 where device_id in ('91e4b4fd-cbdf-4d2e-4261-8a54b2e720bf',
