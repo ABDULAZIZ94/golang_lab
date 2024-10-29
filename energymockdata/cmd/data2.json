@@ -1,0 +1,13 @@
+{
+    "Load_2": {
+        "Current_Load_2": "40D4AB27",
+        "Active_Power_2": "44BB575B",
+        "Reactive_Power_2": "C35BF16B",
+        "Apparent_Power_2": "44BD590B",
+        "Power_Factor_2": "3F7D497D",
+        "Phase_Angle_2": "C1059480",
+        "Current_THD_2": "414051EC",
+        "Total_Import_Energy_2": "44C7F3CF",
+        "Total_Export_Energy_2": "412AE979"
+    }
+}
