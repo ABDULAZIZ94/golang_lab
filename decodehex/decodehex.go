@@ -8,27 +8,35 @@ import (
 )
 
 func main() {
-	fmt.Println(hexStrToFloat64("43f8034b"))
+	fmt.Println(HexStrToFloat64("436EFEE3"))
 }
 
-func hexStrToFloat64(hexStr string) float64 {
-
-	bytes, err := hex.DecodeString(hexStr)
-
-	fmt.Printf("bytes: %#v\n", bytes)
-
+// HexStrToFloat64 takes an 8-character hex string and converts it to a float64.
+func HexStrToFloat64(hexStr string) float64 {
+	// Decode the hex string to bytes
+	var result float64
+	data, err := hex.DecodeString(hexStr)
 	if err != nil {
 		fmt.Println("Error decoding hex string:", err)
-		return 0.0
+		return 0
 	}
 
-	// Convert byte array to float64
-	var floatVal float64
-	// Using BigEndian for conversion (or LittleEndian based on your requirements)
-	floatVal = float64(binary.LittleEndian.Uint64(append(bytes, 0, 0, 0, 0, 0, 0, 0, 0)[:8]))
+	// Ensure the data is exactly 8 bytes (64 bits)
+	if len(data) != 4 {
+		fmt.Println("Hex string must represent exactly 8 bytes for float64")
+		return float64(len(data))
+	}
 
-	//round to two decimal place
-	floatVal = math.Round(floatVal*100) / 100
+	// Convert bytes to uint64 using BigEndian or LittleEndian as needed
+	uintVal := binary.BigEndian.Uint32(data)
 
-	return floatVal
+	// Convert uint64 to float64
+	floatVal := math.Float32frombits(uintVal)
+
+	result = float64(floatVal)
+
+	// Round to two decimal places
+	result = math.Round(result*100) / 100
+
+	return result
 }
