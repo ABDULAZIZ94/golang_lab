@@ -448,21 +448,20 @@ where
 
 -- male -- not exists b26430b7-eb8a-473d-424a-1f47799d421d 
 -- female -- not exists 30935d4a-bcea-48e0-73c6-346f6c8dad6b 
-
 {"error":false,"message":"Toilet info created ID: 1fb8e9f7-bed9-45a6-769b-f25281bec589"} -- oku male
 {"error":false,"message":"Toilet info created ID: a8ff0994-f76c-4290-4f45-4d5f65d84545"} -- oku female
 
--- toilet id locations
+-- list toilet id in laman perdana
 select * from toilet_infos
 -- join locations on locations.location_id = toilet_infos.location_id
-where toilet_info_id = 'd509b6fb-ef7a-4010-47cd-26e444074af6'
+where location_id = '9945f766-738f-4de4-5b51-ac878029af56'
 
--- paired gateway_01 male_toilet
+-- paired gateway_01 male_toilet, oku_make_toilet
 select * from public.device_pairs 
 left join devices using (device_id)
 where gateway_id = '93f04ea4-de81-4c9d-716f-8bc95e3ebb7b'
 
--- paired gateway_02 female_toilet
+-- paired gateway_02 female_toilet, oku_female_toilet
 select * from public.device_pairs 
 left join devices using(device_id)
 where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
@@ -751,17 +750,6 @@ chromium \
 {"error":false,"message":"Device created . ID: 051c42ba-9858-459d-76cf-c5dc15769944"} -- oku counter female
 
 
-# kpkt 
-{"error":false,"message":"Tenant created , ID: 984bbf11-868c-43e8-6c5e-d9a0151fefc6"}↵
-
-select * from tenants where tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
-
--- new location kpkt
-{"error":false,"message":"Location created . ID: 2a83bc9b-0dba-451e-7760-a29bfc3db337"}
-
--- toilet male kpkt
-{"error":false,"message":"Toilet info created ID: 050c7c1d-13fc-48b3-6a4c-e15dfe02a688"}
 
 
--- toilet female kpkt
-{"error":false,"message":"Toilet info created ID: 3194cc8d-31f9-4441-504d-c45758ed9559"}
+

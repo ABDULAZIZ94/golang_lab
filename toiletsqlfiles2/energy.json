@@ -1,0 +1,72 @@
+[
+    {
+        "LoadId": "cfcd93fd-50db-47c3-4577-441f2e8ff90e",
+        "DeviceName": "Soldering Machine",
+        "DeviceShortName": "Load_2",
+        "Voltage": 0,
+        "Current": 6.59,
+        "EnergyConsumption": 1622.39,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "2024-10-30T08:15:29Z"
+    } ,{
+        "LoadId": "7d836977-943e-41a5-68b5-ac3c1a7ba9ec",
+        "DeviceName": "Soldering Machine",
+        "DeviceShortName": "Load_4",
+        "Voltage": 0,
+        "Current": 9.74,
+        "EnergyConsumption": 3503.62,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "1970-01-01T00:00:00Z"
+    }, {
+        "LoadId": "6dda6871-e060-4702-7577-be65045bb9e2",
+        "DeviceName": "Soldering Machine",
+        "DeviceShortName": "Load_5",
+        "Voltage": 0,
+        "Current": 3.31,
+        "EnergyConsumption": 2778,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "1970-01-01T00:00:00Z"
+    } ,{
+        "LoadId": "060e97bb-1aae-4080-6328-f53dedd9bbee",
+        "DeviceName": "Soldering Machine",
+        "DeviceShortName": "Load_1",
+        "Voltage": 0,
+        "Current": 0,
+        "EnergyConsumption": 0.87,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "2024-10-30T08:15:28Z"
+    } ,{
+        "LoadId": "fadbe8c3-e90b-41e0-6e3b-ba6731c5adb1",
+        "DeviceName": "Fridge Updated Ver4",
+        "DeviceShortName": "Load_3",
+        "Voltage": 0,
+        "Current": 0.25,
+        "EnergyConsumption": 22.71,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "2024-10-30T08:15:30Z"
+    }, {
+        "LoadId": "cd478856-e8ca-4e94-4362-e3782edd5825",
+        "DeviceName": "Soldering Machine",
+        "DeviceShortName": "Load_6",
+        "Voltage": 0,
+        "Current": 8.55,
+        "EnergyConsumption": 1833.97,
+        "IsThreePhase": false,
+        "PhaseColor": "Red",
+        "Timestamp": "2024-10-30T08:15:30Z"
+    }, {
+        "Frequency": 50.03,
+        "Voltage_THD_1": 1.38,
+        "Voltage_THD_2": 1.38,
+        "Voltage_THD_3": 1.09,
+        "Voltage_1": 239.8,
+        "Voltage_2": 239.98,
+        "Voltage_3": 240.17,
+        "Timestamp": "2024-10-30T07:56:34Z"
+    }
+]
