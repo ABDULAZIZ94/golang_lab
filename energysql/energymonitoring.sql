@@ -61,3 +61,7 @@ SET
 WHERE
     id = 'fadbe8c3-e90b-41e0-6e3b-ba6731c5adb1'
     AND "loads"."deleted_at" IS NULL
+
+
+
+update enertraces set load_token = 'Load_9' where load_number = 9
