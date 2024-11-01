@@ -10,8 +10,8 @@ import (
 
 type (
 	MessageRequest struct {
-		GroupID string `json:"groupId"`
-		Text    string `json:"text"`
+		Group   string `json:"groupId"`
+		Message string `json:"text"`
 	}
 	Message struct {
 		Alerttype  string
@@ -46,7 +46,7 @@ func main() {
 	wsmodel.Timestamp = time.Now().Local().Format(time.RFC3339)
 
 	wsjson, _ := json.Marshal(wsmodel)
-	sendMessageToGroup("167701581c3c83c3b11eaeb064dd00ba00c890ec0211f0b0bb33435b1840d1e3dccad97da33b47c6", "672492277081dc3e18610c43", string(wsjson))
+	sendMessageToGroup("167701581c3c83c3b11eaeb064dd00ba00c890ec0211f0b0bb33435b1840d1e3dccad97da33b47c6", "120363356335455491@g.us", string(wsjson))
 
 }
 
@@ -55,8 +55,8 @@ func sendMessageToGroup(apiKey, groupID, messageText string) error {
 
 	// Create the message request payload
 	requestBody := MessageRequest{
-		GroupID: groupID,
-		Text:    messageText,
+		Group:   groupID,
+		Message: messageText,
 	}
 	jsonBody, err := json.Marshal(requestBody)
 	if err != nil {
