@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println(HexStrToFloat64("436EFEE3"))
+	fmt.Println(HexStrToFloat64("436F5943"))
 }
 
 // HexStrToFloat64 takes an 8-character hex string and converts it to a float64.
