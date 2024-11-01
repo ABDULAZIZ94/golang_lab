@@ -10,8 +10,8 @@ import (
 
 type (
 	MessageRequest struct {
-		Group   string `json:"groupId"`
-		Message string `json:"text"`
+		Group   string `json:"group"`
+		Message string `json:"message"`
 	}
 	Message struct {
 		Alerttype  string
@@ -69,9 +69,11 @@ func sendMessageToGroup(apiKey, groupID, messageText string) error {
 		return fmt.Errorf("error creating HTTP request: %v", err)
 	}
 
-	// Set headers
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Content-Type", "application/json")
+	// // Set headers
+	// req.Header.Set("Authorization", "Bearer "+apiKey)
+	// req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Token", apiKey)
 
 	// Send request
 	client := &http.Client{}
