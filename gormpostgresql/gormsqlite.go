@@ -16,7 +16,7 @@ const (
 	port     = 9998
 	user     = "postgres"
 	password = "VectoLabs)1"
-	dbname   = "smarttoilet"
+	dbname   = "energy-staging"
 )
 
 type GormDefault struct {
@@ -26,7 +26,7 @@ type GormDefault struct {
 }
 
 type (
-	loads struct {
+	Loads struct {
 		Id                   string
 		IsThreePhase         sql.NullBool
 		LoadName             string
@@ -57,7 +57,7 @@ func main() {
 	log.Println("Successfully connected to the database!")
 	// Use `db` to interact with the database here
 
-	loadsarymodel := []loads{}
+	loadsarymodel := []Loads{}
 	db.Exec("select * from loads").Scan(&loadsarymodel)
 
 	fmt.Printf("loads: %#v\n", loadsarymodel)
