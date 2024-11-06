@@ -25,33 +25,40 @@ type GormDefault struct {
 }
 
 // Loads represents the loads table in the database
-type Loads struct {
-	Id                   string         `json:"id"`
-	IsThreePhase         sql.NullBool   `json:"is_three_phase"`
-	LoadName             string         `json:"load_name"`
-	LoadToken            string         `json:"load_token"`
-	PhaseColor           sql.NullString `json:"phase_color"`
-	PhaseColorValid      sql.NullBool   `json:"phase_color_valid"`
-	LoadThresholdMin     float64        `json:"load_threshold_min"`
-	LoadThresholdMax     float64        `json:"load_threshold_max"`
-	OperationStartHour   time.Time      `json:"operation_start_hour"`
-	OperationEndHour     time.Time      `json:"operation_end_hour"`
-	AlertSecondGap       int            `json:"alert_second_gap"`
-	LastOperationAlerted time.Time      `json:"last_operation_alerted"`
-	LastLoadAlerted      time.Time      `json:"last_load_alerted"`
-	WeekdayOnly          sql.NullBool   `json:"weekday_only"`
-	GormDefault
-}
+type (
+	Loads struct {
+		Id                   string         `json:"id"`
+		IsThreePhase         sql.NullBool   `json:"is_three_phase"`
+		LoadName             string         `json:"load_name"`
+		LoadToken            string         `json:"load_token"`
+		PhaseColor           sql.NullString `json:"phase_color"`
+		PhaseColorValid      sql.NullBool   `json:"phase_color_valid"`
+		LoadThresholdMin     float64        `json:"load_threshold_min"`
+		LoadThresholdMax     float64        `json:"load_threshold_max"`
+		OperationStartHour   time.Time      `json:"operation_start_hour"`
+		OperationEndHour     time.Time      `json:"operation_end_hour"`
+		AlertSecondGap       int            `json:"alert_second_gap"`
+		LastOperationAlerted time.Time      `json:"last_operation_alerted"`
+		LastLoadAlerted      time.Time      `json:"last_load_alerted"`
+		WeekdayOnly          sql.NullBool   `json:"weekday_only"`
+		GormDefault
+	}
 
-// DeviceInfo represents device information
-type DeviceInfo struct {
-	DeviceName string `json:"device_name"`
-}
+	// DeviceInfo represents device information
+	DeviceInfo struct {
+		DeviceName string `json:"device_name"`
+	}
 
-// Response represents a standard API response
-type Response struct {
-	Message string `json:"message"`
-}
+	// Response represents a standard API response
+	Response struct {
+		Message string `json:"message"`
+	}
+
+	LoadsResponse struct {
+		Message string  `json:"message"`
+		Data    []Loads `json:"data"`
+	}
+)
 
 // getDatabaseConnection initializes the database connection
 func getDatabaseConnection() (*gorm.DB, error) {
@@ -116,8 +123,13 @@ func main() {
 			return
 		}
 
+		response := LoadsResponse{
+			Message: "Loads retrieved successfully",
+			Data:    loads,
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(loads); err != nil {
+		if err := json.NewEncoder(w).Encode(response); err != nil {
 			http.Error(w, "Failed to encode loads", http.StatusInternalServerError)
 		}
 	})
