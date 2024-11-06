@@ -58,7 +58,7 @@ func main() {
 	// Use `db` to interact with the database here
 
 	loadsarymodel := []Loads{}
-	db.Exec("select * from loads").Scan(&loadsarymodel)
+	db.Raw("select * from loads").Scan(&loadsarymodel)
 
 	fmt.Printf("loads: %#v\n", loadsarymodel)
 }
