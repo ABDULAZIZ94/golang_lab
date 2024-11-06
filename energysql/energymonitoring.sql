@@ -129,3 +129,11 @@ TIMESTAMP AT TIME ZONE 'Asia/Kuala_Lumpur' BETWEEN (
 id = '7d836977-943e-41a5-68b5-ac3c1a7ba9ec'
 order by timestamp desc
 limit 10 
+
+
+SELECT DISTINCT ON (load_token) *
+FROM "whatsapp_notifications"
+WHERE
+    sent = false
+    AND type = 'overload'
+ORDER BY load_token,timestamp DESC
