@@ -8,6 +8,11 @@ order by REGEXP_REPLACE(
         device_token, '[^0-9]', '', 'g'
     )::int
 
+select * from public.devices where device_token IN (
+    '4050',
+    '4051'
+)
+
 # kpkt
 
 select * from tenants  -- 984bbf11-868c-43e8-6c5e-d9a0151fefc6 
@@ -22,10 +27,12 @@ select * from public.device_pairs where device_id in (
     -- '2ee3148d-56af-42eb-7c9d-fed73be3a314',
     -- '0ed9e984-83ea-4a02-4f51-cad08ce692fc',
     -- '75fb2632-d616-4108-4619-4013fdc4d8b0'
-    'd4c4a614-dbbc-423e-7dee-472ca602d471',
-    '2128e434-5fbc-4cda-4759-95eba64bd61b',
-    '033d9091-cf9f-4d03-61bd-ec7e2a844411',
-    '44b7c154-7bd1-4083-7e47-18e503fd3d29'
+    -- 'd4c4a614-dbbc-423e-7dee-472ca602d471',
+    -- '2128e434-5fbc-4cda-4759-95eba64bd61b',
+    -- '033d9091-cf9f-4d03-61bd-ec7e2a844411',
+    -- '44b7c154-7bd1-4083-7e47-18e503fd3d29'
+    'fde75e65-af87-4176-7a16-1db6a8cfd4bf',
+    '3e7de029-f6f5-4938-5f5f-882c076687f3'
 )
 
 #
@@ -47,7 +54,6 @@ where
 
 -- toilet male kpkt
 {"error":false,"message":"Toilet info created ID: 050c7c1d-13fc-48b3-6a4c-e15dfe02a688"}
-
 
 -- toilet female kpkt
 {"error":false,"message":"Toilet info created ID: 3194cc8d-31f9-4441-504d-c45758ed9559"}
@@ -72,6 +78,41 @@ select * from public.toilet_infos where location_id = '2a83bc9b-0dba-451e-7760-a
 379456c3-9b7e-4bb4-7c92-8212fa6ed997 -- oku kpkt
 3194cc8d-31f9-4441-504d-c45758ed9559  -- female kpkt
 
+-- list cubicle in kpkt
+select * from cubical_infos
+left join cubical_pairs using(cubical_id)
+left join toilet_infos using(toilet_info_id)
+where toilet_infos.location_id = '2a83bc9b-0dba-451e-7760-a29bfc3db337'
+
+
+select * from public.cubical_pairs
+
+-- manage unpaired cubicle
+select * from public.cubical_infos where cubical_id in (
+    'eb993fb2-f732-48f4-7941-aedb08d6e9bd',
+    'cc77608d-79d8-491c-54c9-6fa62f4c8e8a',
+    '1543e26a-6f99-4076-69ed-81bfed019c57',
+    'c909bf67-7530-4d2b-7c23-f982c3d78a97',
+    '586b94c9-5ca4-46fa-7628-1c01cb4f2460',
+    '19d95404-00b4-4a2d-4b85-cf56b15e5807',
+    '57febf1d-3a65-467e-5174-45db69dd49fe',
+    '6d015246-13a1-4cf7-4219-70fc824f3dfe',
+    'b839ad7c-348f-4cb3-5d41-3f1738d7a76a',
+    'f856559d-3a07-48cf-5311-505e6b3b2dc4',
+    '1bc095d3-5ebf-4c47-6f95-041901a03b46',
+    'acf993f9-6ea5-4274-429e-114d0905f130',
+    '40af79d3-a44e-4677-4b10-607d389f65f5',
+    '9c7fc863-7a74-408a-53d9-039d37f9d85b',
+    'edd6a42a-7c17-4da7-45bd-0467c50ed73f'
+)
+
+
+eb993fb2-f732-48f4-7941-aedb08d6e9bd -- f1
+9c7fc863-7a74-408a-53d9-039d37f9d85b -- f2
+19d95404-00b4-4a2d-4b85-cf56b15e5807 -- m1
+cc77608d-79d8-491c-54c9-6fa62f4c8e8a -- m2
+
+
 -- sensor counter,
 {"error":false,"message":"Device created . ID: ada9a3d3-abb6-43a7-61fe-2f07856d6ccf"} -- counter male 110
 {"error":false,"message":"Device created . ID: 544acae6-dd5c-4e1b-5e71-3b671d930ba5"} -- counter female 111
@@ -84,7 +125,10 @@ select * from public.toilet_infos where location_id = '2a83bc9b-0dba-451e-7760-a
 
 {"error":false,"message":"Device created . ID: 688ec9b7-eca5-42c4-4e0e-e730906742b3"}
 
+-- ammonia 73
+44b7c154-7bd1-4083-7e47-18e503fd3d29 
 
+select * from devices where device_id  = '44b7c154-7bd1-4083-7e47-18e503fd3d29'
 
 select * from public.devices where device_token= '233'
 
