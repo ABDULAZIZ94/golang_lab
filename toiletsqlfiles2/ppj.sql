@@ -353,7 +353,7 @@ order by timestamp desc
 -- saujana hijau location id 98998a6b-4be1-4ff4-5dd1-8a8e914943ee 
 
 -- manage saujana hijau cubical
-SELECT cubical_nick_name, cubical_name, cubical_id, device_name, device_id, device_token, device_type_id, toilet_name, device_cubical_pair_id
+SELECT cubical_pair_id, cubical_nick_name, cubical_name, cubical_id, device_name, device_id, device_token, device_type_id, toilet_name, device_cubical_pair_id
 FROM cubical_infos
 left join cubical_pairs using(cubical_id)
 left join device_cubical_pairs using(cubical_id)
@@ -361,7 +361,24 @@ left join toilet_infos using(toilet_info_id)
 left join devices using(device_id)
 where toilet_infos.location_id = '98998a6b-4be1-4ff4-5dd1-8a8e914943ee'
 
-select * from public.device_cubical_pairs
+select * from cubical_infos
+
+select * from public.cubical_pairs
+
+select * from public.cubical_infos where cubical_id in(
+    '25a25532-a743-4857-70f5-5e9dcb3b06ee',
+    '4fcb51b0-cf20-4bd3-780c-3f52028c3e58',
+    '637f3112-8af8-48ec-7524-07720a810117',
+    '2007bdc4-dba7-4638-5a5e-fd41deb46842'
+)
+
+
+select * from public.cubical_pairs where cubical_id in (
+    '637f3112-8af8-48ec-7524-07720a810117',  --fs
+    '2007bdc4-dba7-4638-5a5e-fd41deb46842'  -- ms
+)
+
+
 
 ded9f0f3-395d-47da-76a3-ed28637a3472 
 -- check specific toilet
@@ -409,6 +426,14 @@ from public.toilet_infos
 where
     location_id = '98998a6b-4be1-4ff4-5dd1-8a8e914943ee'
 
+-- toilet id
+e3b73d18-9fc2-405f-5685-bb21bb73e6c4 --male small
+f6cb76e9-1cb0-4c6d-5db2-536e7d0fa4ea -- male big
+1a30dea0-03c9-41d6-5918-b15807c3661f -- female small
+23acd373-4a29-427d-40b7-94d348e4f423 -- female big
+
+
+
 -- female 23acd373-4a29-427d-40b7-94d348e4f423 
 --- male f6cb76e9-1cb0-4c6d-5db2-536e7d0fa4ea 
 
@@ -424,8 +449,17 @@ where
 -- male big
 {"error":false,"message":"Cubical info created ID: 4fcb51b0-cf20-4bd3-780c-3f52028c3e58"}
 
-
 -- del e3b73d18-9fc2-405f-5685-bb21bb73e6c4 , 1a30dea0-03c9-41d6-5918-b15807c3661f 
+
+-- saujana hijau data problem
+select * from counter_data where device_token in ('11','12','13','14') and timestamp between current_timestamp - interval '1 day' and current_timestamp
+
+select sum(people_in) as total_in, device_token
+from counter_data
+where
+    device_token in ('11', '12', '13', '14')
+    and timestamp between current_timestamp - interval '1 day' and current_timestamp
+group by device_token
 
 select * from device_pairs
 ----------------------------------------------------------------------------------------------------------------------------
