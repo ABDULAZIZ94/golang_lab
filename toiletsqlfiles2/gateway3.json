@@ -1,0 +1,166 @@
+{
+    "error": false,
+    "message": {
+        "GatewayID": "e00848d7-4e1b-41a8-4525-cc9194df82ca",
+        "GlobalSetting": {
+            "SettingID": "38fc59fb-752f-40d2-70ff-fa0a85624839",
+            "EntityID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "Context": "GLOBAL",
+            "ActiveActuatorOnCntState": "1",
+            "ActiveActuatorOnCnt": "10",
+            "ActiveActuatorOnOdourState": "0",
+            "ActiveActuatorRunTime": "10",
+            "ActiveActuatorOnOdourLvl": "10",
+            "ActiveFregStat": "1",
+            "ActiveFregOnCnt": "10",
+            "ActiveFregOdourLevel": "1",
+            "ActiveWaterjetRunTime": "10",
+            "ActiveWaterjetState": "1",
+            "ActiveDoorLockRunTime": "10",
+            "ActiveDoorLockState": "1",
+            "NotifyCleanerTotalUser": "10",
+            "NotifyCleanerTotalUserState": "1",
+            "NotifyStartTS": "08:00",
+            "NotifyStopTS": "17:00",
+            "NotifyFregSprayCnt": "1",
+            "CleanerResponseTs": "10",
+            "CleanerResponseTsNotifyState": "1",
+            "NotifyOnLuxThres": "10",
+            "NotifyOnLuxState": "1",
+            "NotifyOnOdourThres": "10",
+            "NotifyOnOdourState": "1",
+            "NotifyOnFregLevel": "1",
+            "NotifyOnFregLevelState": "1",
+            "FpSetID": "ba722ca6-5268-4763-5409-b04eba237353",
+            "MqttLocalServer": "",
+            "createdAt": "2024-10-28T04:09:33.350149Z",
+            "updatedAt": "2024-11-12T02:54:22.377751Z",
+            "deleteAt": null
+        },
+        "FeedbackPanelSetting": [
+            {
+                "ButtonID": 1,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 2,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 3,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 4,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 5,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 6,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 7,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 8,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 9,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 10,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            }
+        ],
+        "ToiletIdentifier": [
+            {
+                "IdentifierID": "379456c3-9b7e-4bb4-7c92-8212fa6ed997",
+                "ToiletTypeID": 3,
+                "Identifier": "TOILET_HANDICAP",
+                "ToiletTypeName": "HANDICAP"
+            }
+        ],
+        "DeviceInfo": [
+            {
+                "Identifier": "TOILET_HANDICAP",
+                "PairedDevice": [
+                    {
+                        "DeviceID": "75fb2632-d616-4108-4619-4013fdc4d8b0",
+                        "Namespace": "FRESHENER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "617",
+                        "Identifier": "TOILET_HANDICAP",
+                        "ToiletTypeID": 3
+                    },
+                    {
+                        "DeviceID": "0ed9e984-83ea-4a02-4f51-cad08ce692fc",
+                        "Namespace": "ENVIROMENTAL",
+                        "NamespaceID": 0,
+                        "DeviceToken": "232",
+                        "Identifier": "TOILET_HANDICAP",
+                        "ToiletTypeID": 3
+                    },
+                    {
+                        "DeviceID": "2ee3148d-56af-42eb-7c9d-fed73be3a314",
+                        "Namespace": "COUNTER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "110",
+                        "Identifier": "TOILET_HANDICAP",
+                        "ToiletTypeID": 3
+                    },
+                    {
+                        "DeviceID": "26ee0aa4-b351-46e4-5c95-c401b5de8477",
+                        "Namespace": "FEEDBACK",
+                        "NamespaceID": 0,
+                        "DeviceToken": "FP_KPKT_03",
+                        "Identifier": "TOILET_HANDICAP",
+                        "ToiletTypeID": 3
+                    }
+                ]
+            }
+        ],
+        "MqttInfo": {
+            "TenantID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "MqttAddress": "ares.vectolabs.com",
+            "MqttPort": 8883,
+            "MqttUsername": "kpkt-787910080555155252",
+            "MqttPassword": "f54d514",
+            "Secure": true,
+            "DownlinkTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/downlink",
+            "UplinkTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/uplink",
+            "ErrorTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/error",
+            "NotifyTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/notify",
+            "RealTimeStatusTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/status",
+            "CommandTopic": "vl/smarttoilet/command/+",
+            "StopAlartTopic": "vl/smarttoilet/command/stopalarm/+"
+        },
+        "CleanerDetails": []
+    }
+}

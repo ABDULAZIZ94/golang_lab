@@ -1,9 +1,11 @@
+-- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 # device token in order
 -- occupancy details
 SELECT *
 FROM public.devices
 where
     device_name like '%%'
+    -- and device_type_id = '7'
 order by REGEXP_REPLACE(
         device_token, '[^0-9]', '', 'g'
     )::int
@@ -12,6 +14,12 @@ select * from public.devices where device_token IN (
     '4050',
     '4051'
 )
+
+# feedback panel
+{"error":false,"message":"Device created . ID: 00b632fd-72e1-4f59-51d7-4d86e605c731"} -- male
+{"error":false,"message":"Device created . ID: 4150b396-d125-411e-40f7-91b209c6aba0"} -- female
+{"error":false,"message":"Device created . ID: 26ee0aa4-b351-46e4-5c95-c401b5de8477"} --oku
+
 
 # kpkt
 
@@ -39,7 +47,12 @@ select * from public.device_pairs where device_id in (
 {"error":false,"message":"Tenant created , ID: 984bbf11-868c-43e8-6c5e-d9a0151fefc6"}
 
 
-select * from device_pairs where device_id ='aed7b940-6686-4767-5398-2eb342f21544'
+select * from public.device_pairs where device_id ='c9331db4-cb9e-4961-47c0-f6735e7ad0c8'
+
+select *
+from public.device_pairs
+where
+    device_id = 'aed7b940-6686-4767-5398-2eb342f21544'
 
 select * from locations
 
@@ -68,6 +81,7 @@ from
     join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
 where
     toilet_infos.location_id = '2a83bc9b-0dba-451e-7760-a29bfc3db337'
+    and device_type_id = '7'
 
 
 -- list toilet in kpkt -- 3 gateway

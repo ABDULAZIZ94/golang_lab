@@ -1,0 +1,190 @@
+{
+    "error": false,
+    "message": {
+        "GatewayID": "90f48065-ae2d-4952-6851-c09f088097b7",
+        "GlobalSetting": {
+            "SettingID": "38fc59fb-752f-40d2-70ff-fa0a85624839",
+            "EntityID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "Context": "GLOBAL",
+            "ActiveActuatorOnCntState": "1",
+            "ActiveActuatorOnCnt": "10",
+            "ActiveActuatorOnOdourState": "0",
+            "ActiveActuatorRunTime": "10",
+            "ActiveActuatorOnOdourLvl": "10",
+            "ActiveFregStat": "1",
+            "ActiveFregOnCnt": "10",
+            "ActiveFregOdourLevel": "1",
+            "ActiveWaterjetRunTime": "10",
+            "ActiveWaterjetState": "1",
+            "ActiveDoorLockRunTime": "10",
+            "ActiveDoorLockState": "1",
+            "NotifyCleanerTotalUser": "10",
+            "NotifyCleanerTotalUserState": "1",
+            "NotifyStartTS": "08:00",
+            "NotifyStopTS": "17:00",
+            "NotifyFregSprayCnt": "1",
+            "CleanerResponseTs": "10",
+            "CleanerResponseTsNotifyState": "1",
+            "NotifyOnLuxThres": "10",
+            "NotifyOnLuxState": "1",
+            "NotifyOnOdourThres": "10",
+            "NotifyOnOdourState": "1",
+            "NotifyOnFregLevel": "1",
+            "NotifyOnFregLevelState": "1",
+            "FpSetID": "ba722ca6-5268-4763-5409-b04eba237353",
+            "MqttLocalServer": "",
+            "createdAt": "2024-10-28T04:09:33.350149Z",
+            "updatedAt": "2024-11-12T02:54:22.377751Z",
+            "deleteAt": null
+        },
+        "FeedbackPanelSetting": [
+            {
+                "ButtonID": 1,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 2,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 3,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 4,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 5,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 6,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 7,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 8,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 9,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            },
+            {
+                "ButtonID": 10,
+                "NotifyUserState": "1",
+                "NotifyUserCnt": "10",
+                "ActiveOnFeedState": "1"
+            }
+        ],
+        "ToiletIdentifier": [
+            {
+                "IdentifierID": "3194cc8d-31f9-4441-504d-c45758ed9559",
+                "ToiletTypeID": 2,
+                "Identifier": "TOILET_FEMALE_KPKT",
+                "ToiletTypeName": "FEMALE"
+            }
+        ],
+        "DeviceInfo": [
+            {
+                "Identifier": "TOILET_FEMALE_KPKT",
+                "PairedDevice": [
+                    {
+                        "DeviceID": "3e7de029-f6f5-4938-5f5f-882c076687f3",
+                        "Namespace": "EXHAUST_FAN",
+                        "NamespaceID": 0,
+                        "DeviceToken": "4051",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "d28e5449-86b3-4ffc-5bd6-a5ef9aca9e26",
+                        "Namespace": "FRESHENER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "616",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "544acae6-dd5c-4e1b-5e71-3b671d930ba5",
+                        "Namespace": "COUNTER",
+                        "NamespaceID": 0,
+                        "DeviceToken": "109",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "947ca54c-3e11-4bbd-6f0c-ad0c0738a0d5",
+                        "Namespace": "OCCUPANCY",
+                        "NamespaceID": 0,
+                        "DeviceToken": "320",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "8971c6c9-687e-4c23-55e5-399a784d8fe9",
+                        "Namespace": "OCCUPANCY",
+                        "NamespaceID": 0,
+                        "DeviceToken": "321",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "d515d563-bb47-4da1-7dab-7d9fc735cbda",
+                        "Namespace": "ENVIROMENTAL",
+                        "NamespaceID": 0,
+                        "DeviceToken": "231",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    },
+                    {
+                        "DeviceID": "4150b396-d125-411e-40f7-91b209c6aba0",
+                        "Namespace": "FEEDBACK",
+                        "NamespaceID": 0,
+                        "DeviceToken": "FP_KPKT_02",
+                        "Identifier": "TOILET_FEMALE_KPKT",
+                        "ToiletTypeID": 2
+                    }
+                ]
+            }
+        ],
+        "MqttInfo": {
+            "TenantID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "MqttAddress": "ares.vectolabs.com",
+            "MqttPort": 8883,
+            "MqttUsername": "kpkt-787910080555155252",
+            "MqttPassword": "f54d514",
+            "Secure": true,
+            "DownlinkTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/downlink",
+            "UplinkTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/uplink",
+            "ErrorTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/error",
+            "NotifyTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/notify",
+            "RealTimeStatusTopic": "vl/smarttoilet/984bbf11-868c-43e8-6c5e-d9a0151fefc6/+/status",
+            "CommandTopic": "vl/smarttoilet/command/+",
+            "StopAlartTopic": "vl/smarttoilet/command/stopalarm/+"
+        },
+        "CleanerDetails": []
+    }
+}

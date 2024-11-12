@@ -301,7 +301,7 @@ WHERE
     lt.cleaner_report_id IS NULL;
 
 
--- migrate mqtt users
+-- migrate mqtt users prod to staging
 INSERT INTO
     mqtt_users (
         id,
