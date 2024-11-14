@@ -195,8 +195,15 @@ select * from public.toilet_infos where location_id = '2a83bc9b-0dba-451e-7760-a
 select * from cubical_infos
 left join cubical_pairs using(cubical_id)
 left join toilet_infos using(toilet_info_id)
+left join device_cubical_pairs using(cubical_id)
+left join devices using(device_id)
 where toilet_infos.location_id = '2a83bc9b-0dba-451e-7760-a29bfc3db337'
 
+
+-- 318 , pair 9a5a94b1-3dde-4660-6ffd-b5e8d32b1f31 , m1 19d95404-00b4-4a2d-4b85-cf56b15e5807 , dev_id e3b92a7a-dbba-4883-4f9d-0415cc764cf1 
+-- 319 , pair 5aab0a3c-da55-442b-6ac5-7b328640fae9 , m2 cc77608d-79d8-491c-54c9-6fa62f4c8e8a , dev_id 5c5f41f5-9b5d-4945-72e8-d24aac1dfc57 
+
+select * from public.device_cubical_pairs where device_cubical_pair_id in ('9a5a94b1-3dde-4660-6ffd-b5e8d32b1f31', '5aab0a3c-da55-442b-6ac5-7b328640fae9')
 
 select * from public.cubical_pairs
 
