@@ -176,3 +176,23 @@ where device_token = '611'
 and  (timestamp::time >= '23:00:00' OR ( timestamp::time >= '00:00:00' AND timestamp::time <= '11:00:00'))
 and timestamp  between to_timestamp('2024-10-18 23:00:00','YYYY-MM-DD HH24:MI:SS')
 and to_timestamp('2024-10-20 11:00:00','YYYY-MM-DD HH24:MI:SS') 
+
+
+
+
+select * from fragrance_data 
+where fragrance_on = true
+and device_token = '617'
+
+
+delete from fragrance_data
+where
+    fragrance_on = true
+    and device_token = '617'
+
+
+
+select * from user_reactions 
+where reaction_id = '291d62e9-bdb4-4343-7821-3e7d901502c0'
+
+-- data masuk db

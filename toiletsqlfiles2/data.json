@@ -1,0 +1,209 @@
+{
+    "error": false,
+    "message": [
+        {
+            "ToiletInfoID": "3194cc8d-31f9-4441-504d-c45758ed9559",
+            "ToiletName": "TOILET_FEMALE_KPKT",
+            "ToiletTypeID": 2,
+            "ToiletTypeName": "FEMALE",
+            "FanStatus": "1",
+            "DisplayStatus": "",
+            "OccupiedStatus": "1",
+            "LocationID": "2a83bc9b-0dba-451e-7760-a29bfc3db337",
+            "TenantID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "CubicalList": [
+                {
+                    "CubicalId": "eb993fb2-f732-48f4-7941-aedb08d6e9bd",
+                    "CubicalName": "F1",
+                    "CubicalNickName": "CUBICLE FEMALE F1"
+                },
+                {
+                    "CubicalId": "9c7fc863-7a74-408a-53d9-039d37f9d85b",
+                    "CubicalName": "F2",
+                    "CubicalNickName": "CUBICLE FEMALE F2"
+                }
+            ],
+            "DeviceList": [
+                {
+                    "DeviceID": "3e7de029-f6f5-4938-5f5f-882c076687f3",
+                    "DeviceName": "EXHAUST_FAN_FEMALE",
+                    "DeviceToken": "4051",
+                    "DeviceType": "EXHAUST_FAN",
+                    "DeviceTypeID": 4
+                },
+                {
+                    "DeviceID": "d28e5449-86b3-4ffc-5bd6-a5ef9aca9e26",
+                    "DeviceName": "FRESHENER_FEMALE",
+                    "DeviceToken": "616",
+                    "DeviceType": "FRESHENER",
+                    "DeviceTypeID": 5
+                },
+                {
+                    "DeviceID": "544acae6-dd5c-4e1b-5e71-3b671d930ba5",
+                    "DeviceName": "COUNTER_FEMALE",
+                    "DeviceToken": "109",
+                    "DeviceType": "COUNTER",
+                    "DeviceTypeID": 2
+                },
+                {
+                    "DeviceID": "947ca54c-3e11-4bbd-6f0c-ad0c0738a0d5",
+                    "DeviceName": "OCCUPANCY_FEMALE_F1",
+                    "DeviceToken": "320",
+                    "DeviceType": "OCCUPANCY",
+                    "DeviceTypeID": 12
+                },
+                {
+                    "DeviceID": "8971c6c9-687e-4c23-55e5-399a784d8fe9",
+                    "DeviceName": "OCCUPANCY_FEMALE_F2",
+                    "DeviceToken": "321",
+                    "DeviceType": "OCCUPANCY",
+                    "DeviceTypeID": 12
+                },
+                {
+                    "DeviceID": "d515d563-bb47-4da1-7dab-7d9fc735cbda",
+                    "DeviceName": "ENVIROMENT_FEMALE",
+                    "DeviceToken": "231",
+                    "DeviceType": "ENVIROMENTAL",
+                    "DeviceTypeID": 3
+                },
+                {
+                    "DeviceID": "4150b396-d125-411e-40f7-91b209c6aba0",
+                    "DeviceName": "FEEDBACK_PANEL_02",
+                    "DeviceToken": "10002",
+                    "DeviceType": "FEEDBACK",
+                    "DeviceTypeID": 7
+                }
+            ]
+        },
+        {
+            "ToiletInfoID": "379456c3-9b7e-4bb4-7c92-8212fa6ed997",
+            "ToiletName": "TOILET_HANDICAP",
+            "ToiletTypeID": 3,
+            "ToiletTypeName": "HANDICAP",
+            "FanStatus": "",
+            "DisplayStatus": "",
+            "OccupiedStatus": "0",
+            "LocationID": "2a83bc9b-0dba-451e-7760-a29bfc3db337",
+            "TenantID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "CubicalList": [],
+            "DeviceList": [
+                {
+                    "DeviceID": "75fb2632-d616-4108-4619-4013fdc4d8b0",
+                    "DeviceName": "FRESHENER_OKU",
+                    "DeviceToken": "617",
+                    "DeviceType": "FRESHENER",
+                    "DeviceTypeID": 5
+                },
+                {
+                    "DeviceID": "0ed9e984-83ea-4a02-4f51-cad08ce692fc",
+                    "DeviceName": "ENVIROMENT_OKU",
+                    "DeviceToken": "232",
+                    "DeviceType": "ENVIROMENTAL",
+                    "DeviceTypeID": 3
+                },
+                {
+                    "DeviceID": "2ee3148d-56af-42eb-7c9d-fed73be3a314",
+                    "DeviceName": "COUNTER_OKU",
+                    "DeviceToken": "110",
+                    "DeviceType": "COUNTER",
+                    "DeviceTypeID": 2
+                },
+                {
+                    "DeviceID": "26ee0aa4-b351-46e4-5c95-c401b5de8477",
+                    "DeviceName": "FEEDBACK_PANEL_03",
+                    "DeviceToken": "10003",
+                    "DeviceType": "FEEDBACK",
+                    "DeviceTypeID": 7
+                },
+                {
+                    "DeviceID": "1d2bc797-f30a-4454-4c66-48ef9141a9b3",
+                    "DeviceName": "EXHAUST_FAN_OKU",
+                    "DeviceToken": "4052",
+                    "DeviceType": "EXHAUST_FAN",
+                    "DeviceTypeID": 4
+                }
+            ]
+        },
+        {
+            "ToiletInfoID": "050c7c1d-13fc-48b3-6a4c-e15dfe02a688",
+            "ToiletName": "TOILET_MALE",
+            "ToiletTypeID": 1,
+            "ToiletTypeName": "MALE",
+            "FanStatus": "",
+            "DisplayStatus": "",
+            "OccupiedStatus": "",
+            "LocationID": "2a83bc9b-0dba-451e-7760-a29bfc3db337",
+            "TenantID": "984bbf11-868c-43e8-6c5e-d9a0151fefc6",
+            "CubicalList": [
+                {
+                    "CubicalId": "19d95404-00b4-4a2d-4b85-cf56b15e5807",
+                    "CubicalName": "M1",
+                    "CubicalNickName": "CUBICLE MALE M1"
+                },
+                {
+                    "CubicalId": "cc77608d-79d8-491c-54c9-6fa62f4c8e8a",
+                    "CubicalName": "M2",
+                    "CubicalNickName": "CUBICLE MALE M2"
+                }
+            ],
+            "DeviceList": [
+                {
+                    "DeviceID": "e5a8b2a2-790c-4631-6d72-e5b7b85ce448",
+                    "DeviceName": "FRESHENER_MALE",
+                    "DeviceToken": "615",
+                    "DeviceType": "FRESHENER",
+                    "DeviceTypeID": 5
+                },
+                {
+                    "DeviceID": "44b7c154-7bd1-4083-7e47-18e503fd3d29",
+                    "DeviceName": "AMMONIA_SENSOR",
+                    "DeviceToken": "73",
+                    "DeviceType": "AMMONIA_SENSOR",
+                    "DeviceTypeID": 13
+                },
+                {
+                    "DeviceID": "fde75e65-af87-4176-7a16-1db6a8cfd4bf",
+                    "DeviceName": "EXHAUST_FAN_MALE",
+                    "DeviceToken": "4050",
+                    "DeviceType": "EXHAUST_FAN",
+                    "DeviceTypeID": 4
+                },
+                {
+                    "DeviceID": "e3b92a7a-dbba-4883-4f9d-0415cc764cf1",
+                    "DeviceName": "OCCUPANCY_MALE_M1",
+                    "DeviceToken": "318",
+                    "DeviceType": "OCCUPANCY",
+                    "DeviceTypeID": 12
+                },
+                {
+                    "DeviceID": "5c5f41f5-9b5d-4945-72e8-d24aac1dfc57",
+                    "DeviceName": "OCCUPANCY_MALE_M2",
+                    "DeviceToken": "319",
+                    "DeviceType": "OCCUPANCY",
+                    "DeviceTypeID": 12
+                },
+                {
+                    "DeviceID": "ada9a3d3-abb6-43a7-61fe-2f07856d6ccf",
+                    "DeviceName": "COUNTER_MALE",
+                    "DeviceToken": "108",
+                    "DeviceType": "COUNTER",
+                    "DeviceTypeID": 2
+                },
+                {
+                    "DeviceID": "8a88b9a8-d2b9-4d28-7ee5-a46372b12b7d",
+                    "DeviceName": "ENVIROMENT_MALE",
+                    "DeviceToken": "230",
+                    "DeviceType": "ENVIROMENTAL",
+                    "DeviceTypeID": 3
+                },
+                {
+                    "DeviceID": "00b632fd-72e1-4f59-51d7-4d86e605c731",
+                    "DeviceName": "FEEDBACK_PANEL_01",
+                    "DeviceToken": "10001",
+                    "DeviceType": "FEEDBACK",
+                    "DeviceTypeID": 7
+                }
+            ]
+        }
+    ]
+}

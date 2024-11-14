@@ -1,6 +1,103 @@
 -- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 # device token in order
+
+select * from public.toilet_infos
+
+--check contractor tenant pair
+SELECT * FROM "contractor_and_tenants"  WHERE tenant_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0' AND contractor_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0'
+
+SELECT *
+FROM "contractor_and_tenants"
+WHERE (
+        tenant_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0'
+        AND contractor_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0'
+    )
+
+-- kpkt 
+select * from users
+
+SELECT *
+FROM public."contractor_and_tenants"
+WHERE (
+        tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+        -- AND contractor_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+    )
+
+
+select * from tenants where tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+
+-- kpkt cleaner id a816fad3-9fe0-4c94-517f-d2545741d82e 
+select * from cleaner_and_tenants where tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+
+select * from cleaner_and_tenants where contractor_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+
+-- table cleaner and tenants
+
+--checking before pairing
+SELECT *
+FROM "contractor_and_tenants"
+WHERE (
+        tenant_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+        AND contractor_id = '984bbf11-868c-43e8-6c5e-d9a0151fefc6'
+    )
+
+select * from users
+
+select * from users where user_id in(
+    '7a1c3658-d58b-46ca-6935-6a0835477b69',
+    'f9ddee64-932d-473b-4452-c803475c5071',
+    '352cf1bc-c016-4fbe-7d86-a8c8422611e7',
+    'b0b44b8c-b3a8-409c-5215-0ef1ec94e03b',
+    'ca47cf09-e64f-4aa7-59cc-5f1c2d2b8f74',
+    '73787930-ad1f-4f11-5b12-39d6b82ef9bc',
+    '3955b814-2ebe-46f1-48b0-b72314b329b3',
+    '92ff589a-b777-4e5c-79d8-6424fc565e8c',
+    'fde98591-e015-45c5-6cb1-24a918b0e056',
+    'b4af7840-ae84-450d-7661-19041a880fd0',
+    '950390ca-19cc-492c-4bf5-c04d40b6656e',
+    '4b079dad-b330-44ff-78e2-be8fa66c8f3f',
+    'a3cd69de-be57-4516-4e9b-7e0281cad3ec',
+    '6dba5d88-84d3-4e0c-7c15-4682f71fb569',
+    '6e146de9-2353-4c64-48e6-fa1c158bc56f',
+    '8bc335d3-283e-46af-4141-487fe7b5edae',
+    'b4798aa4-9f31-429c-5796-777d5ba767ae',
+    'c09d268e-de54-4582-4b5e-acba3ade9b4a'
+)
+
+SELECT 
+    locations.*,
+    toilet_infos.*,
+    -- contractor_and_tenants.*,
+ARRAY_AGG(
+        TOILET_INFOS.TOILET_NAME || ':' || TOILET_INFOS.TOILET_INFO_ID
+        ORDER BY TOILET_INFOS.CREATED_AT DESC
+    ) AS TOILET_LIST
+FROM
+    locations
+    JOIN toilet_infos ON toilet_infos.location_id = LOCATIONS.location_id
+    JOIN contractor_and_tenants ON contractor_and_tenants.tenant_id = LOCATIONS.tenant_id
+    JOIN CLEANER_AND_TENANTS ON CLEANER_AND_TENANTS.TENANT_ID = LOCATIONS.TENANT_ID
+WHERE
+    contractor_and_tenants.CONTRACTOR_ID = '2291ed0a-0ef0-4114-72d1-f61313eb40c0' -- not kpkt tenant id, preset contractor
+    AND CLEANER_AND_TENANTS.CLEANER_ID = 'a816fad3-9fe0-4c94-517f-d2545741d82e' -- user id
+GROUP BY
+    LOCATIONS.LOCATION_ID, 
+    toilet_infos.toilet_info_id
+    -- contractor_and_tenants.pair_id 
+
+-- check di contractor and tenants
+SELECT *
+FROM "contractor_and_tenants"
+WHERE (
+        tenant_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0'
+        AND contractor_id = '2291ed0a-0ef0-4114-72d1-f61313eb40c0'
+    )
+
+select * from locations  --2a83bc9b-0dba-451e-7760-a29bfc3db337  kpkt
+
 -- occupancy details
+
+
 SELECT *
 FROM public.devices
 where
@@ -26,6 +123,8 @@ select * from public.devices where device_token IN (
 select * from tenants  -- 984bbf11-868c-43e8-6c5e-d9a0151fefc6 
 
 select * from locations -- 2a83bc9b-0dba-451e-7760-a29bfc3db337 
+
+select * from public.users where tenant_id ='984bbf11-868c-43e8-6c5e-d9a0151fefc6'
 
 {"error":false,"message":"Device created . ID: 205cb674-f32e-463d-725b-d3965cd8a541"} -- kpkt_gateway_01
 {"error":false,"message":"Device created . ID: 90f48065-ae2d-4952-6851-c09f088097b7"} -- kpkt_gateway_02
@@ -185,6 +284,7 @@ select * from device_pairs where device_id = '0ed9e984-83ea-4a02-4f51-cad08ce692
 
 -- oku
 {"error":false,"message":"Device created . ID: c9331db4-cb9e-4961-47c0-f6735e7ad0c8"} -- occ oku
+{"error":false,"message":"Device created . ID: 1d2bc797-f30a-4454-4c66-48ef9141a9b3"}
 
 
 -- add cubical
@@ -195,3 +295,181 @@ eb993fb2-f732-48f4-7941-aedb08d6e9bd  -- f1
 cc77608d-79d8-491c-54c9-6fa62f4c8e8a  --m2
 
 -- pair cubical
+
+
+select * from enviroment_data where device_token = '232'
+
+select * from counter_data where device_token = '109'
+-- and timestamp > current_timestamp - interval '1 hour'
+
+
+-- fail
+with
+    start_end as (
+        select to_timestamp(
+                '2024-11-11 16:00:00', 'YYYY-MM-DD HH24:MI:SS'
+            ) as start_date, to_timestamp(
+                '2024-11-12 15:59:59', 'YYYY-MM-DD HH24:MI:SS'
+            ) as end_date
+    ),
+    device_list as (
+        select toilet_infos.toilet_info_id, devices.device_token, device_types.device_type_id as namespace_id
+        from
+            device_pairs
+            join devices on devices.device_id = device_pairs.device_id
+            join device_types on device_types.device_type_id = devices.device_type_id
+            join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
+            join toilet_types on toilet_types.toilet_type_id = toilet_infos.toilet_type_id
+        where
+            device_pairs.toilet_info_id = '379456c3-9b7e-4bb4-7c92-8212fa6ed997'
+    )
+
+
+select  *
+from fragrance_data
+    -- join device_list using (device_token)
+where
+    fragrance_data.fragrance_on = true
+    and device_token = '617'
+    -- and (
+    --     timestamp::time >= '16:00:00'
+    --     OR (
+    --         timestamp::time >= '00:00:00'
+    --         AND timestamp::time <= '15:59:59'
+    --     )
+    -- )
+    -- and timestamp between (
+    --     select start_date
+    --     from start_end
+    -- ) and (
+    --     select end_date
+    --     from start_end
+    -- )
+
+
+select
+    coalesce(ttltraffic, '0') as total_counter,
+    last_counter_ts as last_counter_cnt_timestamp,
+    iaq as odour_level,
+    total_fragrance
+from (
+        select device_list.toilet_info_id
+        from device_list
+        limit 1
+    ) as Q0
+    left join (
+        select sum(people_in) as ttltraffic
+        from counter_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 2
+            and (
+                timestamp::time >= '16:00:00'
+                OR (
+                    timestamp::time >= '00:00:00'
+                    AND timestamp::time <= '15:59:59'
+                )
+            )
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+    ) as Q1 ON TRUE
+    left join (
+        select iaq
+        from enviroment_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 3
+            and (
+                timestamp::time >= '16:00:00'
+                OR (
+                    timestamp::time >= '00:00:00'
+                    AND timestamp::time <= '15:59:59'
+                )
+            )
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+        order by timestamp desc
+        limit 1
+    ) as Q2 ON TRUE
+    left join (
+        select count(id) as total_fragrance
+        from fragrance_data
+            join device_list using (device_token)
+        where
+            fragrance_data.fragrance_on = true
+            and (
+                timestamp::time >= '16:00:00'
+                OR (
+                    timestamp::time >= '00:00:00'
+                    AND timestamp::time <= '15:59:59'
+                )
+            )
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+    ) as Q7 ON TRUE
+    left join (
+        select timestamp as last_counter_ts
+        from counter_data
+            join device_list using (device_token)
+        where
+            device_list.namespace_id = 2
+            and (
+                timestamp::time >= '16:00:00'
+                OR (
+                    timestamp::time >= '00:00:00'
+                    AND timestamp::time <= '15:59:59'
+                )
+            )
+            and timestamp between (
+                select start_date
+                from start_end
+            ) and (
+                select end_date
+                from start_end
+            )
+        order by timestamp desc
+        limit 1
+    ) as Q9 ON TRUE
+
+(timestamp::time >= '16:00:00' OR ( timestamp::time >= '00:00:00' AND timestamp::time <= '15:59:59'))
+
+
+-- (cr.created_at::time >= '23:00:00' OR ( cr.created_at::time >= '00:00:00' AND cr.created_at::time <= '11:00:00')
+
+(cr.created_at::time >= '16:00:00' OR ( cr.created_at::time >= '00:00:00' AND cr.created_at::time <= '15:59:59')
+
+
+
+-- sqlite
+select * from health_check_logs where device_id = 232;
+
+
+select * from raw_data_logs where raw_data like '%02690601%'
+
+-- fragrance
+select count(raw_data) from raw_data_logs where raw_data like 'VT_RECEIVED=%02690601%'; --121
+
+
+-- counter
+select count(raw_data)
+from raw_data_logs
+where
+    raw_data like 'VT_RECEIVED=%006E010001%'; --18
+
+'VT_RECEIVED=%02690601%';
+-

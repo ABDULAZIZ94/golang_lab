@@ -103,20 +103,20 @@
             {
                 "IdentifierID": "379456c3-9b7e-4bb4-7c92-8212fa6ed997",
                 "ToiletTypeID": 3,
-                "Identifier": "TOILET_HANDICAP",
+                "Identifier": "TOILET_OKU",
                 "ToiletTypeName": "HANDICAP"
             }
         ],
         "DeviceInfo": [
             {
-                "Identifier": "TOILET_HANDICAP",
+                "Identifier": "TOILET_OKU",
                 "PairedDevice": [
                     {
                         "DeviceID": "75fb2632-d616-4108-4619-4013fdc4d8b0",
                         "Namespace": "FRESHENER",
                         "NamespaceID": 0,
                         "DeviceToken": "617",
-                        "Identifier": "TOILET_HANDICAP",
+                        "Identifier": "TOILET_OKU",
                         "ToiletTypeID": 3
                     },
                     {
@@ -124,7 +124,7 @@
                         "Namespace": "ENVIROMENTAL",
                         "NamespaceID": 0,
                         "DeviceToken": "232",
-                        "Identifier": "TOILET_HANDICAP",
+                        "Identifier": "TOILET_OKU",
                         "ToiletTypeID": 3
                     },
                     {
@@ -132,15 +132,23 @@
                         "Namespace": "COUNTER",
                         "NamespaceID": 0,
                         "DeviceToken": "110",
-                        "Identifier": "TOILET_HANDICAP",
+                        "Identifier": "TOILET_OKU",
                         "ToiletTypeID": 3
                     },
                     {
                         "DeviceID": "26ee0aa4-b351-46e4-5c95-c401b5de8477",
                         "Namespace": "FEEDBACK",
                         "NamespaceID": 0,
-                        "DeviceToken": "FP_KPKT_03",
-                        "Identifier": "TOILET_HANDICAP",
+                        "DeviceToken": "10003",
+                        "Identifier": "TOILET_OKU",
+                        "ToiletTypeID": 3
+                    },
+                    {
+                        "DeviceID": "1d2bc797-f30a-4454-4c66-48ef9141a9b3",
+                        "Namespace": "EXHAUST_FAN",
+                        "NamespaceID": 0,
+                        "DeviceToken": "4052",
+                        "Identifier": "TOILET_OKU",
                         "ToiletTypeID": 3
                     }
                 ]

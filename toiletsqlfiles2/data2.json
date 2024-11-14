@@ -1,0 +1,69 @@
+{
+    "error": false,
+    "message": [
+        {
+            "ToiletName": "TOILET_HANDICAP",
+            "ToiletTypeID": 3,
+            "ToiletIndex": "",
+            "OdourLevel": 2,
+            "TotalCounter": 43,
+            "TotalFragrance": 405,
+            "LastCounterCntTimestamp": "2024-11-12 21:07:49",
+            "EachCubicalStatus": []
+        },
+        {
+            "ToiletName": "TOILET_FEMALE_KPKT",
+            "ToiletTypeID": 2,
+            "ToiletIndex": "",
+            "OdourLevel": 2,
+            "TotalCounter": 287,
+            "TotalFragrance": 3,
+            "LastCounterCntTimestamp": "2024-11-12 20:53:10",
+            "EachCubicalStatus": [
+                {
+                    "CubicalName": "F1",
+                    "DeviceName": "OCCUPANCY_FEMALE_F1",
+                    "DeviceId": "947ca54c-3e11-4bbd-6f0c-ad0c0738a0d5",
+                    "Occupancy": false,
+                    "Autocleaning": false,
+                    "CubicalCounter": 0
+                },
+                {
+                    "CubicalName": "F2",
+                    "DeviceName": "OCCUPANCY_FEMALE_F2",
+                    "DeviceId": "8971c6c9-687e-4c23-55e5-399a784d8fe9",
+                    "Occupancy": false,
+                    "Autocleaning": false,
+                    "CubicalCounter": 3
+                }
+            ]
+        },
+        {
+            "ToiletName": "TOILET_MALE",
+            "ToiletTypeID": 1,
+            "ToiletIndex": "",
+            "OdourLevel": 2,
+            "TotalCounter": 0,
+            "TotalFragrance": 1,
+            "LastCounterCntTimestamp": null,
+            "EachCubicalStatus": [
+                {
+                    "CubicalName": "M1",
+                    "DeviceName": "OCCUPANCY_MALE_M1",
+                    "DeviceId": "e3b92a7a-dbba-4883-4f9d-0415cc764cf1",
+                    "Occupancy": false,
+                    "Autocleaning": false,
+                    "CubicalCounter": 0
+                },
+                {
+                    "CubicalName": "M2",
+                    "DeviceName": "OCCUPANCY_MALE_M2",
+                    "DeviceId": "5c5f41f5-9b5d-4945-72e8-d24aac1dfc57",
+                    "Occupancy": false,
+                    "Autocleaning": false,
+                    "CubicalCounter": 0
+                }
+            ]
+        }
+    ]
+}
