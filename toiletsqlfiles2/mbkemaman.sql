@@ -419,3 +419,8 @@ select count(misc_data_id), namespace from misc_action_data group by namespace
 
 select distinct timestamp, device_token, count(id) from fragrance_data where device_token in ('608', '609', '610') 
 group by timestamp, device_token
+
+
+select * from device_pairs 
+left join devices using(device_id)
+where device_token in ('4040')

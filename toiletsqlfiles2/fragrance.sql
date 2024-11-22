@@ -196,3 +196,11 @@ select * from user_reactions
 where reaction_id = '291d62e9-bdb4-4343-7821-3e7d901502c0'
 
 -- data masuk db
+
+
+
+
+select * from fragrance_data where device_token = '616' order by timestamp desc limit 200
+
+
+

@@ -1,6 +1,8 @@
 -- Active: 1722832765629@@alpha.vectolabs.com@9998@smarttoilet-staging
 # device token in order
 
+select * from locations -- 2a83bc9b-0dba-451e-7760-a29bfc3db337 
+
 select * from public.toilet_infos
 
 --check contractor tenant pair
@@ -180,7 +182,7 @@ from
     join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
 where
     toilet_infos.location_id = '2a83bc9b-0dba-451e-7760-a29bfc3db337'
-    and device_type_id = '7'
+    -- and device_type_id = '7'
 
 
 -- list toilet in kpkt -- 3 gateway

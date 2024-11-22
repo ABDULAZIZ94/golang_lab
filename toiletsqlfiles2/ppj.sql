@@ -86,7 +86,7 @@ select * from device_pairs where device_id ='f7b6dfff-1303-466f-6d72-67444827671
 SELECT *
 FROM public.devices
 where
-    device_name like '%%'
+    device_name like '%OCCUPANCY%'
 order by REGEXP_REPLACE(
         device_token, '[^0-9]', '', 'g'
     )::int
@@ -110,7 +110,8 @@ ORDER BY device_cubical_pair_id ASC
 -- gateway 2 B13_GATEWAY_02  35e1a1ab-7186-4625-71dd-020e8a7120b8 
 select * from device_pairs 
 join toilet_infos on toilet_infos.toilet_info_id = device_pairs.toilet_info_id
-where toilet_infos.location_id = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
+-- where toilet_infos.location_id = '587339bc-5d2f-4f5b-4e85-53aab5f8cefc'
+where gateway_id = '35e1a1ab-7186-4625-71dd-020e8a7120b8'
 
 select * from public.devices 
 -- where device_type_id = 7
@@ -480,8 +481,8 @@ where
 
 -- laman perdana
 
--- male -- not exists b26430b7-eb8a-473d-424a-1f47799d421d 
--- female -- not exists 30935d4a-bcea-48e0-73c6-346f6c8dad6b 
+-- male --  b26430b7-eb8a-473d-424a-1f47799d421d 
+-- female --  30935d4a-bcea-48e0-73c6-346f6c8dad6b 
 {"error":false,"message":"Toilet info created ID: 1fb8e9f7-bed9-45a6-769b-f25281bec589"} -- oku male
 {"error":false,"message":"Toilet info created ID: a8ff0994-f76c-4290-4f45-4d5f65d84545"} -- oku female
 
@@ -493,12 +494,52 @@ where location_id = '9945f766-738f-4de4-5b51-ac878029af56'
 -- paired gateway_01 male_toilet, oku_make_toilet
 select * from public.device_pairs 
 left join devices using (device_id)
+left join toilet_infos using (toilet_info_id)
 where gateway_id = '93f04ea4-de81-4c9d-716f-8bc95e3ebb7b'
+
+select *
+from public.device_pairs
+where
+    -- device_pair_id 
+    device_id in (
+        -- '72609271-ff62-43c2-7f24-af6af40093de',
+        -- 'a015d776-71a7-43e3-41e4-2be44918756e',
+        -- '3662b7e0-9def-4fb3-57ed-e8fdc6de24a9',
+        -- '51a69982-6336-4f6e-4d75-bba228da602f'
+        -- '9aa53d78-6fce-46ea-40c2-871efc4ee886', -- removed this pair
+        -- '42d6e1a1-8f03-4f3c-61f6-bedd64f63328' -- remove this pair
+    )
+
+ -- fp 10004
+select * from public.devices where device_id in(
+    '9a8b80ac-675c-47b2-5719-a9a81e0ea67a',
+    '9a8b80ac-675c-47b2-5719-a9a81e0ea67a'
+)
 
 -- paired gateway_02 female_toilet, oku_female_toilet
 select * from public.device_pairs 
 left join devices using(device_id)
+left join toilet_infos using(toilet_info_id)
 where gateway_id = '0d517343-5eb7-4d56-7c0b-9cdf17920168'
+
+-- del timestamp 2024 -10 -28 06:39:55.097299 + 00
+select * from device_pairs where device_id in (
+    '990c623a-dd34-455d-52e2-27d9d520809d',
+    
+)
+
+-- 100005
+select *
+from public.device_pairs
+where
+    device_pair_id in (
+        'a0e4bc77-0132-4c06-4a01-eef64e36690c',
+        '046262a7-eabb-4a11-5563-b7c98960134d',
+        '2937dd3b-b87f-497d-5f0e-873713a01a89',
+        '990c623a-dd34-455d-52e2-27d9d520809d',
+        '4cdcd434-8770-4acb-6143-dfcc47346eac'
+    )
+
 
 
 -- occupancy devices
@@ -521,8 +562,31 @@ select * from cubical_infos
 select * from cubical_pairs
 
 select * from public.cubical_pairs
--- join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
-where cubical_pairs.toilet_info_id = '30935d4a-bcea-48e0-73c6-346f6c8dad6b'
+join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
+where cubical_pairs.toilet_info_id = 'b26430b7-eb8a-473d-424a-1f47799d421d'
+
+select *
+from public.cubical_pairs
+    join cubical_infos on cubical_infos.cubical_id = cubical_pairs.cubical_id
+    join device_cubical_pairs on device_cubical_pairs.cubical_id = cubical_infos.cubical_id
+where
+    cubical_pairs.cubical_id in (
+        'cf00ca4d-ebe7-4f0a-6f81-c60b4907b1cc',
+        '6e60bb12-7048-43f9-5652-071c2cd005be'
+    )
+
+
+select * from public.device_cubical_pairs 
+left join devices using(device_id)
+where device_cubical_pair_id in (
+    '0e4e2a9e-b2f9-482c-7503-4ab006d0aadb',
+    '4be2cda8-3224-486d-429a-28fe1819539d'
+)
+
+select * from public.cubical_infos where cubical_id in (
+    'cf00ca4d-ebe7-4f0a-6f81-c60b4907b1cc',
+    '6e60bb12-7048-43f9-5652-071c2cd005be'
+)
 
 select * from public.toilet_infos where toilet_info_id in (
     '1fb8e9f7-bed9-45a6-769b-f25281bec589',
@@ -631,6 +695,21 @@ where
     location_id = '9945f766-738f-4de4-5b51-ac878029af56'
 
 -- list devices in laman perdana
+
+-- investigate device pairs
+
+select * from device_pairs 
+left join toilet_infos using (toilet_info_id)
+left join locations using(location_id)
+left join devices using(device_id)
+where device_id in (
+    'e3b92a7a-dbba-4883-4f9d-0415cc764cf1',
+    '5c5f41f5-9b5d-4945-72e8-d24aac1dfc57',
+    '947ca54c-3e11-4bbd-6f0c-ad0c0738a0d5',
+    '8971c6c9-687e-4c23-55e5-399a784d8fe9',
+    'c9331db4-cb9e-4961-47c0-f6735e7ad0c8'
+)
+
 select * from device_pairs
 left join devices using (device_id)
 left join toilet_infos using (toilet_info_id)
