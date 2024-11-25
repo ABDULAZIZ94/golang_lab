@@ -1,0 +1,22 @@
+{
+    "Load_2": {
+        "CurrentLoad_2": "3D966FD4",
+        "timestamp": "1732268698",
+        "ActivePower_2": "417D0E10",
+        "timestamp": "1732268699",
+        "ReactivePower_2": "80000000",
+        "timestamp": "1732268699",
+        "ApparentPower_2": "417D0E0F",
+        "timestamp": "1732268699",
+        "PowerFactor_2": "3F800000",
+        "timestamp": "1732268699",
+        "PhaseAngle_2": "00000000",
+        "timestamp": "1732268699",
+        "CurrentTHD_2": "42458F5C",
+        "timestamp": "1732268699",
+        "TotalImportEnergy_2": "3CE56042",
+        "timestamp": "1732268699",
+        "TotalExportEnergy_2": "00000000",
+        "timestamp": "1732268699"
+    }
+}
