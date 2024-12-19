@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@pusher/push-notifications-server": "^1.2.6"
+    "@pusher/push-notifications-server": "^1.2.6",
+    "pusher-beams-server": "file:"
   }
 }
